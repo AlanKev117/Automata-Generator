@@ -1,10 +1,14 @@
 import Transition from "../Transition/Transition";
 class State {
-	public id: string;
-	private transitions : Transition[];
-	constructor (id: string) {
+	public id: number;
+	private transitions : Set<Transition>;
+	constructor (id: number) {
 		this.id = id;
-		this.transitions = [];
+		this.transitions = new Set<Transition>();
+	}
+
+	addTransition = (t: Transition) => {
+		this.transitions.add(t);
 	}
 }
 
