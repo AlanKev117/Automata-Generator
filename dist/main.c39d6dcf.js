@@ -104,51 +104,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"ts/Automaton/Automaton.ts":[function(require,module,exports) {
-"use strict";
-
-exports.__esModule = true;
-
-var Automaton =
-/** @class */
-function () {
-  function Automaton(sigma, startState, states, acceptStates) {
-    var _this = this;
-
-    this.toString = function () {
-      var sigmaString = _this.sigma.reduce(function (total, current) {
-        return total + " " + current + ", ";
-      }, "");
-
-      var startString = _this.startState.id;
-
-      var acceptString = _this.acceptStates.map(function (state) {
-        return state.id;
-      }).reduce(function (total, current) {
-        return total + " " + current + ", ";
-      }, "");
-
-      var statesString = _this.states.map(function (state) {
-        return state.id;
-      }).reduce(function (total, current) {
-        return total + " " + current + ", ";
-      }, "");
-
-      return "Automaton: states= {" + statesString + "}, sigma={" + sigmaString + "}, start={" + startString + "}, accept={" + acceptString + "}";
-    };
-
-    this.sigma = sigma;
-    this.startState = startState;
-    this.states = states;
-    this.acceptStates = acceptStates;
-    console.log("Autómata creado.");
-  }
-
-  return Automaton;
-}();
-
-exports["default"] = Automaton;
-},{}],"ts/State/State.ts":[function(require,module,exports) {
+})({"ts/State/State.ts":[function(require,module,exports) {
 "use strict";
 
 exports.__esModule = true;
@@ -157,15 +113,80 @@ var State =
 /** @class */
 function () {
   function State(id) {
+    var _this = this;
+
+    this.addTransition = function (t) {
+      _this.transitions.add(t);
+    };
+
     this.id = id;
-    this.transitions = [];
+    this.transitions = new Set();
   }
 
   return State;
 }();
 
 exports["default"] = State;
-},{}],"main.ts":[function(require,module,exports) {
+},{}],"ts/Automaton/Automaton.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+exports.__esModule = true;
+
+var State_1 = __importDefault(require("../State/State"));
+
+var Automaton =
+/** @class */
+function () {
+  function Automaton() {
+    var _this = this;
+
+    this.createBasic = function (symbol, limit) {
+      _this.states.add(new State_1["default"](0));
+
+      _this.states.add(new State_1["default"](symbol));
+
+      _this.states[3]; //this.states = [new State()]
+    };
+
+    this.toString = function () {
+      var sigmaString = _this.sigma.slice().reduce(function (total, current) {
+        return total + " " + current + ", ";
+      }, "");
+
+      var startString = "" + _this.startState.id;
+
+      var acceptString = _this.acceptStates.slice().map(function (state) {
+        return state.id;
+      }).reduce(function (total, current) {
+        return total + " " + current + ", ";
+      }, "");
+
+      var statesString = _this.states.slice().map(function (state) {
+        return state.id;
+      }).reduce(function (total, current) {
+        return total + " " + current + ", ";
+      }, "");
+
+      return "Automaton: states= {" + statesString + "}, sigma={" + sigmaString + "}, start={" + startString + "}, accept={" + acceptString + "}";
+    };
+
+    this.sigma = new Set();
+    this.states = new Set();
+    this.startState = null;
+    this.acceptStates = new Set();
+  }
+
+  return Automaton;
+}();
+
+exports["default"] = Automaton;
+},{"../State/State":"ts/State/State.ts"}],"main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -210,7 +231,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56461" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64928" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
