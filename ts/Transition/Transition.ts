@@ -20,7 +20,7 @@ class Transition {
 				console.log("No es posible crear la transición con ese rango.");
 				return null;
 			}
-			if ()
+			if () {}
 			this.limitSymbol = limitSymbol;
 		} else {
 			this.limitSymbol = null;
