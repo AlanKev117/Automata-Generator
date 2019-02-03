@@ -248,9 +248,9 @@ class Automaton {
 						.getTransitionsBySymbol(symbol)
 						.map(transition => `${transition.targetState.id}`)
 						.join(", ");
-					const cell = `<td>${
-						targetStates.length > 0 ? targetStates : "-"
-					}</td>`;
+					const cell = `<td>{${
+						targetStates.length > 0 ? targetStates : " "
+					}}</td>`;
 					targetStatesRow += cell;
 				}
 				//Fila completa.

@@ -500,7 +500,7 @@ function Automaton() {
           var targetStates = state.getTransitionsBySymbol(symbol).map(function (transition) {
             return "".concat(transition.targetState.id);
           }).join(", ");
-          var cell = "<td>".concat(targetStates.length > 0 ? targetStates : "-", "</td>");
+          var cell = "<td>{".concat(targetStates.length > 0 ? targetStates : " ", "}</td>");
           targetStatesRow += cell;
         } //Fila completa.
 
@@ -562,7 +562,7 @@ Object.defineProperty(exports, "__esModule", {
 var Automaton_1 = __importDefault(require("./ts/Automaton/Automaton"));
 
 var automaton = new Automaton_1.default();
-automaton.createBasic("a");
+automaton.createBasic("a", "z");
 automaton.makeKleene();
 var containter = document.getElementById("automaton-table");
 var str = automaton.toHTMLTable();
@@ -594,7 +594,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65186" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49221" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
