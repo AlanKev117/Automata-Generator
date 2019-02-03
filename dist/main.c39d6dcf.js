@@ -389,7 +389,7 @@ function Automaton() {
     _this.startState.addTransition(finalTransition);
   };
   /**
-   * Crea la cerradura positiva del estado actual del autómata.
+   * Crea la cerradura positiva del autómata.
    *
    * @memberof Automaton
    */
@@ -431,11 +431,18 @@ function Automaton() {
 
     _this.states.add(nextFinalState);
   };
+  /**
+   * Crea la cerradura de Kleene del autómata.
+   *
+   * @memberof Automaton
+   */
+
 
   this.makeKleene = function () {
+    // Se hace la cerradura positiva del autómata
     _this.makePositive();
 
-    var transitionToEnd = new Transition_1.default(Automaton.epsilon, _toConsumableArray(_this.acceptStates)[0]);
+    var transitionToEnd = new Transition_1.default(Automaton.epsilon, _toConsumableArray(_this.acceptStates)[0]); // Se agrega la transición épsilon del inicio al fin del autómata.
 
     _this.startState.addTransition(transitionToEnd);
   };
@@ -556,7 +563,7 @@ var Automaton_1 = __importDefault(require("./ts/Automaton/Automaton"));
 
 var automaton = new Automaton_1.default();
 automaton.createBasic("a");
-automaton.makeOptional();
+automaton.makeKleene();
 var containter = document.getElementById("automaton-table");
 var str = automaton.toHTMLTable();
 containter.innerHTML = str;

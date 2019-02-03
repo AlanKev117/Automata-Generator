@@ -138,7 +138,7 @@ class Automaton {
 	};
 
 	/**
-	 * Crea la cerradura positiva del estado actual del autómata.
+	 * Crea la cerradura positiva del autómata.
 	 *
 	 * @memberof Automaton
 	 */
@@ -180,12 +180,20 @@ class Automaton {
 		this.states.add(nextFinalState);
 	};
 
+
+	/**
+	 * Crea la cerradura de Kleene del autómata.
+	 *
+	 * @memberof Automaton
+	 */
 	makeKleene = () => {
+		// Se hace la cerradura positiva del autómata
 		this.makePositive();
 		const transitionToEnd = new Transition(
 			Automaton.epsilon,
 			[...this.acceptStates][0]
 		);
+		// Se agrega la transición épsilon del inicio al fin del autómata.
 		this.startState.addTransition(transitionToEnd);
 	};
 
