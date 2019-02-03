@@ -1,9 +1,9 @@
 import State from "../State/State";
 
 class Transition {
-	private symbol: string;
-	private limitSymbol: string;
-	private targetState: State;
+	public symbol: string;
+	public limitSymbol: string;
+	public targetState: State;
 
 	constructor (symbol: string, targetState: State, limitSymbol?: string) {
 		// Se sgrega el símbolo principal de la transición.
@@ -20,7 +20,6 @@ class Transition {
 				console.log("No es posible crear la transición con ese rango.");
 				return null;
 			}
-			if () {}
 			this.limitSymbol = limitSymbol;
 		} else {
 			this.limitSymbol = null;

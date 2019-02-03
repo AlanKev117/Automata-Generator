@@ -1,0 +1,36 @@
+* {
+	box-sizing: border-box;
+	font-family: "segoe ui light";
+}
+h1 {
+	text-align: center;
+}
+
+#annotations {
+	margin-bottom: 5px;
+}
+.annotation {
+	margin: 3px;
+}
+
+.annotation div {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.annotation .annotation__title {
+	font-size: 20px;
+}
+
+.annotation .green-identifier {
+	background: #64fdb5;
+	padding: 10px;
+}
+.annotation .blue-identifier {
+	background: #72f6ff;
+	padding: 10px;
+}
+.annotation .orange-identifier {
+	background: #fda964;
+	padding: 10px;
+}

@@ -1,10 +1,28 @@
 <html lang="en">
 	<head>
 		<title>Automaton Generator</title>
+		<link rel="stylesheet" href="./css/table.css" />
+		<link rel="stylesheet" href="./main.css" />
 	</head>
 	<body>
 		<h1>Generador de autómatas</h1>
-		<div id="app"></div>
+		<h2>Código de colores:</h2>
+		<div id="annotations">
+			<div class="annotation">
+				<div class="green-identifier"></div>
+				<div class="annotation__title">Estado inicial</div>
+			</div>
+			<div class="annotation">
+				<div class="blue-identifier"></div>
+				<div class="annotation__title">Estado normal</div>
+			</div>
+			<div class="annotation">
+				<div class="orange-identifier"></div>
+				<div class="annotation__title">Estado final</div>
+			</div>
+		</div>
+		<h2>Tabla del autómata</h2>
+		<div id="automaton-table"></div>
 		<script src="./main.ts"></script>
 	</body>
 </html>
