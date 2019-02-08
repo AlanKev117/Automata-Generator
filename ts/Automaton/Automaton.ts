@@ -89,7 +89,7 @@ class Automaton {
     };
 
     /**
-     * Crea la cerradura opcional del autómata.
+     * Crea la forma opcional del autómata.
      *
      * @memberof Automaton
      */
@@ -123,7 +123,7 @@ class Automaton {
     };
 
     /**
-     * Crea la cerradura positiva del autómata.
+     * Crea la forma positiva del autómata.
      *
      * @memberof Automaton
      */
@@ -163,7 +163,7 @@ class Automaton {
     };
 
     /**
-     * Crea la cerradura de Kleene del autómata.
+     * Crea la forma de Kleene del autómata.
      *
      * @memberof Automaton
      */
@@ -187,7 +187,7 @@ class Automaton {
      * @returns {State} {estado que coincide con la consulta}
      * @memberof Automaton
      */
-    private readonly getState = (id: number, final?: boolean) => {
+    public readonly getState = (id: number, final?: boolean) => {
         if (final) {
             return [...this.acceptStates].filter(state => state.id === id)[0];
         }

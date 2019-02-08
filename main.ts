@@ -1,7 +1,10 @@
 import {Automaton} from "./ts/Automaton/Automaton";
+import {State} from "./ts/State/State";
+import Misc from "./ts/Misc/Misc";
 const automaton = new Automaton();
 automaton.createBasic("a", "z");
 automaton.makeKleene();
+console.log(Misc.epsilonClosure(new Set<State>([automaton.getState(0)])));
 const containter = document.getElementById("automaton-table");
 const str = automaton.toHTMLTable();
 containter.innerHTML = str;

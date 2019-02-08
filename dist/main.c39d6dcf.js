@@ -163,7 +163,7 @@ function State(id) {
   this.transitions = new Set();
 };
 
-exports.default = State;
+exports.State = State;
 },{}],"ts/Transition/Transition.ts":[function(require,module,exports) {
 "use strict";
 
@@ -204,80 +204,99 @@ var Transition = function Transition(symbol, targetState, limitSymbol) {
   }
 };
 
-exports.default = Transition;
-},{}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+exports.Transition = Transition;
+},{}],"ts/Misc/Misc.ts":[function(require,module,exports) {
+"use strict";
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
-  return bundleURL;
-}
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
 
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-  return '/';
-}
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Misc;
 
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
+(function (Misc) {
+  Misc.EPSILON = "\u03B5";
+  /**
+   * Función Ir_a(). Aplica la función Mover() con los parámetros
+   * "states" que es un conjunto de estados y "symbol" que es un
+   * símbolo. Al resultado se le
+   *
+   *
+   * @param {Set<State>} states
+   * @param {string} symbol
+   * @returns {Set<State>}
+   */
 
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
+  Misc.goTo = function (states, symbol) {};
+  /**
+   * Función Mover(). Obtiene el conjunto de estados al que se
+   * puede acceder desde otro conjunto de estados "states"
+   * estrictamente mediante transiciones con un símbolo "symbol"
+   * dado.
+   *
+   * @param {Set<State>} setOfStates
+   * @param {string} symbol
+   * @returns {Set<State>}
+   */
 
-function updateLink(link) {
-  var newLink = link.cloneNode();
 
-  newLink.onload = function () {
-    link.remove();
+  Misc.move = function (states, symbol) {};
+  /**
+  * Obtiene la cerradura épsilon de un conjunto de estados.
+  *
+  * @param {Set<State>} states
+  * @returns {Set<State>}
+  */
+
+
+  Misc.epsilonClosure = function (states) {
+    var epsilonSets = _toConsumableArray(states).map(simpleEpsilonClosure);
+
+    return epsilonSets.reduce(function (union, set) {
+      set.forEach(function (state) {
+        union.add(state);
+      });
+      return union;
+    }, new Set());
   };
+  /**
+   * Obtiene la cerradura épsilon de un estado.
+   *
+   * @param {State} state
+   * @returns {Set<State>}
+   */
 
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
 
-var cssTimeout = null;
+  var simpleEpsilonClosure = function simpleEpsilonClosure(state) {
+    return new Set(_toConsumableArray(state.transitions.values()).filter(function (transition) {
+      return transition.symbol === Misc.EPSILON;
+    }).map(function (transition) {
+      return transition.targetState;
+    }));
+  };
+  /**
+   * Para el análisis léxico, tomamos el último estado de aceptación
+   * con el que se obtuvo un token y se guarda el índice hasta que, con
+   * caracteres siguientes, no se pueda hacer otra transición.
+   *
+   * En ese momento, se corta la cadena hasta el índice con el que se tuvo el
+   * último token y se empieza el proceso de nuevo.
+   *
+   *
+   * LIBRO: Compiler design in C.
+   */
 
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
+})(Misc || (Misc = {}));
 
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-
-    cssTimeout = null;
-  }, 50);
-}
-
-module.exports = reloadCSS;
-},{"./bundle-url":"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"css/table.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"ts/Automaton/Automaton.ts":[function(require,module,exports) {
+exports.default = Misc;
+},{}],"ts/Automaton/Automaton.ts":[function(require,module,exports) {
 "use strict";
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -300,11 +319,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var State_1 = __importDefault(require("../State/State"));
+var State_1 = require("../State/State");
 
-var Transition_1 = __importDefault(require("../Transition/Transition"));
+var Transition_1 = require("../Transition/Transition");
 
-require("../../css/table.css");
+var Misc_1 = __importDefault(require("../Misc/Misc"));
 
 var Automaton =
 /**
@@ -325,9 +344,9 @@ function Automaton() {
    * @memberof Automaton
    */
   this.createBasic = function (symbol, limitSymbol) {
-    var state0 = new State_1.default(0);
-    var state1 = new State_1.default(1);
-    var transition = new Transition_1.default(symbol, state1, limitSymbol);
+    var state0 = new State_1.State(0);
+    var state1 = new State_1.State(1);
+    var transition = new Transition_1.Transition(symbol, state1, limitSymbol);
     state0.addTransition(transition); // Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
 
     if (transition.hasLimitSymbol()) {
@@ -348,7 +367,7 @@ function Automaton() {
     _this.acceptStates.add(state1);
   };
   /**
-   * Crea la cerradura opcional del autómata.
+   * Crea la forma opcional del autómata.
    *
    * @memberof Automaton
    */
@@ -356,13 +375,13 @@ function Automaton() {
 
   this.makeOptional = function () {
     // Se crea el estado inicial auxiliar.
-    var nextBeginState = new State_1.default(_this.states.size); // Se crea el estado final auxiliar.
+    var nextBeginState = new State_1.State(_this.states.size); // Se crea el estado final auxiliar.
 
-    var nextFinalState = new State_1.default(_this.states.size + 1); // Se crea transición épsilon que va al estado final.
+    var nextFinalState = new State_1.State(_this.states.size + 1); // Se crea transición épsilon que va al estado final.
 
-    var finalTransition = new Transition_1.default(Automaton.epsilon, nextFinalState); // Se crea transición épsilon que partirá del nuevo estado inicial.
+    var finalTransition = new Transition_1.Transition(Misc_1.default.EPSILON, nextFinalState); // Se crea transición épsilon que partirá del nuevo estado inicial.
 
-    var firstTransition = new Transition_1.default(Automaton.epsilon, _this.startState); // Se agrega la transición final nueva a todos los estados finales.
+    var firstTransition = new Transition_1.Transition(Misc_1.default.EPSILON, _this.startState); // Se agrega la transición final nueva a todos los estados finales.
 
     _toConsumableArray(_this.states).filter(function (state) {
       return _this.acceptStates.has(state);
@@ -389,7 +408,7 @@ function Automaton() {
     _this.startState.addTransition(finalTransition);
   };
   /**
-   * Crea la cerradura positiva del autómata.
+   * Crea la forma positiva del autómata.
    *
    * @memberof Automaton
    */
@@ -403,13 +422,13 @@ function Automaton() {
     } // Se crea el estado inicial auxiliar.
 
 
-    var nextBeginState = new State_1.default(_this.states.size); // Se crea el estado final auxiliar.
+    var nextBeginState = new State_1.State(_this.states.size); // Se crea el estado final auxiliar.
 
-    var nextFinalState = new State_1.default(_this.states.size + 1); // Se crea transición épsilon que va al estado final.
+    var nextFinalState = new State_1.State(_this.states.size + 1); // Se crea transición épsilon que va al estado final.
 
-    var finalTransition = new Transition_1.default(Automaton.epsilon, nextFinalState); // Se crea transición épsilon que va hacia el viejo estado inicial.
+    var finalTransition = new Transition_1.Transition(Misc_1.default.EPSILON, nextFinalState); // Se crea transición épsilon que va hacia el viejo estado inicial.
 
-    var toPrevStartTransition = new Transition_1.default(Automaton.epsilon, _this.startState); // Agregamos transiciones a los respectivos estados.
+    var toPrevStartTransition = new Transition_1.Transition(Misc_1.default.EPSILON, _this.startState); // Agregamos transiciones a los respectivos estados.
 
     /* const prevFinalState = [...this.states].filter(state =>
         this.acceptStates.has(state)
@@ -432,7 +451,7 @@ function Automaton() {
     _this.states.add(nextFinalState);
   };
   /**
-   * Crea la cerradura de Kleene del autómata.
+   * Crea la forma de Kleene del autómata.
    *
    * @memberof Automaton
    */
@@ -442,7 +461,7 @@ function Automaton() {
     // Se hace la cerradura positiva del autómata
     _this.makePositive();
 
-    var transitionToEnd = new Transition_1.default(Automaton.epsilon, _toConsumableArray(_this.acceptStates)[0]); // Se agrega la transición épsilon del inicio al fin del autómata.
+    var transitionToEnd = new Transition_1.Transition(Misc_1.default.EPSILON, _toConsumableArray(_this.acceptStates)[0]); // Se agrega la transición épsilon del inicio al fin del autómata.
 
     _this.startState.addTransition(transitionToEnd);
   };
@@ -470,7 +489,7 @@ function Automaton() {
   };
 
   this.toHTMLTable = function () {
-    var tmpSigma = new Set([].concat(_toConsumableArray(_this.sigma), [Automaton.epsilon])); // Encabezado de la tabla.
+    var tmpSigma = new Set([].concat(_toConsumableArray(_this.sigma), [Misc_1.default.EPSILON])); // Encabezado de la tabla.
 
     var head = "<tr>" + _toConsumableArray(tmpSigma).reduce(function (tableHead, symbol) {
       return tableHead + "<th>".concat(symbol, "</th>");
@@ -535,18 +554,9 @@ function Automaton() {
   this.acceptStates.clear();
   console.log("Automata vacío creado.");
 };
-/**
- * Símbolo que actúa como la cadena vacía del autómata.
- *
- * @static
- * @type {string}
- * @memberof Automaton
- */
 
-
-Automaton.epsilon = "\u03B5";
-exports.default = Automaton;
-},{"../State/State":"ts/State/State.ts","../Transition/Transition":"ts/Transition/Transition.ts","../../css/table.css":"css/table.css"}],"main.ts":[function(require,module,exports) {
+exports.Automaton = Automaton;
+},{"../State/State":"ts/State/State.ts","../Transition/Transition":"ts/Transition/Transition.ts","../Misc/Misc":"ts/Misc/Misc.ts"}],"main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -559,15 +569,18 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var Automaton_1 = __importDefault(require("./ts/Automaton/Automaton"));
+var Automaton_1 = require("./ts/Automaton/Automaton");
 
-var automaton = new Automaton_1.default();
+var Misc_1 = __importDefault(require("./ts/Misc/Misc"));
+
+var automaton = new Automaton_1.Automaton();
 automaton.createBasic("a", "z");
 automaton.makeKleene();
+console.log(Misc_1.default.epsilonClosure(new Set([automaton.getState(0)])));
 var containter = document.getElementById("automaton-table");
 var str = automaton.toHTMLTable();
 containter.innerHTML = str;
-},{"./ts/Automaton/Automaton":"ts/Automaton/Automaton.ts"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ts/Automaton/Automaton":"ts/Automaton/Automaton.ts","./ts/Misc/Misc":"ts/Misc/Misc.ts"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -594,7 +607,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49221" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53329" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
