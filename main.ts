@@ -1,4 +1,4 @@
-import Automaton from "./ts/Automaton/Automaton";
+import {Automaton} from "./ts/Automaton/Automaton";
 const automaton = new Automaton();
 automaton.createBasic("a", "z");
 automaton.makeKleene();
