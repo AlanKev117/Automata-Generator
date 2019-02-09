@@ -623,7 +623,7 @@ var Automaton_1 = require("./ts/Automaton/Automaton"); // Creamos autómatas vac
 var a1 = new Automaton_1.Automaton();
 var a2 = new Automaton_1.Automaton(); // Aplicamos algunas operaciones a los autómatas.
 
-a1.createBasic("a");
+a1.createBasic("a", "j");
 a2.createBasic("F");
 a1.makeKleene(); // Los unimos en a1
 

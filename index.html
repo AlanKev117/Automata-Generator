@@ -1,39 +1,42 @@
 <html lang="en">
-	<head>
-		<title>Automaton Generator</title>
-		<link rel="stylesheet" href="./css/table.css" />
-		<link rel="stylesheet" href="./main.css" />
-		<link rel="stylesheet" href="./css/header.css" />
-	</head>
-	<body>
-		<header>
-			<div id="brand">Automatón</div>
-			<nav id="main-nav">
-				<ul>
-					<li><a href="/create">Crear</a></li>
-					<li><a href="/afn-to-afd">AFN a AFD</a></li>
-					<li><a href="/syntax">Analizador</a></li>
-				</ul>
-			</nav>
-		</header>
-		<h1>Generador de autómatas</h1>
-		<h2>Código de colores:</h2>
-		<div id="annotations">
-			<div class="annotation">
-				<div class="green-identifier"></div>
-				<div class="annotation__title">Estado inicial</div>
-			</div>
-			<div class="annotation">
-				<div class="blue-identifier"></div>
-				<div class="annotation__title">Estado normal</div>
-			</div>
-			<div class="annotation">
-				<div class="orange-identifier"></div>
-				<div class="annotation__title">Estado final</div>
-			</div>
-		</div>
-		<h2>Tabla del autómata</h2>
-		<div id="automaton-table"></div>
-		<script src="./main.ts"></script>
-	</body>
+    <head>
+        <title>Automaton Generator</title>
+        <link rel="stylesheet" href="./css/table.css" />
+        <link rel="stylesheet" href="./main.css" />
+        <link rel="stylesheet" href="./css/header.css" />
+    </head>
+    <body>
+        <header>
+            <div id="brand">Automatón</div>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="/create">Crear</a></li>
+                    <li><a href="/afn-to-afd">AFN a AFD</a></li>
+                    <li><a href="/syntax">Analizador</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <h1>Generador de autómatas</h1>
+            <h2>Código de colores:</h2>
+            <div id="annotations">
+                <div class="annotation">
+                    <div class="green-identifier"></div>
+                    <div class="annotation__title">Estado inicial</div>
+                </div>
+                <div class="annotation">
+                    <div class="blue-identifier"></div>
+                    <div class="annotation__title">Estado normal</div>
+                </div>
+                <div class="annotation">
+                    <div class="orange-identifier"></div>
+                    <div class="annotation__title">Estado final</div>
+                </div>
+            </div>
+            <h2>Tabla del autómata</h2>
+            <div id="automaton-table"></div>
+        </main>
+        <footer></footer>
+        <script src="./main.ts"></script>
+    </body>
 </html>

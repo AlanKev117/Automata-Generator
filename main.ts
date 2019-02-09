@@ -5,7 +5,7 @@ const a1 = new Automaton();
 const a2 = new Automaton();
 
 // Aplicamos algunas operaciones a los autómatas.
-a1.createBasic("a");
+a1.createBasic("a", "j");
 a2.createBasic("F");
 a1.makeKleene();
 
