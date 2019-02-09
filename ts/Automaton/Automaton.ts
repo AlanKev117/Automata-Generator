@@ -72,8 +72,15 @@ class Automaton {
 	 * @memberof Automaton
 	 */
 	public readonly createBasic = (symbol: string, limitSymbol?: string) => {
-		const state0 = new State(0);
-		const state1 = new State(1);
+		let state0, state1;
+		if(this.states.size == 0){
+			state0 = new State(0);
+			state1 = new State(1);
+		}
+		else{
+			state0 = new State(this.states.size);
+			state1 = new State(this.states.size + 1);
+		}
 		const transition = new Transition(symbol, state1, limitSymbol);
 		state0.addTransition(transition);
 
@@ -95,6 +102,69 @@ class Automaton {
 		this.states.add(state1);
 		this.startState = state0;
 		this.acceptStates.add(state1);
+	};
+
+	/**
+	 * Une un autómata a otro conservando la integridad de las transiciones.
+	 *
+	 * @param {Automaton} automaton {es el automata que se va a unir con this}
+	 * @memberof Automaton
+	 */
+	public readonly unirAFN = (automaton: Automaton) =>{
+		let stateIni = new State(this.states.size + automaton.states.size);
+		let stateEnd = new State(this.states.size + automaton.states.size + 1); 
+
+		const finalTransition = new Transition(
+			Automaton.epsilon,
+			stateEnd
+		);
+		const initialTransitionAFN_1 = new Transition(
+			Automaton.epsilon,
+			this.startState
+		);
+		const initialTransitionAFN_2 = new Transition(
+			Automaton.epsilon,
+			automaton.startState
+		);
+		// Se agrega la transición final nueva a todos los estados finales del AFN this.
+		[...this.states]
+			.filter(state => this.acceptStates.has(state))
+			.forEach(acceptState => {
+				acceptState.addTransition(finalTransition);
+			});
+		// Se agrega la transición final nueva a todos los estados finales del AFN que recibimos como parametro.
+		[...automaton.states]
+			.filter(state => automaton.acceptStates.has(state))
+			.forEach(acceptState => {
+				acceptState.addTransition(finalTransition);
+			});
+		// Se limpia el conjunto de estados finales.
+		this.acceptStates.clear();
+		// Y se reemplaza solo por el nuevo estado final.
+		this.acceptStates.add(stateEnd);
+		
+		//Se agregan los estados del AFN2 al AFN1
+		for(let i = 0; i < automaton.states.size; i++){
+			this.states.add([...automaton.states][i]);
+		}
+		//Se agregan los simbolos del AFN2 al AFN1
+		for(let i = 0; i < automaton.sigma.size; i++){
+			this.sigma.add([...automaton.sigma][i]);
+		}
+		// Se agregan los estados nuevos al conjunto de estados.
+		this.states.add(stateIni);
+		this.states.add(stateEnd);
+		//Se reordenan los id para evitar duplicidades
+		for (let i = 0; i < this.states.size; i++) {
+			[...this.states][i].id = i; // "0", "1", "2", ... "n"
+		 }
+		// Se reemplaza el nuevo estado inicial.
+		this.startState = stateIni;
+		// Se le agregan las transiciones al inicio antiguo del autómata y al final del mismo.
+		this.startState.addTransition(initialTransitionAFN_1);
+		this.startState.addTransition(initialTransitionAFN_2);
+		// Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
+		
 	};
 
 	/**
