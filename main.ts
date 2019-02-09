@@ -1,10 +1,12 @@
-import {Automaton} from "./ts/Automaton/Automaton";
-import {State} from "./ts/State/State";
-import Misc from "./ts/Misc/Misc";
+import Automaton from "./ts/Automaton/Automaton";
 const automaton = new Automaton();
+const automaton2 = new Automaton();
 automaton.createBasic("a", "z");
 automaton.makeKleene();
-console.log(Misc.epsilonClosure(new Set<State>([automaton.getState(0)])));
+automaton2.createBasic("A", "X");
+automaton.unirAFN(automaton2);
 const containter = document.getElementById("automaton-table");
 const str = automaton.toHTMLTable();
+
 containter.innerHTML = str;
+
