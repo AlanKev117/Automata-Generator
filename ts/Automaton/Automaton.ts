@@ -1,5 +1,5 @@
-import State from "../State/State";
-import Transition from "../Transition/Transition";
+import {State} from "../State/State";
+import {Transition} from "../Transition/Transition";
 import "../../css/table.css";
 
 class Automaton {
@@ -332,4 +332,4 @@ class Automaton {
 	};
 }
 
-export default Automaton;
+export {Automaton};
