@@ -167,7 +167,7 @@ class Automaton {
      *
      * @memberof Automaton
      */
-    makeKleene = () => {
+    public readonly makeKleene = () => {
         // Se hace la cerradura positiva del autómata
         this.makePositive();
         const transitionToEnd = new Transition(
@@ -177,6 +177,16 @@ class Automaton {
         // Se agrega la transición épsilon del inicio al fin del autómata.
         this.startState.addTransition(transitionToEnd);
     };
+
+    /**
+     * Getter para el alfabeto del autómata.
+     *
+     * @memberof Automaton
+     * @returns {Set<string>}
+     */
+    public readonly getSigma = () => {
+        return this.sigma;
+    }
 
     /**
      * Obtiene un estado mediante el identificador suministrado. Se puede indicar si es un estado terminal.

@@ -466,6 +466,17 @@ function Automaton() {
     _this.startState.addTransition(transitionToEnd);
   };
   /**
+   * Getter para el alfabeto del autómata.
+   *
+   * @memberof Automaton
+   * @returns {Set<string>}
+   */
+
+
+  this.getSigma = function () {
+    return _this.sigma;
+  };
+  /**
    * Obtiene un estado mediante el identificador suministrado. Se puede indicar si es un estado terminal.
    *
    * @private
