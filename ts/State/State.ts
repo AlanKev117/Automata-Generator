@@ -1,6 +1,6 @@
 import {Transition} from "../Transition/Transition";
 class State {
-	public readonly id: number;
+	public id: number;
 	public readonly transitions: Set<Transition>;
 
 	/**
