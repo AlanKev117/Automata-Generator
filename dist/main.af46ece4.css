@@ -2,6 +2,11 @@
 	box-sizing: border-box;
 	font-family: "segoe ui light";
 }
+
+body {
+	margin: 0;
+}
+
 h1 {
 	text-align: center;
 }
