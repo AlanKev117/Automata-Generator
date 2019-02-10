@@ -1,5 +1,5 @@
-import {State} from "../State/State";
-import {Transition} from "../Transition/Transition";
+import { State } from "../State/State";
+import { Transition } from "../Transition/Transition";
 import "../../css/table.css";
 
 class Automaton {
@@ -62,7 +62,7 @@ class Automaton {
 	 *
 	 * @memberof Automaton
 	 */
-	constructor() {
+	constructor(name: string) {
 		this.sigma = new Set<string>();
 		this.sigma.clear();
 		this.states = new Set<State>();
@@ -70,8 +70,13 @@ class Automaton {
 		this.startState = null;
 		this.acceptStates = new Set<State>();
 		this.acceptStates.clear();
-		console.log("Automata vacío creado.");
+		this.name = name;
+		alert(`Autómata ${name} creado exitosamente.`);
 	}
+
+	public readonly getName = () => {
+		return this.name;
+	};
 
 	/**
 	 * Crea un autómata básico de una transición con el símbolo symbol.
@@ -82,11 +87,10 @@ class Automaton {
 	 */
 	public readonly createBasic = (symbol: string, limitSymbol?: string) => {
 		let state0, state1;
-		if(this.states.size == 0){
+		if (this.states.size == 0) {
 			state0 = new State(0);
 			state1 = new State(1);
-		}
-		else{
+		} else {
 			state0 = new State(this.states.size);
 			state1 = new State(this.states.size + 1);
 		}
@@ -119,14 +123,11 @@ class Automaton {
 	 * @param {Automaton} automaton {es el automata que se va a unir con this}
 	 * @memberof Automaton
 	 */
-	public readonly unirAFN = (automaton: Automaton) =>{
+	public readonly unirAFN = (automaton: Automaton) => {
 		let stateIni = new State(this.states.size + automaton.states.size);
-		let stateEnd = new State(this.states.size + automaton.states.size + 1); 
+		let stateEnd = new State(this.states.size + automaton.states.size + 1);
 
-		const finalTransition = new Transition(
-			Automaton.epsilon,
-			stateEnd
-		);
+		const finalTransition = new Transition(Automaton.epsilon, stateEnd);
 		const initialTransitionAFN_1 = new Transition(
 			Automaton.epsilon,
 			this.startState
@@ -151,13 +152,13 @@ class Automaton {
 		this.acceptStates.clear();
 		// Y se reemplaza solo por el nuevo estado final.
 		this.acceptStates.add(stateEnd);
-		
+
 		//Se agregan los estados del AFN2 al AFN1
-		for(let i = 0; i < automaton.states.size; i++){
+		for (let i = 0; i < automaton.states.size; i++) {
 			this.states.add([...automaton.states][i]);
 		}
 		//Se agregan los simbolos del AFN2 al AFN1
-		for(let i = 0; i < automaton.sigma.size; i++){
+		for (let i = 0; i < automaton.sigma.size; i++) {
 			this.sigma.add([...automaton.sigma][i]);
 		}
 		// Se agregan los estados nuevos al conjunto de estados.
@@ -166,14 +167,13 @@ class Automaton {
 		//Se reordenan los id para evitar duplicidades
 		for (let i = 0; i < this.states.size; i++) {
 			[...this.states][i].id = i; // "0", "1", "2", ... "n"
-		 }
+		}
 		// Se reemplaza el nuevo estado inicial.
 		this.startState = stateIni;
 		// Se le agregan las transiciones al inicio antiguo del autómata y al final del mismo.
 		this.startState.addTransition(initialTransitionAFN_1);
 		this.startState.addTransition(initialTransitionAFN_2);
 		// Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
-		
 	};
 
 	/**
@@ -259,7 +259,6 @@ class Automaton {
 		this.states.add(nextFinalState);
 	};
 
-
 	/**
 	 * Crea la cerradura de Kleene del autómata.
 	 *
@@ -341,4 +340,4 @@ class Automaton {
 	};
 }
 
-export {Automaton};
+export { Automaton };
