@@ -4,6 +4,15 @@ import "../../css/table.css";
 
 class Automaton {
 	/**
+	 * Nombre que se le asignará al autómata cuando se cree.
+	 *
+	 * @private
+	 * @type {string}
+	 * @memberof Automaton
+	 */
+	private name: string;
+
+	/**
 	 * Alfabeto del autómata.
 	 *
 	 * @private

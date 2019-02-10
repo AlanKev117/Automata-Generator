@@ -14,14 +14,19 @@ main {
 
 h1 {
 	text-align: center;
-	margin: 10px 0px;
+}
+
+h1, h2, h3 {
+	margin: 6px 0;
 }
 
 #annotations {
 	margin-bottom: 5px;
 }
+
 .annotation {
-	margin: 3px;
+	display: inline-block;
+	margin: 7px;
 }
 
 .annotation div {
@@ -30,18 +35,18 @@ h1 {
 }
 
 .annotation .annotation__title {
-	font-size: 20px;
+	font-size: 18px;
 }
 
 .annotation .green-identifier {
 	background: #64fdb5;
-	padding: 10px;
+	padding: 7px;
 }
 .annotation .blue-identifier {
 	background: #72f6ff;
-	padding: 10px;
+	padding: 7px;
 }
 .annotation .orange-identifier {
 	background: #fda964;
-	padding: 10px;
+	padding: 7px;
 }
