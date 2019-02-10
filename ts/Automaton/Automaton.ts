@@ -264,7 +264,7 @@ class Automaton {
 	 *
 	 * @memberof Automaton
 	 */
-	makeKleene = () => {
+	public readonly makeKleene = () => {
 		// Se hace la cerradura positiva del autómata
 		this.makePositive();
 		const transitionToEnd = new Transition(
@@ -284,7 +284,7 @@ class Automaton {
 	 * @returns {State} {estado que coincide con la consulta}
 	 * @memberof Automaton
 	 */
-	private readonly getState = (id: number, final?: boolean) => {
+	public readonly getState = (id: number, final?: boolean) => {
 		if (final) {
 			return [...this.acceptStates].filter(state => state.id === id)[0];
 		}

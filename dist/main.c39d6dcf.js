@@ -632,7 +632,9 @@ document.querySelector("#tools").style.display = "none";
 document.querySelector("#target").style.display = "none"; // Listener para crear autómatas simples
 
 document.querySelector(".btn-creator").addEventListener("click", function () {
-  var name = document.querySelector("#name").value;
+  var name_element = document.querySelector("#name");
+  var symbol_element = document.querySelector("#symbol");
+  var name = name_element.value;
 
   if (name.length === 0) {
     alert("Debe ingresar un nombre para el autómata.");
@@ -644,9 +646,8 @@ document.querySelector(".btn-creator").addEventListener("click", function () {
     return;
   }
 
-  var symbol = document.querySelector("#symbol").value;
+  var symbol = symbol_element.value;
   var symbols = symbol.split("-");
-  console.log(symbols);
 
   switch (symbols.length) {
     case 1:
@@ -681,12 +682,19 @@ document.querySelector(".btn-creator").addEventListener("click", function () {
       }
   }
 
-  var option = document.createElement("option");
-  option.text = name;
-  option.value = name;
+  var option_one = document.createElement("option");
+  option_one.text = name;
+  option_one.value = name;
+  var option_two = document.createElement("option");
+  option_two.text = name;
+  option_two.value = name;
   var automaton_select = document.querySelector("#automaton");
-  automaton_select.appendChild(option);
-  console.log(automata);
+  var target_select = document.querySelector("#target-automaton");
+  automaton_select.appendChild(option_one);
+  automaton_select.value = name;
+  target_select.appendChild(option_two);
+  name_element.value = "";
+  symbol_element.value = "";
 }); // Listeners para mostrar tabla de autómata según se seleccione.
 
 document.querySelector("#automaton").addEventListener("DOMNodeInserted", function (event) {
@@ -706,9 +714,43 @@ document.querySelector("#automaton").addEventListener("change", function (event)
   document.querySelector("#automaton-table").innerHTML = automata.find(function (automaton) {
     return automaton.getName() === name;
   }).toHTMLTable();
-}); // Listeners para realizar las operaciones con algún autómata seleccionado.
+}); // Listeners para controlar comportamiento de sección "target".
 
-document.querySelector("#operation").addEventListener("change", function (event) {});
+document.querySelector("#operation").addEventListener("change", function (event) {
+  var operation = event.target.value;
+
+  if (operation === "unirAFN" || operation === "concatenarAFN") {
+    document.querySelector("#target").style.display = "inline-block";
+    document.querySelector(".btn-execute__one").style.display = "none";
+  } else {
+    document.querySelector("#target").style.display = "none";
+    document.querySelector(".btn-execute__one").style.display = "initial";
+  }
+}); // Listeners para realizar las operaciones unarias.
+
+document.querySelector(".btn-execute__one").addEventListener("click", function () {
+  var operation = document.querySelector("#operation").value;
+  var automaton = automata.find(function (a) {
+    var name = document.querySelector("#automaton").value;
+    return a.getName() === name;
+  });
+  automaton[operation]();
+  document.querySelector("#automaton-table").innerHTML = automaton.toHTMLTable();
+}); // Listeners para realizar las operaciones binarias.
+
+document.querySelector(".btn-execute__two").addEventListener("click", function () {
+  var operation = document.querySelector("#operation").value;
+  var a1 = automata.find(function (a) {
+    var name = document.querySelector("#automaton").value;
+    return a.getName() === name;
+  });
+  var a2 = automata.find(function (a) {
+    var name = document.querySelector("#target-automaton").value;
+    return a.getName() === name;
+  });
+  a1[operation](a2);
+  document.querySelector("#automaton-table").innerHTML = a1.toHTMLTable();
+});
 },{"./ts/Automaton/Automaton":"ts/Automaton/Automaton.ts"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -736,7 +778,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60653" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55051" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

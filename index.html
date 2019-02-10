@@ -11,8 +11,6 @@
 			<div id="brand">Automatón</div>
 			<nav id="main-nav">
 				<ul>
-					<li><a href="/create">Crear</a></li>
-					<li><a href="/afn-to-afd">AFN a AFD</a></li>
 					<li><a href="/syntax">Analizador</a></li>
 				</ul>
 			</nav>
@@ -44,11 +42,11 @@
 				<div id="tools">
 					<label for="operation">Operación</label>
 					<select name="operation" id="operation">
-						<option value="kleene">Hacer Kleene</option>
-						<option value="plus">Hacer positivo</option>
-						<option value="option">Hacer opcional</option>
-						<option value="concat">Concatenar</option>
-						<option value="join">Unir</option>
+						<option value="makeKleene">Hacer Kleene</option>
+						<option value="makePositive">Hacer positivo</option>
+						<option value="makeOptional">Hacer opcional</option>
+						<option value="concatenarAFN">Concatenar</option>
+						<option value="unirAFN">Unir</option>
 						<option value="convert">Convertir</option>
 					</select>
 					<button class="btn-execute__one">Ejecutar</button>
@@ -59,7 +57,7 @@
 						name="target-automaton"
 						id="target-automaton"
 					></select>
-					<button class="btn-execute_two">Ejecutar</button>
+					<button class="btn-execute__two">Ejecutar</button>
 				</div>
 			</div>
 			<h2>Código de colores</h2>
