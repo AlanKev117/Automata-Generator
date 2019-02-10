@@ -420,33 +420,37 @@ function Automaton(name) {
 
   this.concatenarAFN = function (automaton) {
     //le asignamos el nuevo nombre a nuestro automata
-    var stateEnd = new State_1.State(_this.states.size + automaton.states.size + 1);
-    var initialTransition = new Transition_1.Transition(Automaton.epsilon, automaton.startState); //automaton tiene un estado inicial el cual vamos a unir con los estados finales de this
-    //mediante epsilon y se borra el estado de aceptacio
+    if (_this.name == automaton.name) {
+      alert("Primero crea el automata que quieres concatenar");
+    } else {
+      var stateEnd = new State_1.State(_this.states.size + automaton.states.size + 1);
+      var initialTransition = new Transition_1.Transition(Automaton.epsilon, automaton.startState); //automaton tiene un estado inicial el cual vamos a unir con los estados finales de this
+      //mediante epsilon y se borra el estado de aceptacio
 
-    _toConsumableArray(_this.states).filter(function (state) {
-      return _this.acceptStates.has(state);
-    }).forEach(function (acceptState) {
-      acceptState.addTransition(initialTransition);
-    }); //se limpia el conjunto de estados finales de this
-
-
-    _this.acceptStates.clear();
-
-    _this.acceptStates = automaton.acceptStates; //Se agregan los estados del AFN2 al AFN1--
-
-    for (var i = 0; i < automaton.states.size; i++) {
-      _this.states.add(_toConsumableArray(automaton.states)[i]);
-    } //Se agregan los simbolos del AFN2 al AFN1---
+      _toConsumableArray(_this.states).filter(function (state) {
+        return _this.acceptStates.has(state);
+      }).forEach(function (acceptState) {
+        acceptState.addTransition(initialTransition);
+      }); //se limpia el conjunto de estados finales de this
 
 
-    for (var _i3 = 0; _i3 < automaton.sigma.size; _i3++) {
-      _this.sigma.add(_toConsumableArray(automaton.sigma)[_i3]);
-    } //Se reordenan los id para evitar duplicidades---
+      _this.acceptStates.clear();
+
+      _this.acceptStates = automaton.acceptStates; //Se agregan los estados del AFN2 al AFN1--
+
+      for (var i = 0; i < automaton.states.size; i++) {
+        _this.states.add(_toConsumableArray(automaton.states)[i]);
+      } //Se agregan los simbolos del AFN2 al AFN1---
 
 
-    for (var _i4 = 0; _i4 < _this.states.size; _i4++) {
-      _toConsumableArray(_this.states)[_i4].id = _i4; // "0", "1", "2", ... "n"
+      for (var _i3 = 0; _i3 < automaton.sigma.size; _i3++) {
+        _this.sigma.add(_toConsumableArray(automaton.sigma)[_i3]);
+      } //Se reordenan los id para evitar duplicidades---
+
+
+      for (var _i4 = 0; _i4 < _this.states.size; _i4++) {
+        _toConsumableArray(_this.states)[_i4].id = _i4; // "0", "1", "2", ... "n"
+      }
     }
   };
   /**
@@ -810,7 +814,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56927" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58259" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

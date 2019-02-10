@@ -179,15 +179,21 @@ class Automaton {
 
 	public readonly concatenarAFN = (automaton:Automaton) => {
 		//le asignamos el nuevo nombre a nuestro automata
-		let stateEnd = new State(this.states.size + automaton.states.size + 1);
+		if (this.name == automaton.name){
+			alert("Primero crea el automata que quieres concatenar");
+			
+		}else
+		{
 
-		const initialTransition = new Transition(Automaton.epsilon, automaton.startState);
-
-		//automaton tiene un estado inicial el cual vamos a unir con los estados finales de this
-		//mediante epsilon y se borra el estado de aceptacio
-		[...this.states]
-		.filter(state => this.acceptStates.has(state))
-		.forEach(acceptState => {
+			let stateEnd = new State(this.states.size + automaton.states.size + 1);
+			
+			const initialTransition = new Transition(Automaton.epsilon, automaton.startState);
+			
+			//automaton tiene un estado inicial el cual vamos a unir con los estados finales de this
+			//mediante epsilon y se borra el estado de aceptacio
+			[...this.states]
+			.filter(state => this.acceptStates.has(state))
+			.forEach(acceptState => {
 			acceptState.addTransition(initialTransition);
 		});
 		//se limpia el conjunto de estados finales de this
@@ -201,15 +207,13 @@ class Automaton {
 		for (let i = 0; i < automaton.sigma.size; i++) {
 			this.sigma.add([...automaton.sigma][i]);
 		}
-
+		
 		//Se reordenan los id para evitar duplicidades---
 		for (let i = 0; i < this.states.size; i++) {
 			[...this.states][i].id = i; // "0", "1", "2", ... "n"
 		}
+	}
 	};
-	
-
-
 	/**
 	 * Crea la cerradura opcional del autómata.
 	 *
