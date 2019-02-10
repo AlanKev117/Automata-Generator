@@ -206,7 +206,7 @@ var Transition = function Transition(symbol, targetState, limitSymbol) {
 };
 
 exports.Transition = Transition;
-},{}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{}],"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -238,7 +238,7 @@ function getBaseURL(url) {
 
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
-},{}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+},{}],"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -273,12 +273,12 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"css/table.css":[function(require,module,exports) {
+},{"./bundle-url":"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"css/table.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"ts/Automaton/Automaton.ts":[function(require,module,exports) {
+},{"_css_loader":"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"ts/Automaton/Automaton.ts":[function(require,module,exports) {
 "use strict";
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -416,6 +416,38 @@ function Automaton(name) {
 
     _this.startState.addTransition(initialTransitionAFN_2); // Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
 
+  };
+
+  this.concatenarAFN = function (automaton) {
+    //le asignamos el nuevo nombre a nuestro automata
+    var stateEnd = new State_1.State(_this.states.size + automaton.states.size + 1);
+    var initialTransition = new Transition_1.Transition(Automaton.epsilon, automaton.startState); //automaton tiene un estado inicial el cual vamos a unir con los estados finales de this
+    //mediante epsilon y se borra el estado de aceptacio
+
+    _toConsumableArray(_this.states).filter(function (state) {
+      return _this.acceptStates.has(state);
+    }).forEach(function (acceptState) {
+      acceptState.addTransition(initialTransition);
+    }); //se limpia el conjunto de estados finales de this
+
+
+    _this.acceptStates.clear();
+
+    _this.acceptStates = automaton.acceptStates; //Se agregan los estados del AFN2 al AFN1--
+
+    for (var i = 0; i < automaton.states.size; i++) {
+      _this.states.add(_toConsumableArray(automaton.states)[i]);
+    } //Se agregan los simbolos del AFN2 al AFN1---
+
+
+    for (var _i3 = 0; _i3 < automaton.sigma.size; _i3++) {
+      _this.sigma.add(_toConsumableArray(automaton.sigma)[_i3]);
+    } //Se reordenan los id para evitar duplicidades---
+
+
+    for (var _i4 = 0; _i4 < _this.states.size; _i4++) {
+      _toConsumableArray(_this.states)[_i4].id = _i4; // "0", "1", "2", ... "n"
+    }
   };
   /**
    * Crea la cerradura opcional del autómata.
@@ -751,7 +783,7 @@ document.querySelector(".btn-execute__two").addEventListener("click", function (
   a1[operation](a2);
   document.querySelector("#automaton-table").innerHTML = a1.toHTMLTable();
 });
-},{"./ts/Automaton/Automaton":"ts/Automaton/Automaton.ts"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ts/Automaton/Automaton":"ts/Automaton/Automaton.ts"}],"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -778,7 +810,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55051" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56927" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
@@ -920,5 +952,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main.ts"], null)
+},{}]},{},["../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main.ts"], null)
 //# sourceMappingURL=/main.c39d6dcf.map

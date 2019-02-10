@@ -179,7 +179,6 @@ class Automaton {
 
 	public readonly concatenarAFN = (automaton:Automaton) => {
 		//le asignamos el nuevo nombre a nuestro automata
-		this.name = (this.name + " ° " + automaton.name);
 		let stateEnd = new State(this.states.size + automaton.states.size + 1);
 
 		const initialTransition = new Transition(Automaton.epsilon, automaton.startState);
@@ -193,7 +192,7 @@ class Automaton {
 		});
 		//se limpia el conjunto de estados finales de this
 		this.acceptStates.clear();
-
+		this.acceptStates = automaton.acceptStates;
 		//Se agregan los estados del AFN2 al AFN1--
 		for (let i = 0; i < automaton.states.size; i++) {
 			this.states.add([...automaton.states][i]);
