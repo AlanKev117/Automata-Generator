@@ -1,4 +1,4 @@
-import Transition from "../Transition/Transition";
+import {Transition} from "../Transition/Transition";
 class State {
 	public id: number;
 	public readonly transitions: Set<Transition>;
@@ -40,4 +40,4 @@ class State {
 	};
 }
 
-export default State;
+export {State};

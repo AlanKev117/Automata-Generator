@@ -1,4 +1,4 @@
-import State from "../State/State";
+import {State} from "../State/State";
 
 class Transition {
 	public symbol: string;
@@ -30,4 +30,4 @@ class Transition {
 		return this.limitSymbol ? true : false;
 	}
 }
-export default Transition;
+export {Transition};
