@@ -30,8 +30,22 @@ namespace Misc {
      * @returns {Set<State>}
      */
     export const move = (states: Set<State>, symbol: string) => {
-        
+        const result = [...states].map( state => simpleMove(state, symbol));
+        return result.reduce((union, set) => {
+            set.forEach(state => {
+                union.add(state);
+            });
+            return union;
+        }, new Set<State>());
     };
+
+    const simpleMove = (state: State, symbol: string) => {
+        return new Set<State>( 
+            [...state.getTransitions().values()]
+                .filter(transition => transition.getSymbol() === symbol)
+                .map(transition => transition.getTargetState())
+        );
+    }
 
 
      /**
