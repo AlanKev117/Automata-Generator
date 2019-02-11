@@ -132,12 +132,25 @@ function State(id) {
 
   _classCallCheck(this, State);
 
+  this.getId = function () {
+    return _this.id;
+  };
+
+  this.getTransitions = function () {
+    return _this.transitions;
+  };
+
+  this.setId = function (id) {
+    _this.id = id;
+  };
   /**
    * Agrega una transición al conjunto de transiciones del estado.
    *
    * @param {Transition} t {transición a ser agregada}
    * @memberof State
    */
+
+
   this.addTransition = function (t) {
     _this.transitions.add(t);
   };
@@ -152,9 +165,9 @@ function State(id) {
   this.getTransitionsBySymbol = function (symbol) {
     return _toConsumableArray(_this.transitions).filter(function (transition) {
       if (transition.hasLimitSymbol()) {
-        return symbol.length === 1 ? transition.symbol <= symbol && symbol <= transition.limitSymbol : false;
+        return symbol.length === 1 ? transition.getSymbol() <= symbol && symbol <= transition.getLimitSymbol() : false;
       } else {
-        return transition.symbol === symbol;
+        return transition.getSymbol() === symbol;
       }
     });
   };
@@ -178,14 +191,22 @@ var Transition = function Transition(symbol, targetState, limitSymbol) {
 
   _classCallCheck(this, Transition);
 
+  this.getSymbol = function () {
+    return _this.symbol;
+  };
+
+  this.getLimitSymbol = function () {
+    return _this.limitSymbol;
+  };
+
+  this.getTargetState = function () {
+    return _this.targetState;
+  };
+
   this.hasLimitSymbol = function () {
     return _this.limitSymbol ? true : false;
-  }; // Se sgrega el símbolo principal de la transición.
+  }; // Se establece el símbolo límite (para rangos), si existe.
 
-
-  this.symbol = symbol; // Se establece el estado objetivo.
-
-  this.targetState = targetState; // Se establece el símbolo límite (para rangos), si existe.
 
   if (limitSymbol) {
     if (symbol.length != 1 || limitSymbol.length != 1) {
@@ -193,7 +214,7 @@ var Transition = function Transition(symbol, targetState, limitSymbol) {
       return null;
     }
 
-    if (limitSymbol <= symbol) {
+    if (limitSymbol.charCodeAt(0) <= symbol.charCodeAt(0)) {
       console.log("No es posible crear la transición con ese rango.");
       return null;
     }
@@ -201,83 +222,16 @@ var Transition = function Transition(symbol, targetState, limitSymbol) {
     this.limitSymbol = limitSymbol;
   } else {
     this.limitSymbol = null;
-  }
+  } // Se agrega el símbolo principal de la transición.
+
+
+  this.symbol = symbol; // Se establece el estado objetivo.
+
+  this.targetState = targetState;
 };
 
 exports.Transition = Transition;
-},{}],"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-
-  return bundleURL;
-}
-
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
-
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
-
-  return '/';
-}
-
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
-  };
-
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-
-    cssTimeout = null;
-  }, 50);
-}
-
-module.exports = reloadCSS;
-},{"./bundle-url":"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"css/table.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"ts/Automaton/Automaton.ts":[function(require,module,exports) {
+},{}],"ts/Misc/Misc.ts":[function(require,module,exports) {
 "use strict";
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -288,7 +242,108 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Misc;
+
+(function (Misc) {
+  Misc.EPSILON = "\u03B5";
+  /**
+   * Función Ir_a(). Aplica la función Mover() con los parámetros
+   * "states" que es un conjunto de estados y "symbol" que es un
+   * símbolo. Al resultado se le
+   *
+   *
+   * @param {Set<State>} states
+   * @param {string} symbol
+   * @returns {Set<State>}
+   */
+
+  Misc.goTo = function (states, symbol) {};
+  /**
+   * Función Mover(). Obtiene el conjunto de estados al que se
+   * puede acceder desde otro conjunto de estados "states"
+   * estrictamente mediante transiciones con un símbolo "symbol"
+   * dado.
+   *
+   * @param {Set<State>} setOfStates
+   * @param {string} symbol
+   * @returns {Set<State>}
+   */
+
+
+  Misc.move = function (states, symbol) {};
+  /**
+  * Obtiene la cerradura épsilon de un conjunto de estados.
+  *
+  * @param {Set<State>} states
+  * @returns {Set<State>}
+  */
+
+
+  Misc.epsilonClosure = function (states) {
+    var epsilonSets = _toConsumableArray(states).map(simpleEpsilonClosure);
+
+    return epsilonSets.reduce(function (union, set) {
+      set.forEach(function (state) {
+        union.add(state);
+      });
+      return union;
+    }, new Set());
+  };
+  /**
+   * Obtiene la cerradura épsilon de un estado.
+   *
+   * @param {State} state
+   * @returns {Set<State>}
+   */
+
+
+  var simpleEpsilonClosure = function simpleEpsilonClosure(state) {
+    return new Set(_toConsumableArray(state.getTransitions().values()).filter(function (transition) {
+      return transition.getSymbol() === Misc.EPSILON;
+    }).map(function (transition) {
+      return transition.getTargetState();
+    }));
+  };
+  /**
+   * Para el análisis léxico, tomamos el último estado de aceptación
+   * con el que se obtuvo un token y se guarda el índice hasta que, con
+   * caracteres siguientes, no se pueda hacer otra transición.
+   *
+   * En ese momento, se corta la cadena hasta el índice con el que se tuvo el
+   * último token y se empieza el proceso de nuevo.
+   *
+   *
+   * LIBRO: Compiler design in C.
+   */
+
+})(Misc || (Misc = {}));
+
+exports.default = Misc;
+},{}],"ts/Automaton/Automaton.ts":[function(require,module,exports) {
+"use strict";
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -298,7 +353,7 @@ var State_1 = require("../State/State");
 
 var Transition_1 = require("../Transition/Transition");
 
-require("../../css/table.css");
+var Misc_1 = __importDefault(require("../Misc/Misc"));
 
 var Automaton =
 /**
@@ -306,11 +361,30 @@ var Automaton =
  *
  * @memberof Automaton
  */
-function Automaton() {
+function Automaton(name) {
   var _this = this;
 
   _classCallCheck(this, Automaton);
 
+  this.getName = function () {
+    return _this.name;
+  };
+
+  this.getSigma = function () {
+    return _this.sigma;
+  };
+
+  this.getStates = function () {
+    return _this.states;
+  };
+
+  this.getStartState = function () {
+    return _this.startState;
+  };
+
+  this.getAcceptStates = function () {
+    return _this.acceptStates;
+  };
   /**
    * Crea un autómata básico de una transición con el símbolo symbol.
    *
@@ -318,6 +392,8 @@ function Automaton() {
    * @param {string} [limitSymbol] {es un símbolo opcional que delimita el rango [symbol, limitSymbol]}
    * @memberof Automaton
    */
+
+
   this.createBasic = function (symbol, limitSymbol) {
     var state0, state1;
 
@@ -358,11 +434,13 @@ function Automaton() {
 
 
   this.unirAFN = function (automaton) {
-    var stateIni = new State_1.State(_this.states.size + automaton.states.size);
-    var stateEnd = new State_1.State(_this.states.size + automaton.states.size + 1);
-    var finalTransition = new Transition_1.Transition(Automaton.epsilon, stateEnd);
-    var initialTransitionAFN_1 = new Transition_1.Transition(Automaton.epsilon, _this.startState);
-    var initialTransitionAFN_2 = new Transition_1.Transition(Automaton.epsilon, automaton.startState); // Se agrega la transición final nueva a todos los estados finales del AFN this.
+    var automaton_copy = _objectSpread({}, automaton);
+
+    var stateIni = new State_1.State(_this.states.size + automaton_copy.states.size);
+    var stateEnd = new State_1.State(_this.states.size + automaton_copy.states.size + 1);
+    var finalTransition = new Transition_1.Transition(Misc_1.default.EPSILON, stateEnd);
+    var initialTransitionAFN_1 = new Transition_1.Transition(Misc_1.default.EPSILON, _this.startState);
+    var initialTransitionAFN_2 = new Transition_1.Transition(Misc_1.default.EPSILON, automaton_copy.startState); // Se agrega la transición final nueva a todos los estados finales del AFN this.
 
     _toConsumableArray(_this.states).filter(function (state) {
       return _this.acceptStates.has(state);
@@ -371,8 +449,8 @@ function Automaton() {
     }); // Se agrega la transición final nueva a todos los estados finales del AFN que recibimos como parametro.
 
 
-    _toConsumableArray(automaton.states).filter(function (state) {
-      return automaton.acceptStates.has(state);
+    _toConsumableArray(automaton_copy.states).filter(function (state) {
+      return automaton_copy.acceptStates.has(state);
     }).forEach(function (acceptState) {
       acceptState.addTransition(finalTransition);
     }); // Se limpia el conjunto de estados finales.
@@ -384,13 +462,13 @@ function Automaton() {
     _this.acceptStates.add(stateEnd); //Se agregan los estados del AFN2 al AFN1
 
 
-    for (var i = 0; i < automaton.states.size; i++) {
-      _this.states.add(_toConsumableArray(automaton.states)[i]);
+    for (var i = 0; i < automaton_copy.states.size; i++) {
+      _this.states.add(_toConsumableArray(automaton_copy.states)[i]);
     } //Se agregan los simbolos del AFN2 al AFN1
 
 
-    for (var _i = 0; _i < automaton.sigma.size; _i++) {
-      _this.sigma.add(_toConsumableArray(automaton.sigma)[_i]);
+    for (var _i = 0; _i < automaton_copy.sigma.size; _i++) {
+      _this.sigma.add(_toConsumableArray(automaton_copy.sigma)[_i]);
     } // Se agregan los estados nuevos al conjunto de estados.
 
 
@@ -400,7 +478,8 @@ function Automaton() {
 
 
     for (var _i2 = 0; _i2 < _this.states.size; _i2++) {
-      _toConsumableArray(_this.states)[_i2].id = _i2; // "0", "1", "2", ... "n"
+      _toConsumableArray(_this.states)[_i2].setId(_i2); // "0", "1", "2", ... "n"
+
     } // Se reemplaza el nuevo estado inicial.
 
 
@@ -410,6 +489,39 @@ function Automaton() {
 
     _this.startState.addTransition(initialTransitionAFN_2); // Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
 
+  };
+
+  this.concatenarAFN = function (automaton) {
+    //le asignamos el nuevo nombre a nuestro automata
+    var stateEnd = new State_1.State(_this.states.size + automaton.states.size + 1);
+    var initialTransition = new Transition_1.Transition(Misc_1.default.EPSILON, automaton.startState); //automaton tiene un estado inicial el cual vamos a unir con los estados finales de this
+    //mediante epsilon y se borra el estado de aceptacio
+
+    _toConsumableArray(_this.states).filter(function (state) {
+      return _this.acceptStates.has(state);
+    }).forEach(function (acceptState) {
+      acceptState.addTransition(initialTransition);
+    }); //se limpia el conjunto de estados finales de this
+
+
+    _this.acceptStates.clear();
+
+    _this.acceptStates = automaton.acceptStates; //Se agregan los estados del AFN2 al AFN1--
+
+    for (var i = 0; i < automaton.states.size; i++) {
+      _this.states.add(_toConsumableArray(automaton.states)[i]);
+    } //Se agregan los simbolos del AFN2 al AFN1---
+
+
+    for (var _i3 = 0; _i3 < automaton.sigma.size; _i3++) {
+      _this.sigma.add(_toConsumableArray(automaton.sigma)[_i3]);
+    } //Se reordenan los id para evitar duplicidades---
+
+
+    for (var _i4 = 0; _i4 < _this.states.size; _i4++) {
+      _toConsumableArray(_this.states)[_i4].setId(_i4); // "0", "1", "2", ... "n"
+
+    }
   };
   /**
    * Crea la cerradura opcional del autómata.
@@ -424,9 +536,9 @@ function Automaton() {
 
     var nextFinalState = new State_1.State(_this.states.size + 1); // Se crea transición épsilon que va al estado final.
 
-    var finalTransition = new Transition_1.Transition(Automaton.epsilon, nextFinalState); // Se crea transición épsilon que partirá del nuevo estado inicial.
+    var finalTransition = new Transition_1.Transition(Misc_1.default.EPSILON, nextFinalState); // Se crea transición épsilon que partirá del nuevo estado inicial.
 
-    var firstTransition = new Transition_1.Transition(Automaton.epsilon, _this.startState); // Se agrega la transición final nueva a todos los estados finales.
+    var firstTransition = new Transition_1.Transition(Misc_1.default.EPSILON, _this.startState); // Se agrega la transición final nueva a todos los estados finales.
 
     _toConsumableArray(_this.states).filter(function (state) {
       return _this.acceptStates.has(state);
@@ -471,9 +583,9 @@ function Automaton() {
 
     var nextFinalState = new State_1.State(_this.states.size + 1); // Se crea transición épsilon que va al estado final.
 
-    var finalTransition = new Transition_1.Transition(Automaton.epsilon, nextFinalState); // Se crea transición épsilon que va hacia el viejo estado inicial.
+    var finalTransition = new Transition_1.Transition(Misc_1.default.EPSILON, nextFinalState); // Se crea transición épsilon que va hacia el viejo estado inicial.
 
-    var toPrevStartTransition = new Transition_1.Transition(Automaton.epsilon, _this.startState); // Agregamos transiciones a los respectivos estados.
+    var toPrevStartTransition = new Transition_1.Transition(Misc_1.default.EPSILON, _this.startState); // Agregamos transiciones a los respectivos estados.
 
     /* const prevFinalState = [...this.states].filter(state =>
         this.acceptStates.has(state)
@@ -506,35 +618,87 @@ function Automaton() {
     // Se hace la cerradura positiva del autómata
     _this.makePositive();
 
-    var transitionToEnd = new Transition_1.Transition(Automaton.epsilon, _toConsumableArray(_this.acceptStates)[0]); // Se agrega la transición épsilon del inicio al fin del autómata.
+    var transitionToEnd = new Transition_1.Transition(Misc_1.default.EPSILON, _toConsumableArray(_this.acceptStates)[0]); // Se agrega la transición épsilon del inicio al fin del autómata.
 
     _this.startState.addTransition(transitionToEnd);
   };
+
+  this.copy = function () {
+    // Creamos un autómata con el mismo nombre.
+    var copy = new Automaton(_this.name); // Creamos estados y transiciones así como el sigma del nuevo autómata según corresponda.
+
+    _toConsumableArray(_this.getStates()).forEach(function (state) {
+      _toConsumableArray(state.getTransitions()).forEach(function (transition) {
+        copy.createTransition(state.getId(), transition.getSymbol(), transition.getLimitSymbol(), transition.getTargetState().getId());
+      });
+    }); // Indicamos cuál estado del nuevo autómata es el inicial.
+
+
+    copy.startState = _toConsumableArray(copy.getStates()).find(function (state) {
+      return state.getId() === _this.getStartState().getId();
+    }); // Indicamos cuáles estados del nuevo autómata son de aceptación.
+
+    _toConsumableArray(_this.getAcceptStates()).forEach(function (acceptState) {
+      copy.getAcceptStates().add(_toConsumableArray(copy.getStates()).find(function (state) {
+        return state.getId() === acceptState.getId();
+      }));
+    });
+
+    return copy;
+  };
   /**
-   * Obtiene un estado mediante el identificador suministrado. Se puede indicar si es un estado terminal.
+   * Método para crear una transición de un estado de origen a unodestino con un símbolo o
+   * un rango de símbolos.
+   *
+   * Si los identificadores no corresponden a algúno de los estados del conjunto de
+   * estados del autómata, se creará.
+   *
+   * Helper para Automaton.copy()
    *
    * @private
-   * @param {number} id {identificador del estado en this.states}
-   * @param {boolean} [final] {bandera que indica si pertenece a this.acceptStates}
-   * @returns {State} {estado que coincide con la consulta}
+   * @param {number} originStateID
+   * @param {string} symbol
+   * @param {string} limitSymbol
+   * @param {number} targetStateID
    * @memberof Automaton
    */
 
 
-  this.getState = function (id, final) {
-    if (final) {
-      return _toConsumableArray(_this.acceptStates).filter(function (state) {
-        return state.id === id;
-      })[0];
+  this.createTransition = function (originStateID, symbol, limitSymbol, targetStateID) {
+    var originState = _toConsumableArray(_this.states).find(function (state) {
+      return state.getId() === originStateID;
+    });
+
+    var targetState = _toConsumableArray(_this.states).find(function (state) {
+      return state.getId() === targetStateID;
+    });
+
+    if (!originState) {
+      originState = new State_1.State(_this.states.size);
+
+      _this.states.add(originState);
     }
 
-    return _toConsumableArray(_this.states).filter(function (state) {
-      return state.id === id;
-    })[0];
+    if (!targetState) {
+      targetState = new State_1.State(_this.states.size);
+
+      _this.states.add(targetState);
+    }
+
+    var transition = new Transition_1.Transition(symbol, targetState, limitSymbol);
+    originState.addTransition(transition);
+
+    if (transition.hasLimitSymbol()) {
+      for (var ascii = symbol.charCodeAt(0); ascii <= limitSymbol.charCodeAt(0); ascii++) {
+        _this.sigma.add(String.fromCharCode(ascii));
+      }
+    } else {
+      _this.sigma.add(symbol);
+    }
   };
 
   this.toHTMLTable = function () {
-    var tmpSigma = new Set([].concat(_toConsumableArray(_this.sigma), [Automaton.epsilon])); // Encabezado de la tabla.
+    var tmpSigma = new Set([].concat(_toConsumableArray(_this.sigma), [Misc_1.default.EPSILON])); // Encabezado de la tabla.
 
     var head = "<tr>" + _toConsumableArray(tmpSigma).reduce(function (tableHead, symbol) {
       return tableHead + "<th>".concat(symbol, "</th>");
@@ -545,11 +709,11 @@ function Automaton() {
       var stateCell;
 
       if (_this.startState === state) {
-        stateCell = "<td class=\"state-cell start\"><p>".concat(state.id, "</p></td>");
+        stateCell = "<td class=\"state-cell start\"><p>".concat(state.getId(), "</p></td>");
       } else if (_this.acceptStates.has(state)) {
-        stateCell = "<td class=\"state-cell accept\"><p>".concat(state.id, "</p></td>");
+        stateCell = "<td class=\"state-cell accept\"><p>".concat(state.getId(), "</p></td>");
       } else {
-        stateCell = "<td class=\"state-cell\"><p>".concat(state.id, "</p></td>");
+        stateCell = "<td class=\"state-cell\"><p>".concat(state.getId(), "</p></td>");
       } // Resto de la fila.
 
 
@@ -562,7 +726,7 @@ function Automaton() {
         for (var _iterator = tmpSigma[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var symbol = _step.value;
           var targetStates = state.getTransitionsBySymbol(symbol).map(function (transition) {
-            return "".concat(transition.targetState.id);
+            return "".concat(transition.getTargetState().getId());
           }).join(", ");
           var cell = "<td>{".concat(targetStates.length > 0 ? targetStates : " ", "}</td>");
           targetStatesRow += cell;
@@ -597,43 +761,150 @@ function Automaton() {
   this.startState = null;
   this.acceptStates = new Set();
   this.acceptStates.clear();
-  console.log("Automata vacío creado.");
+  this.name = name;
 };
-/**
- * Símbolo que actúa como la cadena vacía del autómata.
- *
- * @static
- * @type {string}
- * @memberof Automaton
- */
 
-
-Automaton.epsilon = "\u03B5";
-exports.default = Automaton;
-},{"../State/State":"ts/State/State.ts","../Transition/Transition":"ts/Transition/Transition.ts","../../css/table.css":"css/table.css"}],"main.ts":[function(require,module,exports) {
+exports.Automaton = Automaton;
+},{"../State/State":"ts/State/State.ts","../Transition/Transition":"ts/Transition/Transition.ts","../Misc/Misc":"ts/Misc/Misc.ts"}],"main.ts":[function(require,module,exports) {
 "use strict";
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var Automaton_1 = __importDefault(require("./ts/Automaton/Automaton"));
+var Automaton_1 = require("./ts/Automaton/Automaton"); // Arreglo de autómatas creados localmente.
 
-var automaton = new Automaton_1.default();
-var automaton2 = new Automaton_1.default();
-automaton.createBasic("a", "z");
-automaton.makeKleene();
-automaton2.createBasic("1", "8");
-automaton.unirAFN(automaton2);
-var containter = document.getElementById("automaton-table");
-var str = automaton.toHTMLTable();
-containter.innerHTML = str;
+
+var automata = [];
+document.querySelector("#tools").style.display = "none";
+document.querySelector("#target").style.display = "none"; // Listener para crear autómatas simples
+
+document.querySelector(".btn-creator").addEventListener("click", function () {
+  var name_element = document.querySelector("#name");
+  var symbol_element = document.querySelector("#symbol");
+  var name = name_element.value;
+
+  if (name.length === 0) {
+    alert("Debe ingresar un nombre para el autómata.");
+    return;
+  } else if (automata.find(function (automaton) {
+    return automaton.getName() === name;
+  })) {
+    alert("Ingrese otro nombre para el autómata.");
+    return;
+  }
+
+  var symbol = symbol_element.value;
+  var symbols = symbol.split("-");
+
+  switch (symbols.length) {
+    case 1:
+      {
+        var automaton = new Automaton_1.Automaton(name);
+        automaton.createBasic(symbols[0]);
+        automata.push(automaton);
+        break;
+      }
+
+    case 2:
+      {
+        if (symbols.find(function (_symbol) {
+          return _symbol.length !== 1;
+        })) {
+          alert("El rango se da solamente con símbolos de longitud 1");
+          return;
+        }
+
+        var _automaton = new Automaton_1.Automaton(name);
+
+        _automaton.createBasic(symbols[0], symbols[1]);
+
+        automata.push(_automaton);
+        break;
+      }
+
+    default:
+      {
+        alert("Inserte un símbolo o rango adecuado.");
+        return;
+      }
+  }
+
+  var option_one = document.createElement("option");
+  option_one.text = name;
+  option_one.value = name;
+  var option_two = document.createElement("option");
+  option_two.text = name;
+  option_two.value = name;
+  var automaton_select = document.querySelector("#automaton");
+  var target_select = document.querySelector("#target-automaton");
+  automaton_select.appendChild(option_one);
+  automaton_select.value = name;
+  target_select.appendChild(option_two);
+  name_element.value = "";
+  symbol_element.value = "";
+}); // Listeners para mostrar tabla de autómata según se seleccione.
+
+document.querySelector("#automaton").addEventListener("DOMNodeInserted", function (event) {
+  var selector = event.target;
+
+  if (selector.childElementCount !== 0) {
+    return;
+  }
+
+  document.querySelector("#automaton-table").innerHTML = automata.find(function (automaton) {
+    return automaton.getName() === selector.value;
+  }).toHTMLTable();
+  document.querySelector("#tools").style.display = "inline-block";
+});
+document.querySelector("#automaton").addEventListener("change", function (event) {
+  var name = event.target.value;
+  document.querySelector("#automaton-table").innerHTML = automata.find(function (automaton) {
+    return automaton.getName() === name;
+  }).toHTMLTable();
+}); // Listeners para controlar comportamiento de sección "target".
+
+document.querySelector("#operation").addEventListener("change", function (event) {
+  var operation = event.target.value;
+
+  if (operation === "unirAFN" || operation === "concatenarAFN") {
+    document.querySelector("#target").style.display = "inline-block";
+    document.querySelector(".btn-execute__one").style.display = "none";
+  } else {
+    document.querySelector("#target").style.display = "none";
+    document.querySelector(".btn-execute__one").style.display = "initial";
+  }
+}); // Listeners para realizar las operaciones unarias.
+
+document.querySelector(".btn-execute__one").addEventListener("click", function () {
+  var operation = document.querySelector("#operation").value;
+  var automaton = automata.find(function (a) {
+    var name = document.querySelector("#automaton").value;
+    return a.getName() === name;
+  });
+  automaton[operation]();
+  document.querySelector("#automaton-table").innerHTML = automaton.toHTMLTable();
+}); // Listeners para realizar las operaciones binarias.
+
+document.querySelector(".btn-execute__two").addEventListener("click", function () {
+  var operation = document.querySelector("#operation").value;
+  var a1 = automata.find(function (a) {
+    var name = document.querySelector("#automaton").value;
+    return a.getName() === name;
+  });
+  var a2 = automata.find(function (a) {
+    var name = document.querySelector("#target-automaton").value;
+    return a.getName() === name;
+  });
+
+  if (a1.getName() === a2.getName()) {
+    a1[operation](a1.copy());
+  } else {
+    a1[operation](a2);
+  }
+
+  document.querySelector("#automaton-table").innerHTML = a1.toHTMLTable();
+});
 },{"./ts/Automaton/Automaton":"ts/Automaton/Automaton.ts"}],"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -661,7 +932,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57424" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58769" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
