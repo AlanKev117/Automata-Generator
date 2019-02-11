@@ -16,7 +16,9 @@ namespace Misc {
      * @returns {Set<State>}
      */
     export const goTo = (states: Set<State>, symbol: string) => {
-
+        let S:Set<State>; 
+        S = epsilonClosure(move(states,symbol));
+        return S;
     };
 
     /**
