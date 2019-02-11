@@ -273,7 +273,26 @@ var Misc;
    */
 
 
-  Misc.move = function (states, symbol) {};
+  Misc.move = function (states, symbol) {
+    var result = _toConsumableArray(states).map(function (state) {
+      return simpleMove(state, symbol);
+    });
+
+    return result.reduce(function (union, set) {
+      set.forEach(function (state) {
+        union.add(state);
+      });
+      return union;
+    }, new Set());
+  };
+
+  var simpleMove = function simpleMove(state, symbol) {
+    return new Set(_toConsumableArray(state.getTransitions().values()).filter(function (transition) {
+      return transition.getSymbol() === symbol;
+    }).map(function (transition) {
+      return transition.getTargetState();
+    }));
+  };
   /**
   * Obtiene la cerradura épsilon de un conjunto de estados.
   *
