@@ -59,13 +59,13 @@ namespace Misc {
      */
     const simpleEpsilonClosure = (state: State) => {
         return new Set<State>(
-            [...state.transitions.values()]
-                .filter(transition => transition.symbol === EPSILON)
-                .map(transition => transition.targetState)
+            [...state.getTransitions().values()]
+                .filter(transition => transition.getSymbol() === EPSILON)
+                .map(transition => transition.getTargetState())
         );
-    };
-
-    /**
+	};
+	
+	/**
      * Para el análisis léxico, tomamos el último estado de aceptación
      * con el que se obtuvo un token y se guarda el índice hasta que, con
      * caracteres siguientes, no se pueda hacer otra transición.

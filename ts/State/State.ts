@@ -1,7 +1,7 @@
-import {Transition} from "../Transition/Transition";
+import { Transition } from "../Transition/Transition";
 class State {
-	public id: number;
-	public readonly transitions: Set<Transition>;
+	private id: number;
+	private transitions: Set<Transition>;
 
 	/**
 	 * Crea un estado.
@@ -13,13 +13,20 @@ class State {
 		this.transitions = new Set<Transition>();
 	}
 
+	public readonly getId = () => this.id;
+	public readonly getTransitions = () => this.transitions;
+
+	public readonly setId = id => {
+		this.id = id;
+	};
+
 	/**
 	 * Agrega una transición al conjunto de transiciones del estado.
 	 *
 	 * @param {Transition} t {transición a ser agregada}
 	 * @memberof State
 	 */
-	addTransition = (t: Transition) => {
+	public readonly addTransition = (t: Transition) => {
 		this.transitions.add(t);
 	};
 
@@ -30,14 +37,17 @@ class State {
 	 * @memberof State
 	 */
 	public getTransitionsBySymbol = (symbol: string) => {
-		return [...this.transitions].filter( transition => {
+		return [...this.transitions].filter(transition => {
 			if (transition.hasLimitSymbol()) {
-				return symbol.length === 1 ? transition.symbol <= symbol && symbol <= transition.limitSymbol : false;
+				return symbol.length === 1
+					? transition.getSymbol() <= symbol &&
+							symbol <= transition.getLimitSymbol()
+					: false;
 			} else {
-				return transition.symbol === symbol;
+				return transition.getSymbol() === symbol;
 			}
 		});
 	};
 }
 
-export {State};
+export { State };

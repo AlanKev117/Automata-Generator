@@ -7,8 +7,8 @@ const automata: Automaton[] = [];
 
 // Listener para crear autómatas simples
 document.querySelector(".btn-creator").addEventListener("click", () => {
-	const name_element = (<HTMLInputElement>document.querySelector("#name"));
-	const symbol_element = (<HTMLInputElement>document.querySelector("#symbol"));
+	const name_element = <HTMLInputElement>document.querySelector("#name");
+	const symbol_element = <HTMLInputElement>document.querySelector("#symbol");
 	const name = name_element.value;
 	if (name.length === 0) {
 		alert("Debe ingresar un nombre para el autómata.");
@@ -50,8 +50,12 @@ document.querySelector(".btn-creator").addEventListener("click", () => {
 	const option_two = document.createElement("option");
 	option_two.text = name;
 	option_two.value = name;
-	const automaton_select = <HTMLSelectElement>document.querySelector("#automaton");
-	const target_select = <HTMLSelectElement>document.querySelector("#target-automaton");
+	const automaton_select = <HTMLSelectElement>(
+		document.querySelector("#automaton")
+	);
+	const target_select = <HTMLSelectElement>(
+		document.querySelector("#target-automaton")
+	);
 	automaton_select.appendChild(option_one);
 	automaton_select.value = name;
 	target_select.appendChild(option_two);
@@ -90,8 +94,7 @@ document.querySelector("#operation").addEventListener("change", event => {
 			document.querySelector(".btn-execute__one")
 		)).style.display = "none";
 	} else {
-		(<HTMLElement>document.querySelector("#target")).style.display =
-			"none";
+		(<HTMLElement>document.querySelector("#target")).style.display = "none";
 		(<HTMLButtonElement>(
 			document.querySelector(".btn-execute__one")
 		)).style.display = "initial";
@@ -130,6 +133,10 @@ document.querySelector(".btn-execute__two").addEventListener("click", () => {
 		return a.getName() === name;
 	});
 
-	a1[operation](a2);
+	if (a1.getName() === a2.getName()) {
+		a1[operation](a1.copy());
+	} else {
+		a1[operation](a2);
+	}
 	document.querySelector("#automaton-table").innerHTML = a1.toHTMLTable();
 });

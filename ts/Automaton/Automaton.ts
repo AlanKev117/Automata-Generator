@@ -1,6 +1,6 @@
 import { State } from "../State/State";
 import { Transition } from "../Transition/Transition";
-import "../../css/table.css";
+import Misc from "../Misc/Misc";
 
 class Automaton {
 	/**
@@ -49,15 +49,6 @@ class Automaton {
 	private acceptStates: Set<State>;
 
 	/**
-	 * Símbolo que actúa como la cadena vacía del autómata.
-	 *
-	 * @static
-	 * @type {string}
-	 * @memberof Automaton
-	 */
-	static readonly epsilon: string = "\u03B5";
-
-	/**
 	 * Genera un autómata vacío.
 	 *
 	 * @memberof Automaton
@@ -71,12 +62,13 @@ class Automaton {
 		this.acceptStates = new Set<State>();
 		this.acceptStates.clear();
 		this.name = name;
-		alert(`Autómata ${name} creado exitosamente.`);
 	}
 
-	public readonly getName = () => {
-		return this.name;
-	};
+	public readonly getName = () => this.name;
+	public readonly getSigma = () => this.sigma;
+	public readonly getStates = () => this.states;
+	public readonly getStartState = () => this.startState;
+	public readonly getAcceptStates = () => this.acceptStates;
 
 	/**
 	 * Crea un autómata básico de una transición con el símbolo symbol.
@@ -124,17 +116,20 @@ class Automaton {
 	 * @memberof Automaton
 	 */
 	public readonly unirAFN = (automaton: Automaton) => {
-		let stateIni = new State(this.states.size + automaton.states.size);
-		let stateEnd = new State(this.states.size + automaton.states.size + 1);
+		const automaton_copy = <Automaton>{ ...automaton };
+		let stateIni = new State(this.states.size + automaton_copy.states.size);
+		let stateEnd = new State(
+			this.states.size + automaton_copy.states.size + 1
+		);
 
-		const finalTransition = new Transition(Automaton.epsilon, stateEnd);
+		const finalTransition = new Transition(Misc.EPSILON, stateEnd);
 		const initialTransitionAFN_1 = new Transition(
-			Automaton.epsilon,
+			Misc.EPSILON,
 			this.startState
 		);
 		const initialTransitionAFN_2 = new Transition(
-			Automaton.epsilon,
-			automaton.startState
+			Misc.EPSILON,
+			automaton_copy.startState
 		);
 		// Se agrega la transición final nueva a todos los estados finales del AFN this.
 		[...this.states]
@@ -143,8 +138,8 @@ class Automaton {
 				acceptState.addTransition(finalTransition);
 			});
 		// Se agrega la transición final nueva a todos los estados finales del AFN que recibimos como parametro.
-		[...automaton.states]
-			.filter(state => automaton.acceptStates.has(state))
+		[...automaton_copy.states]
+			.filter(state => automaton_copy.acceptStates.has(state))
 			.forEach(acceptState => {
 				acceptState.addTransition(finalTransition);
 			});
@@ -154,19 +149,19 @@ class Automaton {
 		this.acceptStates.add(stateEnd);
 
 		//Se agregan los estados del AFN2 al AFN1
-		for (let i = 0; i < automaton.states.size; i++) {
-			this.states.add([...automaton.states][i]);
+		for (let i = 0; i < automaton_copy.states.size; i++) {
+			this.states.add([...automaton_copy.states][i]);
 		}
 		//Se agregan los simbolos del AFN2 al AFN1
-		for (let i = 0; i < automaton.sigma.size; i++) {
-			this.sigma.add([...automaton.sigma][i]);
+		for (let i = 0; i < automaton_copy.sigma.size; i++) {
+			this.sigma.add([...automaton_copy.sigma][i]);
 		}
 		// Se agregan los estados nuevos al conjunto de estados.
 		this.states.add(stateIni);
 		this.states.add(stateEnd);
 		//Se reordenan los id para evitar duplicidades
 		for (let i = 0; i < this.states.size; i++) {
-			[...this.states][i].id = i; // "0", "1", "2", ... "n"
+			[...this.states][i].setId(i); // "0", "1", "2", ... "n"
 		}
 		// Se reemplaza el nuevo estado inicial.
 		this.startState = stateIni;
@@ -176,20 +171,22 @@ class Automaton {
 		// Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
 	};
 
-
-	public readonly concatenarAFN = (automaton:Automaton) => {
+	public readonly concatenarAFN = (automaton: Automaton) => {
 		//le asignamos el nuevo nombre a nuestro automata
 		let stateEnd = new State(this.states.size + automaton.states.size + 1);
 
-		const initialTransition = new Transition(Automaton.epsilon, automaton.startState);
+		const initialTransition = new Transition(
+			Misc.EPSILON,
+			automaton.startState
+		);
 
 		//automaton tiene un estado inicial el cual vamos a unir con los estados finales de this
 		//mediante epsilon y se borra el estado de aceptacio
 		[...this.states]
-		.filter(state => this.acceptStates.has(state))
-		.forEach(acceptState => {
-			acceptState.addTransition(initialTransition);
-		});
+			.filter(state => this.acceptStates.has(state))
+			.forEach(acceptState => {
+				acceptState.addTransition(initialTransition);
+			});
 		//se limpia el conjunto de estados finales de this
 		this.acceptStates.clear();
 		this.acceptStates = automaton.acceptStates;
@@ -204,11 +201,9 @@ class Automaton {
 
 		//Se reordenan los id para evitar duplicidades---
 		for (let i = 0; i < this.states.size; i++) {
-			[...this.states][i].id = i; // "0", "1", "2", ... "n"
+			[...this.states][i].setId(i); // "0", "1", "2", ... "n"
 		}
 	};
-	
-
 
 	/**
 	 * Crea la cerradura opcional del autómata.
@@ -221,15 +216,9 @@ class Automaton {
 		// Se crea el estado final auxiliar.
 		const nextFinalState = new State(this.states.size + 1);
 		// Se crea transición épsilon que va al estado final.
-		const finalTransition = new Transition(
-			Automaton.epsilon,
-			nextFinalState
-		);
+		const finalTransition = new Transition(Misc.EPSILON, nextFinalState);
 		// Se crea transición épsilon que partirá del nuevo estado inicial.
-		const firstTransition = new Transition(
-			Automaton.epsilon,
-			this.startState
-		);
+		const firstTransition = new Transition(Misc.EPSILON, this.startState);
 		// Se agrega la transición final nueva a todos los estados finales.
 		[...this.states]
 			.filter(state => this.acceptStates.has(state))
@@ -267,13 +256,10 @@ class Automaton {
 		// Se crea el estado final auxiliar.
 		const nextFinalState = new State(this.states.size + 1);
 		// Se crea transición épsilon que va al estado final.
-		const finalTransition = new Transition(
-			Automaton.epsilon,
-			nextFinalState
-		);
+		const finalTransition = new Transition(Misc.EPSILON, nextFinalState);
 		// Se crea transición épsilon que va hacia el viejo estado inicial.
 		const toPrevStartTransition = new Transition(
-			Automaton.epsilon,
+			Misc.EPSILON,
 			this.startState
 		);
 
@@ -302,31 +288,99 @@ class Automaton {
 		// Se hace la cerradura positiva del autómata
 		this.makePositive();
 		const transitionToEnd = new Transition(
-			Automaton.epsilon,
+			Misc.EPSILON,
 			[...this.acceptStates][0]
 		);
 		// Se agrega la transición épsilon del inicio al fin del autómata.
 		this.startState.addTransition(transitionToEnd);
 	};
 
+	public readonly copy = () => {
+		// Creamos un autómata con el mismo nombre.
+		const copy = new Automaton(this.name);
+
+		// Creamos estados y transiciones así como el sigma del nuevo autómata según corresponda.
+		[...this.getStates()].forEach(state => {
+			[...state.getTransitions()].forEach(transition => {
+				copy.createTransition(
+					state.getId(),
+					transition.getSymbol(),
+					transition.getLimitSymbol(),
+					transition.getTargetState().getId()
+				);
+			});
+		});
+		// Indicamos cuál estado del nuevo autómata es el inicial.
+		copy.startState = [...copy.getStates()].find(
+			state => state.getId() === this.getStartState().getId()
+		);
+		// Indicamos cuáles estados del nuevo autómata son de aceptación.
+		[...this.getAcceptStates()].forEach(acceptState => {
+			copy.getAcceptStates().add(
+				[...copy.getStates()].find(
+					state => state.getId() === acceptState.getId()
+				)
+			);
+		});
+
+		return copy;
+	};
+
 	/**
-	 * Obtiene un estado mediante el identificador suministrado. Se puede indicar si es un estado terminal.
+	 * Método para crear una transición de un estado de origen a unodestino con un símbolo o
+	 * un rango de símbolos.
+	 *
+	 * Si los identificadores no corresponden a algúno de los estados del conjunto de
+	 * estados del autómata, se creará.
+	 *
+	 * Helper para Automaton.copy()
 	 *
 	 * @private
-	 * @param {number} id {identificador del estado en this.states}
-	 * @param {boolean} [final] {bandera que indica si pertenece a this.acceptStates}
-	 * @returns {State} {estado que coincide con la consulta}
+	 * @param {number} originStateID
+	 * @param {string} symbol
+	 * @param {string} limitSymbol
+	 * @param {number} targetStateID
 	 * @memberof Automaton
 	 */
-	public readonly getState = (id: number, final?: boolean) => {
-		if (final) {
-			return [...this.acceptStates].filter(state => state.id === id)[0];
+	private createTransition = (
+		originStateID: number,
+		symbol: string,
+		limitSymbol: string,
+		targetStateID: number
+	) => {
+		let originState = [...this.states].find(
+			state => state.getId() === originStateID
+		);
+		let targetState = [...this.states].find(
+			state => state.getId() === targetStateID
+		);
+		if (!originState) {
+			originState = new State(this.states.size);
+			this.states.add(originState);
 		}
-		return [...this.states].filter(state => state.id === id)[0];
+
+		if (!targetState) {
+			targetState = new State(this.states.size);
+			this.states.add(targetState);
+		}
+		const transition = new Transition(symbol, targetState, limitSymbol);
+		originState.addTransition(transition);
+
+		if (transition.hasLimitSymbol()) {
+			for (
+				let ascii = symbol.charCodeAt(0);
+				ascii <= limitSymbol.charCodeAt(0);
+				ascii++
+			) {
+				this.sigma.add(String.fromCharCode(ascii));
+			}
+		} else {
+			this.sigma.add(symbol);
+		}
 	};
 
 	public readonly toHTMLTable = () => {
-		const tmpSigma = new Set<string>([...this.sigma, Automaton.epsilon]);
+		const tmpSigma = new Set<string>([...this.sigma, Misc.EPSILON]);
 		// Encabezado de la tabla.
 		const head =
 			"<tr>" +
@@ -341,24 +395,21 @@ class Automaton {
 				// Celda del estado actual.
 				let stateCell: string;
 				if (this.startState === state) {
-					stateCell = `<td class="state-cell start"><p>${
-						state.id
-					}</p></td>`;
+					stateCell = `<td class="state-cell start"><p>${state.getId()}</p></td>`;
 				} else if (this.acceptStates.has(state)) {
-					stateCell = `<td class="state-cell accept"><p>${
-						state.id
-					}</p></td>`;
+					stateCell = `<td class="state-cell accept"><p>${state.getId()}</p></td>`;
 				} else {
-					stateCell = `<td class="state-cell"><p>${
-						state.id
-					}</p></td>`;
+					stateCell = `<td class="state-cell"><p>${state.getId()}</p></td>`;
 				}
 				// Resto de la fila.
 				let targetStatesRow: string = "";
 				for (let symbol of tmpSigma) {
 					const targetStates = state
 						.getTransitionsBySymbol(symbol)
-						.map(transition => `${transition.targetState.id}`)
+						.map(
+							transition =>
+								`${transition.getTargetState().getId()}`
+						)
 						.join(", ");
 					const cell = `<td>{${
 						targetStates.length > 0 ? targetStates : " "

@@ -1,9 +1,9 @@
 import {State} from "../State/State";
 
 class Transition {
-	public symbol: string;
-	public limitSymbol: string;
-	public targetState: State;
+	private symbol: string;
+	private limitSymbol: string;
+	private targetState: State;
 
 	constructor (symbol: string, targetState: State, limitSymbol?: string) {
 		// Se establece el símbolo límite (para rangos), si existe.
@@ -20,11 +20,15 @@ class Transition {
 		} else {
 			this.limitSymbol = null;
 		}
-		// Se sgrega el símbolo principal de la transición.
+		// Se agrega el símbolo principal de la transición.
 		this.symbol = symbol;
 		// Se establece el estado objetivo.
 		this.targetState = targetState;
 	}
+
+	public readonly getSymbol = () => this.symbol;
+	public readonly getLimitSymbol = () => this.limitSymbol;
+	public readonly getTargetState = () => this.targetState;
 
 	hasLimitSymbol = () => {
 		return this.limitSymbol ? true : false;
