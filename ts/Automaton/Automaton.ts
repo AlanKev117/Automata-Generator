@@ -116,11 +116,8 @@ class Automaton {
 	 * @memberof Automaton
 	 */
 	public readonly unirAFN = (automaton: Automaton) => {
-		const automaton_copy = <Automaton>{ ...automaton };
-		let stateIni = new State(this.states.size + automaton_copy.states.size);
-		let stateEnd = new State(
-			this.states.size + automaton_copy.states.size + 1
-		);
+		let stateIni = new State(this.states.size + automaton.states.size);
+		let stateEnd = new State(this.states.size + automaton.states.size + 1);
 
 		const finalTransition = new Transition(Misc.EPSILON, stateEnd);
 		const initialTransitionAFN_1 = new Transition(
@@ -129,40 +126,39 @@ class Automaton {
 		);
 		const initialTransitionAFN_2 = new Transition(
 			Misc.EPSILON,
-			automaton_copy.startState
+			automaton.startState
 		);
 		// Se agrega la transición final nueva a todos los estados finales del AFN this.
-		[...this.states]
-			.filter(state => this.acceptStates.has(state))
-			.forEach(acceptState => {
-				acceptState.addTransition(finalTransition);
-			});
+		[...this.acceptStates].forEach(acceptState => {
+			acceptState.addTransition(finalTransition);
+		});
 		// Se agrega la transición final nueva a todos los estados finales del AFN que recibimos como parametro.
-		[...automaton_copy.states]
-			.filter(state => automaton_copy.acceptStates.has(state))
-			.forEach(acceptState => {
-				acceptState.addTransition(finalTransition);
-			});
+		[...automaton.acceptStates].forEach(acceptState => {
+			acceptState.addTransition(finalTransition);
+		});
 		// Se limpia el conjunto de estados finales.
 		this.acceptStates.clear();
 		// Y se reemplaza solo por el nuevo estado final.
 		this.acceptStates.add(stateEnd);
 
-		//Se agregan los estados del AFN2 al AFN1
-		for (let i = 0; i < automaton_copy.states.size; i++) {
-			this.states.add([...automaton_copy.states][i]);
-		}
+		// Reasignamos id a estados del autómata argumento y los agregamos al
+		// conjunto de estados de autómata this.
+		const newStates = [...automaton.states];
+		newStates.forEach((state, index) => {
+			state.setId(this.states.size + index);
+		});
+		newStates.forEach(state => {
+			this.states.add(state);
+		});
+
 		//Se agregan los simbolos del AFN2 al AFN1
-		for (let i = 0; i < automaton_copy.sigma.size; i++) {
-			this.sigma.add([...automaton_copy.sigma][i]);
-		}
+		[...automaton.sigma].forEach(symbol => {
+			this.sigma.add(symbol);
+		});
 		// Se agregan los estados nuevos al conjunto de estados.
 		this.states.add(stateIni);
 		this.states.add(stateEnd);
-		//Se reordenan los id para evitar duplicidades
-		for (let i = 0; i < this.states.size; i++) {
-			[...this.states][i].setId(i); // "0", "1", "2", ... "n"
-		}
+
 		// Se reemplaza el nuevo estado inicial.
 		this.startState = stateIni;
 		// Se le agregan las transiciones al inicio antiguo del autómata y al final del mismo.
@@ -198,7 +194,7 @@ class Automaton {
 		for (let i = 0; i < automaton.sigma.size; i++) {
 			this.sigma.add([...automaton.sigma][i]);
 		}
-		
+
 		//Se reordenan los id para evitar duplicidades---
 		for (let i = 0; i < this.states.size; i++) {
 			[...this.states][i].setId(i); // "0", "1", "2", ... "n"
@@ -354,12 +350,12 @@ class Automaton {
 			state => state.getId() === targetStateID
 		);
 		if (!originState) {
-			originState = new State(this.states.size);
+			originState = new State(originStateID);
 			this.states.add(originState);
 		}
 
 		if (!targetState) {
-			targetState = new State(this.states.size);
+			targetState = new State(targetStateID);
 			this.states.add(targetState);
 		}
 		const transition = new Transition(symbol, targetState, limitSymbol);
