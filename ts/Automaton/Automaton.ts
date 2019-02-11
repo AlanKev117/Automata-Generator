@@ -198,13 +198,12 @@ class Automaton {
 		for (let i = 0; i < automaton.sigma.size; i++) {
 			this.sigma.add([...automaton.sigma][i]);
 		}
-
+		
 		//Se reordenan los id para evitar duplicidades---
 		for (let i = 0; i < this.states.size; i++) {
 			[...this.states][i].setId(i); // "0", "1", "2", ... "n"
 		}
 	};
-
 	/**
 	 * Crea la cerradura opcional del autómata.
 	 *
