@@ -4,36 +4,72 @@
 		<link rel="stylesheet" href="/table.5144ca56.css">
 		<link rel="stylesheet" href="/main.af46ece4.css">
 		<link rel="stylesheet" href="/header.d390d9f1.css">
+<<<<<<< HEAD
 	<script src="/table.5144ca56.js"></script><script src="/main.af46ece4.js"></script><script src="/header.d390d9f1.js"></script><link rel="stylesheet" href="/main.c39d6dcf.css"></head>
+=======
+		<link rel="stylesheet" href="/inputs.136aa176.css">
+	<script src="/table.5144ca56.js"></script><script src="/main.af46ece4.js"></script><script src="/header.d390d9f1.js"></script><script src="/inputs.136aa176.js"></script></head>
+>>>>>>> 261ef1d7dd704c12f04ae2058187a45591f8d81c
 	<body>
 		<header>
 			<div id="brand">Automatón</div>
 			<nav id="main-nav">
 				<ul>
-					<li><a href="/create">Crear</a></li>
-					<li><a href="/afn-to-afd">AFN a AFD</a></li>
 					<li><a href="/syntax">Analizador</a></li>
 				</ul>
 			</nav>
 		</header>
-		<h1>Generador de autómatas</h1>
-		<h2>Código de colores:</h2>
-		<div id="annotations">
-			<div class="annotation">
-				<div class="green-identifier"></div>
-				<div class="annotation__title">Estado inicial</div>
+		<main>
+			<h1>Generador de autómatas</h1>
+
+			<div id="inputs">
+				<div id="creator">
+					<label for="symbol">Nuevo autómata simple</label>
+					<input type="text" name="symbol" id="symbol" placeholder="Símbolo/rango">
+					<input type="text" name="name" id="name" placeholder="Nombre del autómata">
+					<button class="btn-creator">Crear</button>
+				</div>
+				<div id="chooser">
+					<label for="automaton">Selecciona un autómata</label>
+					<select name="automaton" id="automaton"></select>
+				</div>
+				<div id="tools">
+					<label for="operation">Operación</label>
+					<select name="operation" id="operation">
+						<option value="makeKleene">Hacer Kleene</option>
+						<option value="makePositive">Hacer positivo</option>
+						<option value="makeOptional">Hacer opcional</option>
+						<option value="concatenarAFN">Concatenar</option>
+						<option value="unirAFN">Unir</option>
+						<option value="convert">Convertir</option>
+					</select>
+					<button class="btn-execute__one">Ejecutar</button>
+				</div>
+				<div id="target">
+					<label for="target-automaton">Con</label>
+					<select name="target-automaton" id="target-automaton"></select>
+					<button class="btn-execute__two">Ejecutar</button>
+				</div>
 			</div>
-			<div class="annotation">
-				<div class="blue-identifier"></div>
-				<div class="annotation__title">Estado normal</div>
+			<h2>Código de colores</h2>
+			<div id="annotations">
+				<div class="annotation">
+					<div class="green-identifier"></div>
+					<div class="annotation__title">Estado inicial</div>
+				</div>
+				<div class="annotation">
+					<div class="blue-identifier"></div>
+					<div class="annotation__title">Estado normal</div>
+				</div>
+				<div class="annotation">
+					<div class="orange-identifier"></div>
+					<div class="annotation__title">Estado final</div>
+				</div>
 			</div>
-			<div class="annotation">
-				<div class="orange-identifier"></div>
-				<div class="annotation__title">Estado final</div>
-			</div>
-		</div>
-		<h2>Tabla del autómata</h2>
-		<div id="automaton-table"></div>
+			<h2>Tabla del autómata</h2>
+			<div id="automaton-table"></div>
+		</main>
+		<footer></footer>
 		<script src="/main.c39d6dcf.js"></script>
 	</body>
 </html>
