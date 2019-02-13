@@ -1,15 +1,17 @@
-import {State} from "../State/State";
+import { State } from "../State/State";
 
 class Transition {
 	private symbol: string;
 	private limitSymbol: string;
 	private targetState: State;
 
-	constructor (symbol: string, targetState: State, limitSymbol?: string) {
+	constructor(symbol: string, targetState: State, limitSymbol?: string) {
 		// Se establece el símbolo límite (para rangos), si existe.
 		if (limitSymbol) {
 			if (symbol.length != 1 || limitSymbol.length != 1) {
-				console.log("La longitud de ambos símbolos para un rango debe ser 1");
+				console.log(
+					"La longitud de ambos símbolos para un rango debe ser 1"
+				);
 				return null;
 			}
 			if (limitSymbol.charCodeAt(0) <= symbol.charCodeAt(0)) {
@@ -32,6 +34,6 @@ class Transition {
 
 	hasLimitSymbol = () => {
 		return this.limitSymbol ? true : false;
-	}
+	};
 }
-export {Transition};
+export { Transition };

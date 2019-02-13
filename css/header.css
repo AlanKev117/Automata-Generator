@@ -1,49 +1,49 @@
 header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #57849e;
-    margin: 0;
-    padding: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: #57849e;
+	margin: 0;
+	padding: 0;
 }
 
 #brand {
-    display: inline-block;
-    padding: 0;
-    margin: 0 15px;
-    font-size: 20px;
-    font-weight: bold;
+	display: inline-block;
+	padding: 0;
+	margin: 0 15px;
+	font-size: 20px;
+	font-weight: bold;
 }
 
 #main-nav {
-    display: inline-block;
-    padding: 0;
-    margin: 0 15px;
-    font-size: 18px;
-    text-align: right;
-    width: calc(100% - 190px);
+	display: inline-block;
+	padding: 0;
+	margin: 0 15px;
+	font-size: 18px;
+	text-align: right;
+	width: calc(100% - 190px);
 }
 
 #main-nav ul {
-    list-style: none;
-    display: inline-block;
-    margin: 0;
-    padding: 0;
+	list-style: none;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
 }
 
 #main-nav li {
-    display: inline-block;
-    padding: 10px;
+	display: inline-block;
+	padding: 10px;
 }
 
 #main-nav a {
-    text-decoration: none;
-    color: black;
+	text-decoration: none;
+	color: black;
 }
 
 #main-nav li:hover,
 #main-nav li:active {
-    background-color: #3cb8ff;
-    color: white;
+	background-color: #3cb8ff;
+	color: white;
 }
