@@ -298,11 +298,11 @@ var Misc;
     }));
   };
   /**
-  * Obtiene la cerradura épsilon de un conjunto de estados.
-  *
-  * @param {Set<State>} states
-  * @returns {Set<State>}
-  */
+   * Obtiene la cerradura épsilon de un conjunto de estados.
+   *
+   * @param {Set<State>} states
+   * @returns {Set<State>}
+   */
 
 
   Misc.epsilonClosure = function (states) {
@@ -329,6 +329,22 @@ var Misc;
     }).map(function (transition) {
       return transition.getTargetState();
     }));
+  };
+
+  Misc.getSymbolsFromRange = function (symbol, limitSymbol) {
+    if (symbol.length !== 1 || limitSymbol.length !== 1) {
+      return null;
+    }
+
+    var begin = symbol.charCodeAt(0);
+    var end = limitSymbol.charCodeAt(0);
+    var symbols = [];
+
+    for (var ascii = begin; ascii <= end; ascii++) {
+      symbols.push(String.fromCharCode(ascii));
+    }
+
+    return symbols;
   };
   /**
    * Para el análisis léxico, tomamos el último estado de aceptación
@@ -428,9 +444,10 @@ function Automaton(name) {
     state0.addTransition(transition); // Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
 
     if (transition.hasLimitSymbol()) {
-      for (var ascii = symbol.charCodeAt(0); ascii <= limitSymbol.charCodeAt(0); ascii++) {
-        _this.sigma.add(String.fromCharCode(ascii));
-      }
+      var symbols = Misc_1.default.getSymbolsFromRange(symbol, limitSymbol);
+      symbols.forEach(function (symbol) {
+        _this.sigma.add(symbol);
+      });
     } else {
       _this.sigma.add(symbol);
     } // Agregamos los estados a los conjuntos y establecemos estados inicial y finales.
@@ -446,6 +463,7 @@ function Automaton(name) {
   };
   /**
    * Une un autómata a otro conservando la integridad de las transiciones.
+   * Guarda la unión mutando al autómata this.
    *
    * @param {Automaton} automaton {es el automata que se va a unir con this}
    * @memberof Automaton
@@ -502,41 +520,44 @@ function Automaton(name) {
     _this.startState.addTransition(initialTransitionAFN_2); // Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
 
   };
+  /**
+   * Concatena al autómata mismo con un automata "autómaton" dado y guarda
+   * el resultado mutando el autómata this.
+   *
+   * @param {Automaton} automaton
+   * @memberof Automaton
+   */
+
 
   this.concatenarAFN = function (automaton) {
-    //le asignamos el nuevo nombre a nuestro automata
-    var stateEnd = new State_1.State(_this.states.size + automaton.states.size + 1);
-    var initialTransition = new Transition_1.Transition(Misc_1.default.EPSILON, automaton.startState); //automaton tiene un estado inicial el cual vamos a unir con los estados finales de this
-    //mediante epsilon y se borra el estado de aceptacio
+    // Capturamos los estados de automaton excluyendo el inicial.
+    var incomingStates = _toConsumableArray(automaton.getStates()).filter(function (state) {
+      return state !== automaton.startState;
+    }); // Re-indexamos los id's de esos estados.
 
-    _toConsumableArray(_this.states).filter(function (state) {
-      return _this.acceptStates.has(state);
-    }).forEach(function (acceptState) {
-      acceptState.addTransition(initialTransition);
-    }); //se limpia el conjunto de estados finales de this
 
+    incomingStates.forEach(function (state, index) {
+      state.setId(_this.states.size + index);
+    }); //Agregamos las transiciones del estado inicial de automaton al final de this.
+
+    _toConsumableArray(automaton.startState.getTransitions()).forEach(function (transition) {
+      _toConsumableArray(_this.acceptStates)[0].addTransition(transition);
+    });
+
+    for (var i = 0; i < automaton.sigma.size; i++) {
+      _this.sigma.add(_toConsumableArray(automaton.sigma)[i]);
+    }
+
+    incomingStates.forEach(function (state) {
+      _this.states.add(state);
+    });
 
     _this.acceptStates.clear();
 
-    _this.acceptStates = automaton.acceptStates; //Se agregan los estados del AFN2 al AFN1--
-
-    for (var i = 0; i < automaton.states.size; i++) {
-      _this.states.add(_toConsumableArray(automaton.states)[i]);
-    } //Se agregan los simbolos del AFN2 al AFN1---
-
-
-    for (var _i = 0; _i < automaton.sigma.size; _i++) {
-      _this.sigma.add(_toConsumableArray(automaton.sigma)[_i]);
-    } //Se reordenan los id para evitar duplicidades---
-
-
-    for (var _i2 = 0; _i2 < _this.states.size; _i2++) {
-      _toConsumableArray(_this.states)[_i2].setId(_i2); // "0", "1", "2", ... "n"
-
-    }
+    _this.acceptStates.add(_toConsumableArray(automaton.acceptStates)[0]);
   };
   /**
-   * Crea la cerradura opcional del autómata.
+   * Hace opcional al autómata.
    *
    * @memberof Automaton
    */
@@ -577,7 +598,7 @@ function Automaton(name) {
     _this.startState.addTransition(finalTransition);
   };
   /**
-   * Crea la cerradura positiva del autómata.
+   * Hace positivo al autómata.
    *
    * @memberof Automaton
    */
@@ -599,10 +620,6 @@ function Automaton(name) {
 
     var toPrevStartTransition = new Transition_1.Transition(Misc_1.default.EPSILON, _this.startState); // Agregamos transiciones a los respectivos estados.
 
-    /* const prevFinalState = [...this.states].filter(state =>
-        this.acceptStates.has(state)
-    )[0];*/
-
     var prevFinalState = _toConsumableArray(_this.acceptStates)[0];
 
     prevFinalState.addTransition(toPrevStartTransition);
@@ -620,7 +637,7 @@ function Automaton(name) {
     _this.states.add(nextFinalState);
   };
   /**
-   * Crea la cerradura de Kleene del autómata.
+   * Hace Kleene al autómata.
    *
    * @memberof Automaton
    */
@@ -634,6 +651,13 @@ function Automaton(name) {
 
     _this.startState.addTransition(transitionToEnd);
   };
+  /**
+   * Crea una copia exacta de sí mismo sin ninguna depndencia en referencias.
+   *
+   * @memberof Automaton
+   * @returns {Automaton}
+   */
+
 
   this.copy = function () {
     // Creamos un autómata con el mismo nombre.
@@ -701,12 +725,32 @@ function Automaton(name) {
     originState.addTransition(transition);
 
     if (transition.hasLimitSymbol()) {
-      for (var ascii = symbol.charCodeAt(0); ascii <= limitSymbol.charCodeAt(0); ascii++) {
-        _this.sigma.add(String.fromCharCode(ascii));
-      }
+      var symbols = Misc_1.default.getSymbolsFromRange(symbol, limitSymbol);
+      symbols.forEach(function (symbol) {
+        _this.sigma.add(symbol);
+      });
     } else {
       _this.sigma.add(symbol);
     }
+  };
+
+  this.esAFD = function () {
+    var symbols = new Set();
+
+    _toConsumableArray(_this.states).forEach(function (state) {
+      symbols.clear();
+
+      _toConsumableArray(state.getTransitions()).forEach(function (trans) {
+        var tranSymbols = Misc_1.default.getSymbolsFromRange(trans.getSymbol(), trans.getLimitSymbol());
+        tranSymbols.forEach(function (tranSymbol) {
+          if (symbols.has(tranSymbol) || tranSymbol === Misc_1.default.EPSILON) {
+            return false;
+          }
+        });
+      });
+    });
+
+    return true;
   };
 
   this.toHTMLTable = function () {
@@ -912,7 +956,7 @@ document.querySelector(".btn-execute__two").addEventListener("click", function (
   a1[operation](copy);
   document.querySelector("#automaton-table").innerHTML = a1.toHTMLTable();
 });
-},{"./ts/Automaton/Automaton":"ts/Automaton/Automaton.ts"}],"../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ts/Automaton/Automaton":"ts/Automaton/Automaton.ts"}],"../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -939,7 +983,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61895" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65210" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
@@ -1081,5 +1125,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../../../../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main.ts"], null)
+},{}]},{},["../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main.ts"], null)
 //# sourceMappingURL=/main.c39d6dcf.map
