@@ -1,26 +1,26 @@
-function Queue() {
 
-    this.dataStore = Array.prototype.slice.call(arguments, 0);
-    this.enqueue = queue;
-    this.dequeue = dequeue;
-    this.isEmpty = isEmpty;
-    this.size = size;
+class Queue{
 
-    this.print = print;
+    private dataStore;
 
-    function queue(element) {
+    constructor(){
+        this.dataStore = Array.prototype.slice.call(arguments, 0);
+    }
+    
+
+    public queue = (element) => {
         this.dataStore.push(element);
     }
 
-    function dequeue() {
+    public dequeue = () => {
         return this.dataStore.shift();
     }
 
-    function isEmpty() {
+    public isEmpty = () => {
         return (this.dataStore == 0)?true:false;
     }
 
-    function size() {
+    public size = () => {
         return this.dataStore.size;
     }
 }
