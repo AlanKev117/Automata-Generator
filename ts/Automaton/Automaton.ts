@@ -168,37 +168,31 @@ class Automaton {
 	};
 
 	public readonly concatenarAFN = (automaton: Automaton) => {
-		//le asignamos el nuevo nombre a nuestro automata
-		let stateEnd = new State(this.states.size + automaton.states.size + 1);
-
-		const initialTransition = new Transition(
-			Misc.EPSILON,
-			automaton.startState
+		// Capturamos los estados de automaton excluyendo el inicial.
+		const incomingStates = [...automaton.getStates()].filter(
+			state => state !== automaton.startState
 		);
 
-		//automaton tiene un estado inicial el cual vamos a unir con los estados finales de this
-		//mediante epsilon y se borra el estado de aceptacio
-		[...this.states]
-			.filter(state => this.acceptStates.has(state))
-			.forEach(acceptState => {
-				acceptState.addTransition(initialTransition);
-			});
-		//se limpia el conjunto de estados finales de this
-		this.acceptStates.clear();
-		this.acceptStates = automaton.acceptStates;
-		//Se agregan los estados del AFN2 al AFN1--
-		for (let i = 0; i < automaton.states.size; i++) {
-			this.states.add([...automaton.states][i]);
-		}
-		//Se agregan los simbolos del AFN2 al AFN1---
+		// Re-indexamos los id's de esos estados.
+		incomingStates.forEach((state, index) => {
+			state.setId(this.states.size + index);
+		});
+
+		//Agregamos las transiciones del estado inicial de automaton al final de this.
+		[...automaton.startState.getTransitions()].forEach(transition => {
+			[...this.acceptStates][0].addTransition(transition);
+		});
+
 		for (let i = 0; i < automaton.sigma.size; i++) {
 			this.sigma.add([...automaton.sigma][i]);
 		}
 
-		//Se reordenan los id para evitar duplicidades---
-		for (let i = 0; i < this.states.size; i++) {
-			[...this.states][i].setId(i); // "0", "1", "2", ... "n"
-		}
+		incomingStates.forEach(state => {
+			this.states.add(state);
+		});
+
+		this.acceptStates.clear();
+		this.acceptStates.add([...automaton.acceptStates][0]);
 	};
 	/**
 	 * Crea la cerradura opcional del autómata.
