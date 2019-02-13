@@ -2,14 +2,16 @@ import { Transition } from "../Transition/Transition";
 class State {
 	private id: number;
 	private transitions: Set<Transition>;
-
+	private token: number;
 	/**
 	 * Crea un estado.
 	 *
 	 * @param id {identidiacdor del estado}
 	 */
-	constructor(id: number) {
+
+	constructor(id: number, token?:number) {
 		this.id = id;
+		this.token = token;
 		this.transitions = new Set<Transition>();
 	}
 
@@ -19,7 +21,9 @@ class State {
 	public readonly setId = id => {
 		this.id = id;
 	};
-
+	public readonly addToken = (t : number) => {
+		this.token = t;
+	}
 	/**
 	 * Agrega una transición al conjunto de transiciones del estado.
 	 *

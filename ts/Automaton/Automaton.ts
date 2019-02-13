@@ -2,6 +2,7 @@ import { State } from "../State/State";
 import { Transition } from "../Transition/Transition";
 import Misc from "../Misc/Misc";
 
+var tok:number = 0;
 class Automaton {
     /**
      * Nombre que se le asignará al autómata cuando se cree.
@@ -62,7 +63,7 @@ class Automaton {
         this.acceptStates = new Set<State>();
         this.acceptStates.clear();
         this.name = name;
-    }
+    };
 
     public readonly getName = () => this.name;
     public readonly getSigma = () => this.sigma;
@@ -107,6 +108,8 @@ class Automaton {
         this.states.add(state1);
         this.startState = state0;
         this.acceptStates.add(state1);
+        //Agregamos un token multiplo de 10  a cada uno de los estados de aceptación de nuestros automatas
+        [...this.acceptStates].forEach(acceptState => acceptState.addToken(tok+10))
     };
 
     /**
@@ -300,6 +303,7 @@ class Automaton {
                 );
             });
         });
+
         // Indicamos cuál estado del nuevo autómata es el inicial.
         copy.startState = [...copy.getStates()].find(
             state => state.getId() === this.getStartState().getId()
@@ -315,7 +319,12 @@ class Automaton {
 
         return copy;
     };
-
+    //Función que asigna un token a los estados de aceptacion del AFN
+    public readonly asigToken= () =>{
+        [...this.getAcceptStates()].forEach(acceptState =>{
+            acceptState.addToken(tok+10);
+        });
+    };
     /**
      * Método para crear una transición de un estado de origen a unodestino con un símbolo o
      * un rango de símbolos.
