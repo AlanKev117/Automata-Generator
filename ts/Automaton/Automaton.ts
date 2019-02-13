@@ -19,7 +19,7 @@ class Automaton {
 	 * @type {Set<string>}
 	 * @memberof Automaton
 	 */
-	private sigma: Set<string>;
+	public sigma: Set<string>;
 
 	/**
 	 * Conjunto de estados del autómata.
@@ -28,7 +28,7 @@ class Automaton {
 	 * @type {Set<State>}
 	 * @memberof Automaton
 	 */
-	private states: Set<State>;
+	public states: Set<State>;
 
 	/**
 	 * Estado inicial del autómata.
@@ -37,7 +37,7 @@ class Automaton {
 	 * @type {State}
 	 * @memberof Automaton
 	 */
-	private startState: State;
+	public startState: State;
 
 	/**
 	 * Conjunto de estados de aceptación del autómata.
@@ -46,7 +46,7 @@ class Automaton {
 	 * @type {Set<State>}
 	 * @memberof Automaton
 	 */
-	private acceptStates: Set<State>;
+	public acceptStates: Set<State>;
 
 	/**
 	 * Genera un autómata vacío.
