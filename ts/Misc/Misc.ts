@@ -97,8 +97,7 @@ namespace Misc {
         let estados = new Set<Set<State>>(); //Es un conjunto de conjuntos de estados
         let estadosAFD = new Set<State>(); //Contendra estados numerados de 0 a n
         let transicion : Transition;
-        let state1: State;
-        let state2: State;
+        let state: State;
         afd.sigma = afn.getSigma(); //Se copia el alfabeto del AFN al AFD
         afd.sigma.delete(EPSILON); //Elimina Epsilon del alfabeto del AFD
         resultado = simpleEpsilonClosure(afn.startState); //Se calcula la cerradura epsilon del estado inicial y se guarda en resultado
@@ -107,20 +106,20 @@ namespace Misc {
         afd.startState = estadoInicial;
         while(!queue.isEmpty()){    
             estadoAProcesar = queue.dequeue();
-            estados.add(estadoAProcesar);
+            estados.add(estadoAProcesar); //Se agrega al subconjunto de estados al conjunto estados
             for(let i = 0; i < (afn.sigma.size - 1); i++){ //Se itera sobre los simbolos del alfabeto
                 resultado = goTo(estadoAProcesar, afn.sigma[i]);
                 for(let j = 0; j < estados.size; j++){ //Itera sobre los subconjuntos de estados en el conjunto estados
-                    state1 = new State(estadosAFD.size);
-                    afd.states.add(state1);
+                    state = new State(estadosAFD.size);
+                    afd.states.add(state);
                     if(resultado != estados[j]){ //Si no exisitia este subconjunto de estados va a conformar un nuevo estado del AFD con su transicion
                         transicion = new Transition(
                             afn.sigma[i],
-                            state1,
+                            state,
                         );
                         for(let k = 0; k < estadoAProcesar.size; k++){
                             if(estadoAProcesar[k] = [...afn.acceptStates]){ //Si ese set contenia al menos un estado de aceptacion
-                                afd.acceptStates.add(state2); //se establece state2 como estado de aceptacion del AFD
+                                afd.acceptStates.add(state); //se establece state como estado de aceptacion del AFD
                             };
                         }
                         afd.startState.addTransition(transicion);
@@ -131,7 +130,7 @@ namespace Misc {
                             afn.sigma[i],
                             afd.states[j]
                         );
-                        state1.addTransition(transicion); //Agrega una transicion al estado j del AFD
+                        state.addTransition(transicion); //Agrega una transicion al estado j del AFD
                     }
                 }
             }
