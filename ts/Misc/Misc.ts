@@ -79,6 +79,26 @@ namespace Misc {
 		);
 	};
 
+	export /**
+	 *
+	 *
+	 * @param {string} symbol
+	 * @param {string} limitSymbol
+	 * @returns
+	 */
+	const getSymbolsFromRange = (symbol: string, limitSymbol: string) => {
+		if (symbol.length !== 1 || limitSymbol.length !== 1) {
+			return null;
+		}
+		const begin = symbol.charCodeAt(0);
+		const end = limitSymbol.charCodeAt(0);
+		const symbols: string[] = [];
+		for (let ascii = begin; ascii <= end; ascii++) {
+			symbols.push(String.fromCharCode(ascii));
+		}
+		return symbols;
+	};
+
 	/**
 	 * Para el análisis léxico, tomamos el último estado de aceptación
 	 * con el que se obtuvo un token y se guarda el índice hasta que, con

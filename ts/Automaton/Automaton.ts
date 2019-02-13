@@ -91,13 +91,10 @@ class Automaton {
 
 		// Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
 		if (transition.hasLimitSymbol()) {
-			for (
-				let ascii = symbol.charCodeAt(0);
-				ascii <= limitSymbol.charCodeAt(0);
-				ascii++
-			) {
-				this.sigma.add(String.fromCharCode(ascii));
-			}
+			const symbols = Misc.getSymbolsFromRange(symbol, limitSymbol);
+			symbols.forEach(symbol => {
+				this.sigma.add(symbol);
+			});
 		} else {
 			this.sigma.add(symbol);
 		}
@@ -111,6 +108,7 @@ class Automaton {
 
 	/**
 	 * Une un autómata a otro conservando la integridad de las transiciones.
+	 * Guarda la unión mutando al autómata this.
 	 *
 	 * @param {Automaton} automaton {es el automata que se va a unir con this}
 	 * @memberof Automaton
@@ -167,6 +165,13 @@ class Automaton {
 		// Se agregan los símbolos que abarca el rango (symbol, limitSymbol) a sigma.
 	};
 
+	/**
+	 * Concatena al autómata mismo con un automata "autómaton" dado y guarda
+	 * el resultado mutando el autómata this.
+	 *
+	 * @param {Automaton} automaton
+	 * @memberof Automaton
+	 */
 	public readonly concatenarAFN = (automaton: Automaton) => {
 		// Capturamos los estados de automaton excluyendo el inicial.
 		const incomingStates = [...automaton.getStates()].filter(
@@ -195,7 +200,7 @@ class Automaton {
 		this.acceptStates.add([...automaton.acceptStates][0]);
 	};
 	/**
-	 * Crea la cerradura opcional del autómata.
+	 * Hace opcional al autómata.
 	 *
 	 * @memberof Automaton
 	 */
@@ -229,7 +234,7 @@ class Automaton {
 	};
 
 	/**
-	 * Crea la cerradura positiva del autómata.
+	 * Hace positivo al autómata.
 	 *
 	 * @memberof Automaton
 	 */
@@ -253,9 +258,6 @@ class Automaton {
 		);
 
 		// Agregamos transiciones a los respectivos estados.
-		/* const prevFinalState = [...this.states].filter(state =>
-			this.acceptStates.has(state)
-		)[0];*/
 		const prevFinalState = [...this.acceptStates][0];
 		prevFinalState.addTransition(toPrevStartTransition);
 		prevFinalState.addTransition(finalTransition);
@@ -269,7 +271,7 @@ class Automaton {
 	};
 
 	/**
-	 * Crea la cerradura de Kleene del autómata.
+	 * Hace Kleene al autómata.
 	 *
 	 * @memberof Automaton
 	 */
@@ -284,6 +286,12 @@ class Automaton {
 		this.startState.addTransition(transitionToEnd);
 	};
 
+	/**
+	 * Crea una copia exacta de sí mismo sin ninguna depndencia en referencias.
+	 *
+	 * @memberof Automaton
+	 * @returns {Automaton}
+	 */
 	public readonly copy = () => {
 		// Creamos un autómata con el mismo nombre.
 		const copy = new Automaton(this.name);
@@ -356,16 +364,35 @@ class Automaton {
 		originState.addTransition(transition);
 
 		if (transition.hasLimitSymbol()) {
-			for (
-				let ascii = symbol.charCodeAt(0);
-				ascii <= limitSymbol.charCodeAt(0);
-				ascii++
-			) {
-				this.sigma.add(String.fromCharCode(ascii));
-			}
+			const symbols = Misc.getSymbolsFromRange(symbol, limitSymbol);
+			symbols.forEach(symbol => {
+				this.sigma.add(symbol);
+			});
 		} else {
 			this.sigma.add(symbol);
 		}
+	};
+
+	public readonly esAFD = () => {
+		const symbols = new Set<string>();
+		[...this.states].forEach(state => {
+			symbols.clear();
+			[...state.getTransitions()].forEach(trans => {
+				const tranSymbols = Misc.getSymbolsFromRange(
+					trans.getSymbol(),
+					trans.getLimitSymbol()
+				);
+				tranSymbols.forEach(tranSymbol => {
+					if (
+						symbols.has(tranSymbol) ||
+						tranSymbol === Misc.EPSILON
+					) {
+						return false;
+					}
+				});
+			});
+		});
+		return true;
 	};
 
 	public readonly toHTMLTable = () => {
