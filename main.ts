@@ -133,10 +133,7 @@ document.querySelector(".btn-execute__two").addEventListener("click", () => {
 		return a.getName() === name;
 	});
 
-	if (a1.getName() === a2.getName()) {
-		a1[operation](a1.copy());
-	} else {
-		a1[operation](a2);
-	}
+	const copy: Automaton = a2.copy();
+	a1[operation](copy);
 	document.querySelector("#automaton-table").innerHTML = a1.toHTMLTable();
 });
