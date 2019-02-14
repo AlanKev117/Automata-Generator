@@ -1,3 +1,5 @@
+import { State } from "../State/State";
+
 class Queue<T> {
 	private dataStore: Array<T>;
 

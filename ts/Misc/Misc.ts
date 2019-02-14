@@ -106,6 +106,7 @@ namespace Misc {
         resultado = simpleEpsilonClosure(afn.startState); //Se calcula la cerradura epsilon del estado inicial y se guarda en resultado
 		//queue.queue(resultado);
 		queueA.push(resultado);
+		console.log(resultado.size);
 		estados.add(resultado);
         afd.states.add(estadoInicial); //Agrega el inicial
 		afd.startState = estadoInicial;
@@ -115,30 +116,28 @@ namespace Misc {
 
             for(let i = 0; i < (afn.sigma.size); i++){ //Se itera sobre los simbolos del alfabeto
 				resultado = goTo(estadoAProcesar, afn.sigma[i]);
-                for(let j = 0; j < estados.size; j++){ //Itera sobre los subconjuntos de estados en el conjunto estados
-                    state = new State(estadosAFD.size);
-                    afd.states.add(state);
-                    if(resultado != estados[j]){ //Si no exisitia este subconjunto de estados va a conformar un nuevo estado del AFD con su transicion
-                        transicion = new Transition(
-                            afn.sigma[i],
-                            state,
-                        );
-                        for(let k = 0; k < estadoAProcesar.size; k++){
-                            if(estadoAProcesar[k] = [...afn.acceptStates]){ //Si ese set contenia al menos un estado de aceptacion
-                                afd.acceptStates.add(state); //se establece state como estado de aceptacion del AFD
-                            };
-                        }
-						afd.startState.addTransition(transicion);
-						//queueA.push(resultado); //Si el estado no existia previamente en los estados ya asignados al AFD lo encola
-						//break; 
+				state = new State(estadosAFD.size);
+				afd.states.add(state);
+                if(!estados.has(resultado)){ //Si no exisitia este subconjunto de estados va a conformar un nuevo estado del AFD con su transicion
+					transicion = new Transition(
+                    	afn.sigma[i],
+                    	state
+                    );
+                    for(let j = 0; j < estadoAProcesar.size; j++){
+                        if(afn.acceptStates.has(estadoAProcesar[j])){//Si ese set contenia al menos un estado de aceptacion
+                            afd.acceptStates.add(state); //se establece state como estado de aceptacion del AFD
+                        };
                     }
-                    else{
-                        transicion = new Transition(
-                            afn.sigma[i],
-                            afd.states[j]
-                        );
-                        state.addTransition(transicion); //Agrega una transicion al estado j del AFD
-                    }
+					afd.startState.addTransition(transicion);
+					//queueA.push(resultado);
+					console.log(resultado.size);
+                }
+                else{
+                    transicion = new Transition(
+                        afn.sigma[i],
+                        afd.states[[...estados].indexOf(resultado)] //Agrega una transicion al estado repetido
+                    );
+                    state.addTransition(transicion); //Agrega una transicion al estado j del AFD
                 }
 			}
 		}
