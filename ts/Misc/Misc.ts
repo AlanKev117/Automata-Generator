@@ -17,9 +17,7 @@ namespace Misc {
 	 * @returns {Set<State>}
 	 */
 	export const goTo = (states: Set<State>, symbol: string) => {
-		let S: Set<State>;
-		S = epsilonClosure(move(states, symbol));
-		return S;
+		return epsilonClosure(move(states, symbol));
 	};
 
 	/**
@@ -57,7 +55,9 @@ namespace Misc {
 	 * @returns {Set<State>}
 	 */
 	export const epsilonClosure = (states: Set<State>) => {
-		const epsilonSets = [...states].map(simpleEpsilonClosure);
+		const epsilonSets = [...states].map(state =>
+			simpleEpsilonClosure(state)
+		);
 		return epsilonSets.reduce((union, set) => {
 			set.forEach(state => {
 				union.add(state);
@@ -67,60 +67,62 @@ namespace Misc {
 	};
 
 	/**
-	 * Obtiene la cerradura épsilon de un estado.
+	 * Obtiene la cerradura épsilon de un estado a un nivel.
 	 *
 	 * @param {State} state
 	 * @returns {Set<State>}
 	 */
 	const simpleEpsilonClosure = (state: State) => {
-		return new Set<State>(
+		const states = new Set<State>(
 			[...state.getTransitions().values()]
-				.filter(transition => transition.getSymbol() === EPSILON)
+				.filter(transition => transition.getSymbol() === Misc.EPSILON)
 				.map(transition => transition.getTargetState())
 		);
-    };
-    
+		states.add(state);
+		return states;
+	};
 
-    /**
-     *Realiza la conversion de AFN  a AFD
-     * 
-     * @param {Automaton} afn
-     * @returns {Automaton} afd
-     */
+	/**
+	 *Realiza la conversion de AFN  a AFD
+	 *
+	 * @param {Automaton} afn
+	 * @returns {Automaton} afd
+	 */
 
-    export const afnToAfd = (afn: Automaton) => {
-        //let queue = new Queue();
-        let afd = new Automaton("afd");
-        let estadoInicial = new State(0);
-        let resultado = new Set<State>();
-        let estadoAProcesar = new Set<State>();
-        let estados = new Set<Set<State>>(); //Es un conjunto de conjuntos de estados
-        let estadosAFD = new Set<State>(); //Contendra estados numerados de 0 a n
-        let transicion : Transition;
+	export const afnToAfd = (afn: Automaton) => {
+		//let queue = new Queue();
+		let afd = new Automaton(afn.getName() + "-afd");
+		let estadoInicial = new State(0);
+		let resultado = new Set<State>();
+		let estadoAProcesar = new Set<State>();
+		let estados = new Set<Set<State>>(); //Es un conjunto de conjuntos de estados
+		let estadosAFD = new Set<State>(); //Contendra estados numerados de 0 a n
+		let transicion: Transition;
 		let state: State;
-		let queueA: Array<Set<State>>
+		let queueA: Array<Set<State>>;
 		queueA = new Array();
 		//queueA = [];
-        afd.sigma = afn.getSigma(); //Se copia el alfabeto del AFN al AFD
-        afd.sigma.delete(EPSILON); //Elimina Epsilon del alfabeto del AFD
-        resultado = simpleEpsilonClosure(afn.startState); //Se calcula la cerradura epsilon del estado inicial y se guarda en resultado
+		afd.sigma = afn.getSigma(); //Se copia el alfabeto del AFN al AFD
+		afd.sigma.delete(Misc.EPSILON); //Elimina Epsilon del alfabeto del AFD
+		resultado = simpleEpsilonClosure(afn.startState); //Se calcula la cerradura epsilon del estado inicial y se guarda en resultado
 		//queue.queue(resultado);
 		queueA.push(resultado);
 		console.log(resultado.size);
 		estados.add(resultado);
-        afd.states.add(estadoInicial); //Agrega el inicial
+		afd.states.add(estadoInicial); //Agrega el inicial
 		afd.startState = estadoInicial;
-        while(queueA.length !=  0){    
+		while (queueA.length != 0) {
 			estadoAProcesar = queueA.shift(); //Desencola
 			estados.add(estadoAProcesar); //Se agrega al subconjunto de estados al conjunto estados
 
-            for(let i = 0; i < (afn.sigma.size); i++){ //Se itera sobre los simbolos del alfabeto
+			for (let i = 0; i < afn.sigma.size; i++) {
+				//Se itera sobre los simbolos del alfabeto
 				resultado = goTo(estadoAProcesar, afn.sigma[i]);
 				state = new State(estadosAFD.size);
 				afd.states.add(state);
                 if(!estados.has(resultado)){ //Si no exisitia este subconjunto de estados va a conformar un nuevo estado del AFD con su transicion
 					transicion = new Transition(
-                    	afn.sigma[i],
+                    	[...afn.sigma][i],
                     	state
                     );
                     for(let j = 0; j < estadoAProcesar.size; j++){
@@ -130,12 +132,13 @@ namespace Misc {
                     }
 					afd.startState.addTransition(transicion);
 					//queueA.push(resultado);
-					console.log(resultado.size);
+					console.log(transicion.getTargetState() + " Con el simbolo" + transicion.getSymbol());
+					console.log([...afn.sigma][i]);
                 }
                 else{
                     transicion = new Transition(
-                        afn.sigma[i],
-                        afd.states[[...estados].indexOf(resultado)] //Agrega una transicion al estado repetido
+                        [...afn.sigma][i],
+                        [...afd.states][[...estados].indexOf(resultado)] //Agrega una transicion al estado repetido
                     );
                     state.addTransition(transicion); //Agrega una transicion al estado j del AFD
                 }
@@ -143,9 +146,15 @@ namespace Misc {
 		}
 		console.log("El proceso termino");
 		console.log("El AFD quedo con " + afd.states.size + "estados");
-		console.log("El AFD tiene " + afd.acceptStates.size + " estados de aceptacion");
+		console.log(
+			"El AFD tiene " + afd.acceptStates.size + " estados de aceptacion"
+		);
+		const newStates = [...afd.states];
+		newStates.forEach((state, index) => {
+			state.setId(index);
+		});
 		return afd;
-    }
+	};
 
 	export /**
 	 *
