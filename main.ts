@@ -1,148 +1,51 @@
+import { ListenersHome } from "./ts/Listeners/ListenersHome";
 import { Automaton } from "./ts/Automaton/Automaton";
-import Misc from "./ts/Misc/Misc";
 
 // Arreglo de autómatas creados localmente.
 const automata: Automaton[] = [];
-(<HTMLElement>document.querySelector("#tools")).style.display = "none";
-(<HTMLElement>document.querySelector("#target")).style.display = "none";
 
-// Listener para crear autómatas simples
-document.querySelector(".btn-creator").addEventListener("click", () => {
-	const name_element = <HTMLInputElement>document.querySelector("#name");
-	const symbol_element = <HTMLInputElement>document.querySelector("#symbol");
-	const name = name_element.value;
-	if (name.length === 0) {
-		alert("Debe ingresar un nombre para el autómata.");
-		return;
-	} else if (automata.find(automaton => automaton.getName() === name)) {
-		alert("Ingrese otro nombre para el autómata.");
-		return;
+// Listener para la opción de navegación a "syntax" (analizador sntáctico).
+document.querySelector("#to-syntax").addEventListener("click", event => {
+	event.preventDefault();
+	const currentlyHere = window.location.href
+		.split("/")
+		.find(item => item === "syntax");
+	if (!currentlyHere) {
+		window.history.pushState(
+			{},
+			"/syntax",
+			window.location.origin + "/syntax"
+		);
+		(<HTMLDivElement>document.querySelector("#main__home")).style.display = "none";
+		(<HTMLDivElement>document.querySelector("#main__syntax")).style.display = "block";
+		(<HTMLAnchorElement>document.querySelector("#to-syntax")).classList.add("active");
 	}
-	const symbol = symbol_element.value;
-	const symbols = symbol.split("-");
-	switch (symbols.length) {
-		case 1: {
-			const automaton = new Automaton(name);
-			automaton.createBasic(symbols[0]);
-			automata.push(automaton);
-			break;
-		}
-
-		case 2: {
-			if (symbols.find(_symbol => _symbol.length !== 1)) {
-				alert("El rango se da solamente con símbolos de longitud 1");
-				return;
-			}
-			const automaton = new Automaton(name);
-			automaton.createBasic(symbols[0], symbols[1]);
-			automata.push(automaton);
-			break;
-		}
-
-		default: {
-			alert("Inserte un símbolo o rango adecuado.");
-			return;
-		}
-	}
-
-	const option_one = document.createElement("option");
-	option_one.text = name;
-	option_one.value = name;
-	const option_two = document.createElement("option");
-	option_two.text = name;
-	option_two.value = name;
-	const automaton_select = <HTMLSelectElement>(
-		document.querySelector("#automaton")
-	);
-	const target_select = <HTMLSelectElement>(
-		document.querySelector("#target-automaton")
-	);
-	automaton_select.appendChild(option_one);
-	automaton_select.value = name;
-	target_select.appendChild(option_two);
-	name_element.value = "";
-	symbol_element.value = "";
+	
 });
 
-// Listeners para mostrar tabla de autómata según se seleccione.
-document
-	.querySelector("#automaton")
-	.addEventListener("DOMNodeInserted", event => {
-		const selector = <HTMLSelectElement>event.target;
-		if (selector.childElementCount !== 0) {
-			return;
-		}
-		document.querySelector("#automaton-table").innerHTML = automata
-			.find(automaton => automaton.getName() === selector.value)
-			.toHTMLTable();
-		(<HTMLElement>document.querySelector("#tools")).style.display =
-			"inline-block";
-	});
-document.querySelector("#automaton").addEventListener("change", event => {
-	const name = (<HTMLSelectElement>event.target).value;
-	document.querySelector("#automaton-table").innerHTML = automata
-		.find(automaton => automaton.getName() === name)
-		.toHTMLTable();
-});
-
-// Listeners para controlar comportamiento de sección "target".
-document.querySelector("#operation").addEventListener("change", event => {
-	const operation = (<HTMLSelectElement>event.target).value;
-	if (operation === "unirAFN" || operation === "concatenarAFN") {
-		(<HTMLElement>document.querySelector("#target")).style.display =
-			"inline-block";
-		(<HTMLButtonElement>(
-			document.querySelector(".btn-execute__one")
-		)).style.display = "none";
-	} else {
-		(<HTMLElement>document.querySelector("#target")).style.display = "none";
-		(<HTMLButtonElement>(
-			document.querySelector(".btn-execute__one")
-		)).style.display = "initial";
+// Listener para la navegación a "home"
+document.querySelector("#brand").addEventListener("click", event => {
+	event.preventDefault();
+	const currentlyHere = window.location.href
+		.split("/")
+		.find(item => item === "");
+	if (!currentlyHere) {
+		window.history.pushState(
+			{},
+			"/",
+			window.location.origin
+		);
+		(<HTMLDivElement>document.querySelector("#main__home")).style.display = "block";
+		(<HTMLDivElement>document.querySelector("#main__syntax")).style.display = "none";
+		(<HTMLAnchorElement>document.querySelector("#to-syntax")).classList.remove("active");
 	}
 });
 
-// Listeners para realizar las operaciones unarias.
-document.querySelector(".btn-execute__one").addEventListener("click", () => {
-	// Obtenemos el valor del selector.
-	const operation = (<HTMLSelectElement>document.querySelector("#operation"))
-		.value;
-		
-	// Buscamos el autómata.
-	const automaton = automata.find(a => {
-		const name = (<HTMLSelectElement>document.querySelector("#automaton"))
-			.value;
-		return a.getName() === name;
-	});
-	// Ejecutamos la operación según el valor del selector.
-	if (operation === "hacerAFD") {
-		Misc.afnToAfd(automaton);
-	} else {
-		automaton[operation]();
-	}
-	// Mostramos al autómata en tabla.
-	document.querySelector(
-		"#automaton-table"
-	).innerHTML = automaton.toHTMLTable();
-});
-
-// Listeners para realizar las operaciones binarias.
-document.querySelector(".btn-execute__two").addEventListener("click", () => {
-	const operation = (<HTMLSelectElement>document.querySelector("#operation"))
-		.value;
-	const a1 = automata.find(a => {
-		const name = (<HTMLSelectElement>document.querySelector("#automaton"))
-			.value;
-		return a.getName() === name;
-	});
-	const a2 = automata.find(a => {
-		const name = (<HTMLSelectElement>(
-			document.querySelector("#target-automaton")
-		)).value;
-		return a.getName() === name;
-	});
-
-	const copy: Automaton = a2.copy();
-	a1[operation](copy);
-	document.querySelector("#automaton-table").innerHTML = a1.toHTMLTable();
-});
+// Ejecutamos los listeners de ListenersHome
+// Asignamos acciones a los elementos de entrada.
+ListenersHome.init();
+ListenersHome.activateBtnCreator(automata);
+ListenersHome.activateBtnExecuteOne(automata);
+ListenersHome.activateBtnExecuteTwo(automata);
+ListenersHome.activateAutomatonSelector(automata);
+ListenersHome.makeTargetAutomatonSelectorDynamic(automata);

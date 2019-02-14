@@ -89,7 +89,7 @@ namespace Misc {
      */
 
     export const afnToAfd = (afn: Automaton) => {
-        let queue = new Queue();
+        let queue = new Queue<Set<State>>();
         let afd = new Automaton("afd");
         let estadoInicial = new State(0);
         let resultado = new Set<State>();
@@ -101,7 +101,7 @@ namespace Misc {
         afd.sigma = afn.getSigma(); //Se copia el alfabeto del AFN al AFD
         afd.sigma.delete(EPSILON); //Elimina Epsilon del alfabeto del AFD
         resultado = simpleEpsilonClosure(afn.startState); //Se calcula la cerradura epsilon del estado inicial y se guarda en resultado
-        queue.queue(resultado);
+        //queue.queue(resultado);
         afd.states.add(estadoInicial); //Agrega el inicial
         afd.startState = estadoInicial;
         while(!queue.isEmpty()){    
@@ -112,13 +112,13 @@ namespace Misc {
                 for(let j = 0; j < estados.size; j++){ //Itera sobre los subconjuntos de estados en el conjunto estados
                     state = new State(estadosAFD.size);
                     afd.states.add(state);
-                    if(resultado != estados[j]){ //Si no exisitia este subconjunto de estados va a conformar un nuevo estado del AFD con su transicion
+                    if(resultado !== estados[j]){ //Si no exisitia este subconjunto de estados va a conformar un nuevo estado del AFD con su transicion
                         transicion = new Transition(
                             afn.sigma[i],
                             state,
                         );
                         for(let k = 0; k < estadoAProcesar.size; k++){
-                            if(estadoAProcesar[k] = [...afn.acceptStates]){ //Si ese set contenia al menos un estado de aceptacion
+                            if(estadoAProcesar[k] === [...afn.acceptStates]){ //Si ese set contenia al menos un estado de aceptacion
                                 afd.acceptStates.add(state); //se establece state como estado de aceptacion del AFD
                             };
                         }

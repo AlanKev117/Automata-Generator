@@ -5,12 +5,12 @@ class Queue<T> {
 		this.dataStore = [];
 	}
 
-	public queue = element => {
+	public queue = (element: T) => {
 		this.dataStore.push(element);
 	};
 
 	public dequeue = () => {
-		return this.dataStore.shift();
+		return <T>this.dataStore.shift();
 	};
 
 	public isEmpty = () => {

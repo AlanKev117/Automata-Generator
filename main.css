@@ -22,6 +22,16 @@ h3 {
 	margin: 6px 0;
 }
 
+#brand {
+	cursor: pointer;
+}
+
+#brand:active,
+#to-syntax:active,
+#to-syntax.active {
+	text-decoration: underline;
+}
+
 #annotations {
 	margin-bottom: 5px;
 }
