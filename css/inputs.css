@@ -1,5 +1,6 @@
 /*General*/
-#inputs > div {
+#inputs > div,
+#inputs-lexic > div {
 	display: inline-block;
 	padding: 10px;
 	margin: 15px 10px;
@@ -54,7 +55,8 @@ input[type="text"] {
 }
 
 /*Creador de autómatas simple*/
-#creator {
+#creator,
+#afd-chooser {
 	background: #a4eaff;
 }
 

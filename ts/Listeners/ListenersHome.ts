@@ -4,7 +4,8 @@ import Misc from "../Misc/Misc";
 namespace ListenersHome {
 	// Inicializador para el DOM
 	// Desactivamos las secciones que no se deben visualizar.
-	export const init = () => {
+	export const init = 
+	() => {
 		(<HTMLElement>document.querySelector("#tools")).style.display = "none";
 		(<HTMLElement>document.querySelector("#target")).style.display = "none";
 		(<HTMLElement>document.querySelector("#main__lexic")).style.display =
