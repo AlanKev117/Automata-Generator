@@ -90,7 +90,7 @@ namespace Misc {
 
     export const afnToAfd = (afn: Automaton) => {
         //let queue = new Queue();
-        let afd = new Automaton("afd");
+        let afd = new Automaton(afn.getName() + "-afd");
         let estadoInicial = new State(0);
         let resultado = new Set<State>();
         let estadoAProcesar = new Set<State>();
