@@ -17,14 +17,14 @@ class lexema{
 	 *
 	 * @param token {Token correspondiente al AFN}
 	 */
-	private token: string;
+	private token: any;
 	
-	constructor (caracteres:Set<string>,token:string){
-		this.caracteres = caracteres;
-		this.token = token;
+	constructor (caracteres:Set<string>,token:any){
+		this.caracteres.clear();
+		this.token = -1;
 	}
-	public readonly addCaracter = (c:Set<string>) => {
-		this.caracteres = c;
+	public readonly addCaracter = (c:string) => {
+		this.caracteres = this.caracteres.add(c);
 	}
 	public readonly addTok = (t: string) => {
 		this.token;
