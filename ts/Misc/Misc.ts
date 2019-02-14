@@ -196,6 +196,28 @@ namespace Misc {
 	 *
 	 * LIBRO: Compiler design in C.
 	 */
+
+	const analizadorLexico = () =>{
+		//previously_seen_accepting = none_seen;
+		if(esUltimaEntrada(caracter_sig)){
+			return 0;
+		}
+		while (caracter_sig != finalEntrada){
+
+			if(estadoActual.haytrancicion(caracter_sig)){
+				estadoActual = estadoActual.transicion(caracter_sig);
+				if(estadoActual == acceptState){
+					posicionActual = pocicionEntrada
+				}else
+				
+			}
+
+
+
+		}
+
+	}
+
 }
 
 export default Misc;
