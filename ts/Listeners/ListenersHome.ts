@@ -144,7 +144,7 @@ namespace ListenersHome {
 				)).value;
 
 				// Buscamos el autómata.
-				const automaton = automata.find(a => {
+				let automaton = automata.find(a => {
 					const name = (<HTMLSelectElement>(
 						document.querySelector("#automaton")
 					)).value;
@@ -152,7 +152,7 @@ namespace ListenersHome {
 				});
 				// Ejecutamos la operación según el valor del selector.
 				if (operation === "hacerAFD") {
-					Misc.afnToAfd(automaton);
+					automaton = Misc.afnToAfd(automaton);
 				} else {
 					automaton[operation]();
 				}
