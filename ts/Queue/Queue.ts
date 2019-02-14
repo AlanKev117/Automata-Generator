@@ -1,28 +1,25 @@
+class Queue {
+	private dataStore;
 
-class Queue{
+	constructor() {
+		this.dataStore = Array.prototype.slice.call(arguments, 0);
+	}
 
-    private dataStore;
+	public queue = element => {
+		this.dataStore.push(element);
+	};
 
-    constructor(){
-        this.dataStore = Array.prototype.slice.call(arguments, 0);
-    }
-    
+	public dequeue = () => {
+		return this.dataStore.shift();
+	};
 
-    public queue = (element) => {
-        this.dataStore.push(element);
-    }
+	public isEmpty = () => {
+		return this.dataStore == 0 ? true : false;
+	};
 
-    public dequeue = () => {
-        return this.dataStore.shift();
-    }
-
-    public isEmpty = () => {
-        return (this.dataStore == 0)?true:false;
-    }
-
-    public size = () => {
-        return this.dataStore.size;
-    }
+	public size = () => {
+		return this.dataStore.size;
+	};
 }
 
 export { Queue };

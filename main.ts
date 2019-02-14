@@ -1,4 +1,5 @@
 import { Automaton } from "./ts/Automaton/Automaton";
+import Misc from "./ts/Misc/Misc";
 
 // Arreglo de autómatas creados localmente.
 const automata: Automaton[] = [];
@@ -103,15 +104,23 @@ document.querySelector("#operation").addEventListener("change", event => {
 
 // Listeners para realizar las operaciones unarias.
 document.querySelector(".btn-execute__one").addEventListener("click", () => {
+	// Obtenemos el valor del selector.
 	const operation = (<HTMLSelectElement>document.querySelector("#operation"))
 		.value;
+		
+	// Buscamos el autómata.
 	const automaton = automata.find(a => {
 		const name = (<HTMLSelectElement>document.querySelector("#automaton"))
 			.value;
 		return a.getName() === name;
 	});
-
-	automaton[operation]();
+	// Ejecutamos la operación según el valor del selector.
+	if (operation === "hacerAFD") {
+		Misc.afnToAfd(automaton);
+	} else {
+		automaton[operation]();
+	}
+	// Mostramos al autómata en tabla.
 	document.querySelector(
 		"#automaton-table"
 	).innerHTML = automaton.toHTMLTable();
