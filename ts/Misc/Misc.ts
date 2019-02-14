@@ -134,7 +134,13 @@ namespace Misc {
                         };
                     }
 					afd.startState.addTransition(transicion);
-					//queueA.push(resultado);
+					/**
+					 * ESTA ES LA PARTE QUE ESTA DANDO PROBLEMAS, SIN EMBARGO ES FUNDAMENTAL PARA EL ALGORITMO
+					 * PORQUE ES LO QUE MANTIENE ACTUALIZADO EL ARREGLO ESTADOS CON LOS ESTADOS YA VISTOS
+					 * (YA PROBE SIMPLEMENTE IR AGREGANDO LOS ESTADOS YA VISTOS A ESTADOS CSIN LA COLA PERO
+					 * TAMPOCO FUNCIONA)
+					 */
+					//queueA.push(resultado); 
 					//console.log("Tamano de cola: " + queueA.length);
                 }
                 else{
