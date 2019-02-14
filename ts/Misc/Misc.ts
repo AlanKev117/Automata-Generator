@@ -100,12 +100,14 @@ namespace Misc {
 		let transicion: Transition;
 		let state: State;
 		let queueA: Array<Set<State>>;
-		queueA = new Array();
-		//queueA = [];
+		queueA = new Array<Set<State>>();
+		queueA = [];
+		estados.clear();
 		afd.sigma = afn.getSigma(); //Se copia el alfabeto del AFN al AFD
 		afd.sigma.delete(Misc.EPSILON); //Elimina Epsilon del alfabeto del AFD
 		resultado = simpleEpsilonClosure(afn.startState); //Se calcula la cerradura epsilon del estado inicial y se guarda en resultado
 		//queue.queue(resultado);
+		console.log("La cola empieza con: " + queueA.length);
 		queueA.push(resultado);
 		console.log(resultado.size);
 		estados.add(resultado);
@@ -117,7 +119,8 @@ namespace Misc {
 
 			for (let i = 0; i < afn.sigma.size; i++) {
 				//Se itera sobre los simbolos del alfabeto
-				resultado = goTo(estadoAProcesar, afn.sigma[i]);
+				resultado = goTo(estadoAProcesar, [...afn.sigma][i]);
+				console.log("Resultado.size = " + resultado.size);
 				state = new State(estadosAFD.size);
 				afd.states.add(state);
                 if(!estados.has(resultado)){ //Si no exisitia este subconjunto de estados va a conformar un nuevo estado del AFD con su transicion
@@ -126,16 +129,16 @@ namespace Misc {
                     	state
                     );
                     for(let j = 0; j < estadoAProcesar.size; j++){
-                        if(afn.acceptStates.has(estadoAProcesar[j])){//Si ese set contenia al menos un estado de aceptacion
+                        if(afn.acceptStates.has([...estadoAProcesar][j])){//Si ese set contenia al menos un estado de aceptacion
                             afd.acceptStates.add(state); //se establece state como estado de aceptacion del AFD
                         };
                     }
 					afd.startState.addTransition(transicion);
 					//queueA.push(resultado);
-					console.log(transicion.getTargetState() + " Con el simbolo" + transicion.getSymbol());
-					console.log([...afn.sigma][i]);
+					//console.log("Tamano de cola: " + queueA.length);
                 }
                 else{
+					console.log("estado ya existente");
                     transicion = new Transition(
                         [...afn.sigma][i],
                         [...afd.states][[...estados].indexOf(resultado)] //Agrega una transicion al estado repetido
