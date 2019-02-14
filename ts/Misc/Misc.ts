@@ -109,7 +109,7 @@ namespace Misc {
 
     export const afnToAfd = (afn: Automaton) => {
         //let queue = new Queue();
-        let afd = new Automaton(afn.getName() + "-afd");
+        let afd = new Automaton(afn.getName());
         let estadoInicial = new State(0);
         let resultado = new Set<State>();
         let estadoAProcesar = new Set<State>();
@@ -213,24 +213,26 @@ namespace Misc {
      * LIBRO: Compiler design in C.
      */
 
-    // const analizadorLexico = () =>{
-    // 	//previously_seen_accepting = none_seen;
-    // 	if(esUltimaEntrada(caracter_sig)){
-    // 		return 0;
-    // 	}
-    // 	while (caracter_sig != finalEntrada){
+/*     const analizadorLexico = (A:Automaton) =>{
+		var estadoActual = A.startState;
+		previously_seen_accepting = false; //Anteriormente hemos estado en aceptacion = no
+		
+		if(esUltimaEntrada(caracter_sig)){ //El caracter siguiente es la ultima entrada?
+    		return 0;//Termina el algoritmo
+    	}
+    	while (!esUltimaEntrada(caracter_sig)){ //mientras el caracter siguiente  no sea la ultima entrada
 
-    // 		if(estadoActual.haytrancicion(caracter_sig)){
-    // 			estadoActual = estadoActual.transicion(caracter_sig);
-    // 			if(estadoActual == acceptState){
-    // 				posicionActual = pocicionEntrada
-    // 			}else
+    		if(estadoActual.haytrancicion(caracter_sig)){ // Si hay una transición ern el estado actual con el siguiente caracter
+    			estadoActual = estadoActual.transicion(caracter_sig);
+    			if(estadoActual == acceptState){
+    				posicionActual = pocicionEntrada
+    			}else
 
-    // 		}
+    		}
 
-    // 	}
+    	}
 
-    // }
+    } */
 }
 
 export default Misc;
