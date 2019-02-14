@@ -170,7 +170,10 @@ class Automaton {
 
     /**
      * Concatena un automata con otro para analisis lexico (teniendo 2 o mas estados
-     * de aceptacion)
+     * de aceptacion y conservandolos)
+     * 
+     * @param {Automaton} automaton {es el automata que se va a unir con this}
+     * @memberof Automaton
      */
 
     public readonly unirAFNAnalisis = (automaton: Automaton) => {
