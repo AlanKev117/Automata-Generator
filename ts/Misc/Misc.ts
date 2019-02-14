@@ -196,7 +196,7 @@ namespace Misc {
 	 *
 	 * LIBRO: Compiler design in C.
 	 */
-
+/*
 	const analizadorLexico = () =>{
 		//previously_seen_accepting = none_seen;
 		if(esUltimaEntrada(caracter_sig)){
@@ -217,6 +217,7 @@ namespace Misc {
 		}
 
 	}
+	*/
 
 }
 
