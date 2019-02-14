@@ -7,8 +7,8 @@ namespace ListenersHome {
 	export const init = () => {
 		(<HTMLElement>document.querySelector("#tools")).style.display = "none";
 		(<HTMLElement>document.querySelector("#target")).style.display = "none";
-		(<HTMLElement>document.querySelector("#main__lexic")).style.display = "none";
-
+		(<HTMLElement>document.querySelector("#main__lexic")).style.display =
+			"none";
 	};
 	// Listener para crear autómatas simples
 	export const activateBtnCreator = (automata: Automaton[]) => {
@@ -36,6 +36,7 @@ namespace ListenersHome {
 					const automaton = new Automaton(name);
 					automaton.createBasic(symbols[0]);
 					automata.push(automaton);
+					//console.log(Misc.goTo(automaton.getStates(), "a"));
 					break;
 				}
 
@@ -152,7 +153,7 @@ namespace ListenersHome {
 				});
 				// Ejecutamos la operación según el valor del selector.
 				if (operation === "hacerAFD") {
-					automaton = Misc.afnToAfd(automaton);
+					automaton = Misc.afnToAfd(automaton.copy());
 				} else {
 					automaton[operation]();
 				}
@@ -193,8 +194,9 @@ namespace ListenersHome {
 	};
 
 	export const close = () => {
-		(<HTMLElement>document.querySelector("#main__home")).style.display = "none";
-	}
+		(<HTMLElement>document.querySelector("#main__home")).style.display =
+			"none";
+	};
 }
 
 export { ListenersHome };
