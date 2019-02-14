@@ -7,7 +7,7 @@ namespace ListenersHome {
 	export const init = () => {
 		(<HTMLElement>document.querySelector("#tools")).style.display = "none";
 		(<HTMLElement>document.querySelector("#target")).style.display = "none";
-		(<HTMLElement>document.querySelector("#main__syntax")).style.display = "none";
+		(<HTMLElement>document.querySelector("#main__lexic")).style.display = "none";
 
 	};
 	// Listener para crear autómatas simples

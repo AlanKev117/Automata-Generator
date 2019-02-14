@@ -4,21 +4,21 @@ import { Automaton } from "./ts/Automaton/Automaton";
 // Arreglo de autómatas creados localmente.
 const automata: Automaton[] = [];
 
-// Listener para la opción de navegación a "syntax" (analizador sntáctico).
-document.querySelector("#to-syntax").addEventListener("click", event => {
+// Listener para la opción de navegación a "lexic" (analizador sntáctico).
+document.querySelector("#to-lexic").addEventListener("click", event => {
 	event.preventDefault();
 	const currentlyHere = window.location.href
 		.split("/")
-		.find(item => item === "syntax");
+		.find(item => item === "lexic");
 	if (!currentlyHere) {
 		window.history.pushState(
 			{},
-			"/syntax",
-			window.location.origin + "/syntax"
+			"/lexic",
+			window.location.origin + "/lexic"
 		);
 		(<HTMLDivElement>document.querySelector("#main__home")).style.display = "none";
-		(<HTMLDivElement>document.querySelector("#main__syntax")).style.display = "block";
-		(<HTMLAnchorElement>document.querySelector("#to-syntax")).classList.add("active");
+		(<HTMLDivElement>document.querySelector("#main__lexic")).style.display = "block";
+		(<HTMLAnchorElement>document.querySelector("#to-lexic")).classList.add("active");
 	}
 	
 });
@@ -36,8 +36,8 @@ document.querySelector("#brand").addEventListener("click", event => {
 			window.location.origin
 		);
 		(<HTMLDivElement>document.querySelector("#main__home")).style.display = "block";
-		(<HTMLDivElement>document.querySelector("#main__syntax")).style.display = "none";
-		(<HTMLAnchorElement>document.querySelector("#to-syntax")).classList.remove("active");
+		(<HTMLDivElement>document.querySelector("#main__lexic")).style.display = "none";
+		(<HTMLAnchorElement>document.querySelector("#to-lexic")).classList.remove("active");
 	}
 });
 
