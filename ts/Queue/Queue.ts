@@ -1,8 +1,8 @@
-class Queue {
-	private dataStore;
+class Queue<T> {
+	private dataStore: Array<T>;
 
 	constructor() {
-		this.dataStore = Array.prototype.slice.call(arguments, 0);
+		this.dataStore = [];
 	}
 
 	public queue = element => {
@@ -14,11 +14,11 @@ class Queue {
 	};
 
 	public isEmpty = () => {
-		return this.dataStore == 0 ? true : false;
+		return this.dataStore.length === 0;
 	};
 
 	public size = () => {
-		return this.dataStore.size;
+		return this.dataStore.length;
 	};
 }
 
