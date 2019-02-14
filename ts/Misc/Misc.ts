@@ -89,7 +89,7 @@ namespace Misc {
      */
 
     export const afnToAfd = (afn: Automaton) => {
-        let queue = new Queue<Set<State>>();
+        //let queue = new Queue();
         let afd = new Automaton("afd");
         let estadoInicial = new State(0);
         let resultado = new Set<State>();
@@ -97,18 +97,24 @@ namespace Misc {
         let estados = new Set<Set<State>>(); //Es un conjunto de conjuntos de estados
         let estadosAFD = new Set<State>(); //Contendra estados numerados de 0 a n
         let transicion : Transition;
-        let state: State;
+		let state: State;
+		let queueA: Array<Set<State>>
+		queueA = new Array();
+		//queueA = [];
         afd.sigma = afn.getSigma(); //Se copia el alfabeto del AFN al AFD
         afd.sigma.delete(EPSILON); //Elimina Epsilon del alfabeto del AFD
         resultado = simpleEpsilonClosure(afn.startState); //Se calcula la cerradura epsilon del estado inicial y se guarda en resultado
-        //queue.queue(resultado);
+		//queue.queue(resultado);
+		queueA.push(resultado);
+		estados.add(resultado);
         afd.states.add(estadoInicial); //Agrega el inicial
-        afd.startState = estadoInicial;
-        while(!queue.isEmpty()){    
-            estadoAProcesar = queue.dequeue();
-            estados.add(estadoAProcesar); //Se agrega al subconjunto de estados al conjunto estados
-            for(let i = 0; i < (afn.sigma.size - 1); i++){ //Se itera sobre los simbolos del alfabeto
-                resultado = goTo(estadoAProcesar, afn.sigma[i]);
+		afd.startState = estadoInicial;
+        while(queueA.length !=  0){    
+			estadoAProcesar = queueA.shift(); //Desencola
+			estados.add(estadoAProcesar); //Se agrega al subconjunto de estados al conjunto estados
+
+            for(let i = 0; i < (afn.sigma.size); i++){ //Se itera sobre los simbolos del alfabeto
+				resultado = goTo(estadoAProcesar, afn.sigma[i]);
                 for(let j = 0; j < estados.size; j++){ //Itera sobre los subconjuntos de estados en el conjunto estados
                     state = new State(estadosAFD.size);
                     afd.states.add(state);
@@ -122,8 +128,9 @@ namespace Misc {
                                 afd.acceptStates.add(state); //se establece state como estado de aceptacion del AFD
                             };
                         }
-                        afd.startState.addTransition(transicion);
-                        queue.queue(resultado); //Si el estado no existia previamente en los estados ya asignados al AFD lo encola 
+						afd.startState.addTransition(transicion);
+						//queueA.push(resultado); //Si el estado no existia previamente en los estados ya asignados al AFD lo encola
+						//break; 
                     }
                     else{
                         transicion = new Transition(
@@ -133,8 +140,12 @@ namespace Misc {
                         state.addTransition(transicion); //Agrega una transicion al estado j del AFD
                     }
                 }
-            }
-        }
+			}
+		}
+		console.log("El proceso termino");
+		console.log("El AFD quedo con " + afd.states.size + "estados");
+		console.log("El AFD tiene " + afd.acceptStates.size + " estados de aceptacion");
+		return afd;
     }
 
 	export /**
