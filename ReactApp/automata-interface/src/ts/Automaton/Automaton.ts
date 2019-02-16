@@ -3,7 +3,6 @@ import { Transition } from "../Transition/Transition";
 import Misc from "../Misc/Misc";
 
 class Automaton {
-    private static tok = 0;
     /**
      * Nombre que se le asignará al autómata cuando se cree.
      *

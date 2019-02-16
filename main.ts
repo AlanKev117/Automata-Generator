@@ -1,5 +1,5 @@
 import { ListenersHome } from "./ts/Listeners/ListenersHome";
-import { ListenersLexic } from "./ts/Listeners/ListenersLexic";
+//import { ListenersLexic } from "./ts/Listeners/ListenersLexic";
 import { Automaton } from "./ts/Automaton/Automaton";
 
 // Arreglo de autómatas creados localmente.
@@ -14,7 +14,7 @@ ListenersHome.activateBtnExecuteOne(automata);
 ListenersHome.activateBtnExecuteTwo(automata);
 ListenersHome.activateAutomatonSelector(automata);
 ListenersHome.makeTargetAutomatonSelectorDynamic(automata);
-ListenersLexic.loadDFAs(automata);
+//ListenersLexic.loadDFAs(automata);
 // Listener para la opción de navegación a "lexic" (analizador sntáctico).
 document.querySelector("#to-lexic").addEventListener("click", event => {
     event.preventDefault();

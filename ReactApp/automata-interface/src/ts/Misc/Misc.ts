@@ -3,8 +3,8 @@ import { State } from "../State/State";
 import { Transition } from "../Transition/Transition";
 import { Queue } from "../Queue/Queue";
 
-namespace Misc {
-    export const EPSILON: string = "\u03B5";
+class Misc {
+    public static readonly EPSILON: string = "\u03B5";
 
     /**
      * Función Ir_a(). Aplica la función Mover() con los parámetros
@@ -16,8 +16,8 @@ namespace Misc {
      * @param {string} symbol
      * @returns {Set<State>}
      */
-    export const goTo = (states: Set<State>, symbol: string) => {
-        return epsilonClosure(move(states, symbol));
+    public static readonly goTo = (states: Set<State>, symbol: string) => {
+        return Misc.epsilonClosure(Misc.move(states, symbol));
     };
 
     /**
@@ -30,8 +30,8 @@ namespace Misc {
      * @param {string} symbol
      * @returns {Set<State>}
      */
-    export const move = (states: Set<State>, symbol: string) => {
-        const result = [...states].map(state => simpleMove(state, symbol));
+    public static readonly move = (states: Set<State>, symbol: string) => {
+        const result = [...states].map(state => Misc.simpleMove(state, symbol));
         return result.reduce((union, set) => {
             set.forEach(state => {
                 union.add(state);
@@ -40,7 +40,7 @@ namespace Misc {
         }, new Set<State>());
     };
 
-    const simpleMove = (state: State, symbol: string) => {
+    public static readonly simpleMove = (state: State, symbol: string) => {
         return new Set<State>(
             [...state.getTransitions().values()]
                 .filter(transition => transition.getSymbol() === symbol)
@@ -54,9 +54,9 @@ namespace Misc {
      * @param {Set<State>} states
      * @returns {Set<State>}
      */
-    export const epsilonClosure = (states: Set<State>) => {
+    public static readonly epsilonClosure = (states: Set<State>) => {
         const epsilonSets = [...states].map(state =>
-            simpleEpsilonClosure(state)
+            Misc.simpleEpsilonClosure(state)
         );
         return epsilonSets.reduce((union, set) => {
             set.forEach(state => {
@@ -72,7 +72,7 @@ namespace Misc {
      * @param {State} state
      * @returns {Set<State>}
      */
-    const simpleEpsilonClosure = (state: State) => {
+    public static readonly simpleEpsilonClosure = (state: State) => {
         // Función auxiliar.
         const epsilonChildren = (s: State) => {
             return [...s.getTransitions()]
@@ -107,9 +107,9 @@ namespace Misc {
      * @returns {Automaton} afd
      */
 
-    export const afnToAfd = (afn: Automaton) => {
+    public static readonly afnToAfd = (afn: Automaton) => {
         // Estado inicial del autómata AFD
-        const s0 = simpleEpsilonClosure(afn.getStartState());
+        const s0 = Misc.simpleEpsilonClosure(afn.getStartState());
         // Estados del autómata AFD
         const afdSets = new Set<Set<State>>([s0]);
         // Cola de análisis
@@ -125,7 +125,7 @@ namespace Misc {
 			// Creamos un estado AFD asociado a "currentSet" si es que este no se encuentra
 			// en el conjunto de conjuntos de estados del AFD.
             afn.getSigma().forEach(symbol => {
-				const s_i = goTo(currentSet, symbol); // Se obtiene Ir_A(Sn, symbol)
+				const s_i = Misc.goTo(currentSet, symbol); // Se obtiene Ir_A(Sn, symbol)
                 if (s_i.size > 0) {
 					// const AFDOriginState = stateSupplier[]? 
                     // Agregamos el conjunto S[i] al final de la cola de análisis.
@@ -139,14 +139,14 @@ namespace Misc {
         }
     };
 
-    export /**
+    /**
      *
      *
      * @param {string} symbol
      * @param {string} limitSymbol
      * @returns
      */
-    const getSymbolsFromRange = (symbol: string, limitSymbol: string) => {
+    public static readonly getSymbolsFromRange = (symbol: string, limitSymbol: string) => {
         if (symbol.length !== 1 || limitSymbol.length !== 1) {
             return null;
         }
