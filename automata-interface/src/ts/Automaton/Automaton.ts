@@ -398,51 +398,6 @@ class Automaton {
         });
         return true;
     };
-
-    public readonly toHTMLTable = () => {
-        const tmpSigma = new Set<string>([...this.sigma, Misc.EPSILON]);
-        // Encabezado de la tabla.
-        const head =
-            "<tr>" +
-            [...tmpSigma].reduce(
-                (tableHead, symbol) => tableHead + `<th>${symbol}</th>`,
-                "<th>Estado</th>"
-            ) +
-            "</tr>";
-        // Cuerpo (filas) de la tabla.
-        const body = [...this.states]
-            .map(state => {
-                // Celda del estado actual.
-                let stateCell: string;
-                if (this.startState === state) {
-                    stateCell = `<td class="state-cell start"><p>${state.getId()}</p></td>`;
-                } else if (this.acceptStates.has(state)) {
-                    stateCell = `<td class="state-cell accept"><p>${state.getId()}</p></td>`;
-                } else {
-                    stateCell = `<td class="state-cell"><p>${state.getId()}</p></td>`;
-                }
-                // Resto de la fila.
-                let targetStatesRow: string = "";
-                for (let symbol of tmpSigma) {
-                    const targetStates = state
-                        .getTransitionsBySymbol(symbol)
-                        .map(
-                            transition =>
-                                `${transition.getTargetState().getId()}`
-                        )
-                        .join(", ");
-                    const cell = `<td>{${
-                        targetStates.length > 0 ? targetStates : " "
-                    }}</td>`;
-                    targetStatesRow += cell;
-                }
-                //Fila completa.
-                return `<tr>${stateCell}${targetStatesRow}</tr>`;
-            })
-            // Se unen (concatenan) todas las filas
-            .join("");
-        return `<table>${head}${body}</table>`;
-    };
 }
 
 export { Automaton };

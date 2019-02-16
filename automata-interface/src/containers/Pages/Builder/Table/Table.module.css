@@ -1,0 +1,38 @@
+.Table {
+	display: inline-block;
+	overflow-x: auto;
+    border-collapse: collapse;
+    margin: 15px;
+    box-shadow: 4px 4px 4px #444444;
+}
+
+.Table th,
+.Table td {
+	border: 1px solid black;
+	font-size: 18px;
+	padding: 5px;
+	text-align: center;
+	width: 100px;
+}
+
+.Table th {
+	background: #57849e;
+}
+
+.Table tr:nth-child(2n + 1) {
+	background: #cfcfcf;
+}
+
+.StateCell {
+	background: #72f6ff;
+}
+
+.StateCell.start {
+	background: #64fdb5;
+}
+
+.StateCell.accept {
+	background: #fda964;
+}
+
+

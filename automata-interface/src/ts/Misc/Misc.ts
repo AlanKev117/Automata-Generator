@@ -1,7 +1,5 @@
 import { Automaton } from "../Automaton/Automaton";
 import { State } from "../State/State";
-import { Transition } from "../Transition/Transition";
-import { Queue } from "../Queue/Queue";
 
 class Misc {
     public static readonly EPSILON: string = "\u03B5";

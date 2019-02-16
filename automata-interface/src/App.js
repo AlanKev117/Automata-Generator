@@ -1,27 +1,31 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import Auxiliary from "./hoc/Auxiliary/Auxiliary";
+import Header from "./components/Header/Header";
+import Builder from "./containers/Pages/Builder/Builder";
+import { Switch, Route } from "react-router-dom";
 import { Automaton } from "./ts/Automaton/Automaton";
 
 class App extends Component {
+    constructor () {
+        super();
+        const automaton = new Automaton("alan");
+        automaton.createBasic("s");
+        this.automata = [automaton];
+    }
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <p>
-                        Edit <code>src/App.js</code> and save to reload.
-                    </p>
-                    <a
-                        className="App-link"
-                        href="https://reactjs.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Learn React
-                    </a>
-                </header>
-            </div>
+            <Auxiliary>
+                <Header />
+                <Switch>
+                    <Route path="/lexic" render={null} />
+                    <Route
+                        path="/"
+                        render={() => (
+                            <Builder automata={this.automata} />
+                        )}
+                    />
+                </Switch>
+            </Auxiliary>
         );
     }
 }

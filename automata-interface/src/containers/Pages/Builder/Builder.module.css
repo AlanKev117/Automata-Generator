@@ -1,0 +1,36 @@
+.Builder {
+    background: #eaeaea;
+    padding: 10px;
+    height: calc(100% + 80px);
+    margin-top: 42px;
+}
+
+.Builder h1 {
+    text-align: center;
+}
+
+.BuilderBtn {
+    display: inline-block;
+    background: #d8afff;
+    border: none;
+    border-radius: 4px;
+    padding: 30px;
+    vertical-align: middle;
+	font-size: 16px;
+    margin: 15px;
+    box-shadow: 3px 3px 3px #555555;
+}
+
+.BuilderBtn:focus {
+    outline: none;
+}
+
+.BuilderBtn:hover {
+    color: white;
+    cursor: pointer;
+}
+
+.BuilderBtn:active {
+    background: #57849e;
+    color: white;
+}
