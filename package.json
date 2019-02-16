@@ -1,8 +1,0 @@
-{
-  "devDependencies": {
-    "typescript": "^3.3.3"
-  },
-  "dependencies": {
-    "axios": "^0.18.0"
-  }
-}

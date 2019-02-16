@@ -1,4 +1,46 @@
-.cache
-.vscode
-dist
-node_modules
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#react-folder on repository
+# dependencies
+automata-interface/node_modules
+automata-interface/.pnp
+automata-interface/.pnp.js
+
+# testing
+automata-interface/coverage
+
+# production
+automata-interface/build
+
+# misc
+automata-interface/.DS_Store
+automata-interface/.env.local
+automata-interface/.env.development.local
+automata-interface/.env.test.local
+automata-interface/.env.production.local
+
+automata-interface/npm-debug.log*
+automata-interface/yarn-debug.log*
+automata-interface/yarn-error.log*
