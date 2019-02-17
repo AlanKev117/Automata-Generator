@@ -5,7 +5,7 @@ import Misc from "../Misc/Misc";
 class Automaton {
     /**
      * Nombre que se le asignará al autómata cuando se cree.
-     *
+	 * 
      * @private
      * @type {string}
      * @memberof Automaton

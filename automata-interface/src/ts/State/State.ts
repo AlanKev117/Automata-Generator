@@ -3,27 +3,37 @@ class State {
 	private id: number;
 	private transitions: Set<Transition>;
 	private token: number;
+	private lexicClass: string;
+
 	/**
 	 * Crea un estado.
 	 *
 	 * @param id {identidiacdor del estado}
 	 */
-
-	constructor(id: number, token?:number) {
+	constructor(id: number) {
 		this.id = id;
-		this.token = token;
 		this.transitions = new Set<Transition>();
 	}
 
+	// Getters
 	public readonly getId = () => this.id;
 	public readonly getTransitions = () => this.transitions;
+	public readonly getToken = () => this.token;
+	public readonly getLexicClass = () => this.lexicClass;
 
-	public readonly setId = id => {
+	// Setters
+	public readonly setId = (id: number) => {
 		this.id = id;
 	};
-	public readonly addToken = (t : number) => {
-		this.token = t;
+
+	public readonly setToken = (token: number) => {
+		this.token = token;
+	};
+
+	public readonly setLexicClass = (lexicClass: string) => {
+		this.lexicClass = lexicClass;
 	}
+
 	/**
 	 * Agrega una transición al conjunto de transiciones del estado.
 	 *
