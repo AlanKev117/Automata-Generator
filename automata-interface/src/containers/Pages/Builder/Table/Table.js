@@ -4,7 +4,7 @@ import Misc from "../../../../ts/Misc/Misc";
 
 import classes from "./Table.module.css";
 
-const table = props => {
+const table = (props, ref) => {
     const automaton = props.automaton;
     const tmpSigma = new Set([...automaton.getSigma(), Misc.EPSILON]);
     // Encabezado de la tabla.
@@ -72,11 +72,11 @@ const table = props => {
         </tbody>
     );
     return (
-        <table className={classes.Table}>
+        <table ref={ref} className={classes.Table}>
             {head}
             {body}
         </table>
     );
 };
 
-export default table;
+export default React.forwardRef(table);

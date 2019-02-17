@@ -1,10 +1,8 @@
 .Table {
 	display: inline-block;
-	overflow-x: auto;
-    border-collapse: collapse;
-    margin: 15px;
+	border-collapse: collapse;
+	margin: 15px;
 	box-shadow: 4px 4px 4px #444444;
-	overflow-x: hidden;
 }
 
 .Table th,
@@ -35,5 +33,3 @@
 .StateCell.accept {
 	background: #fda964;
 }
-
-
