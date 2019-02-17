@@ -3,7 +3,8 @@
 	overflow-x: auto;
     border-collapse: collapse;
     margin: 15px;
-    box-shadow: 4px 4px 4px #444444;
+	box-shadow: 4px 4px 4px #444444;
+	overflow-x: hidden;
 }
 
 .Table th,
@@ -28,7 +29,7 @@
 }
 
 .StateCell.start {
-	background: #64fdb5;
+	text-decoration: underline;
 }
 
 .StateCell.accept {

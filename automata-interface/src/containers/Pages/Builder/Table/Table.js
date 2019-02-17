@@ -29,10 +29,13 @@ const table = props => {
             {[...automaton.states].map(state => {
                 // Celda del estado actual.
                 const cellClasses = [classes.StateCell];
-                if (automaton.startState === state) {
+                if (automaton.startState === state && automaton.acceptStates.has(state)) {
                     cellClasses.push(classes.start);
+                    cellClasses.push(classes.accept);
                 } else if (automaton.acceptStates.has(state)) {
                     cellClasses.push(classes.accept);
+                } else if (state === automaton.startState) {
+                    cellClasses.push(classes.start);
                 }
                 const stateCell = (
                     <td className={cellClasses.join(" ")}>

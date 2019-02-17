@@ -1,5 +1,6 @@
 import { Automaton } from "../Automaton/Automaton";
 import { State } from "../State/State";
+import { Transition } from "../Transition/Transition";
 
 class Misc {
     public static readonly EPSILON: string = "\u03B5";
@@ -40,8 +41,8 @@ class Misc {
 
     public static readonly simpleMove = (state: State, symbol: string) => {
         return new Set<State>(
-            [...state.getTransitions().values()]
-                .filter(transition => transition.getSymbol() === symbol)
+            state
+                .getTransitionsBySymbol(symbol)
                 .map(transition => transition.getTargetState())
         );
     };
@@ -99,42 +100,76 @@ class Misc {
     };
 
     /**
-     *Realiza la conversion de AFN  a AFD
+     * Realiza la conversion de un AFN a un AFD
      *
      * @param {Automaton} afn
-     * @returns {Automaton} afd
+     * @returns {Automaton}
      */
-
     public static readonly afnToAfd = (afn: Automaton) => {
-        // Estado inicial del autómata AFD
-        const s0 = Misc.simpleEpsilonClosure(afn.getStartState());
-        // Estados del autómata AFD
-        const afdSets = new Set<Set<State>>([s0]);
-        // Cola de análisis
-        const queue = [s0];
-        // Estado en análisis del AFD
-		let currentSet: Set<State>;
-		// Mapeo de estados con conjuntos de estados
-		const stateSupplier = {};
+        const getSetWithKeysOfGiven = (
+            superSet: Set<State>[],
+            set: Set<State>
+        ) => {
+            const targetIDs = [...set]
+                .map(state => "" + state.getId())
+                .join(",");
+            const found = [...superSet].find(s => {
+                const currentIDs = [...s].map(s => "" + s.getId()).join(",");
+                return currentIDs === targetIDs;
+            });
+            return found;
+        };
 
-        // Iteramos el alfabeto del AFN
+        const afd = new Automaton(afn.getName());
+        // Estado inicial del autómata AFD
+        const s0: Set<State> = Misc.simpleEpsilonClosure(afn.getStartState());
+        // Estados del autómata AFD
+        const AFDMap: Set<State>[] = [s0];
+        // Cola de análisis
+        const queue: Set<State>[] = [s0];
+
         while (queue.length > 0) {
-            currentSet = queue.shift();
-			// Creamos un estado AFD asociado a "currentSet" si es que este no se encuentra
-			// en el conjunto de conjuntos de estados del AFD.
+            const set = queue.shift();
+            const index = AFDMap.indexOf(set);
+            // Iteramos el alfabeto del AFN para agregar las
             afn.getSigma().forEach(symbol => {
-				const s_i = Misc.goTo(currentSet, symbol); // Se obtiene Ir_A(Sn, symbol)
-                if (s_i.size > 0) {
-					// const AFDOriginState = stateSupplier[]? 
-                    // Agregamos el conjunto S[i] al final de la cola de análisis.
-                    // const ADFTargetState = new State(afdSets.size);
-                    // queue.push(s_i);
-                    // const transition = new Transition(symbol, AFDTargetState);
-                    // currentSet;
+                // Se obtiene Ir_A(Sn, symbol)
+                const targetSet: Set<State> = Misc.goTo(set, symbol);
+                let targetIndex: number;
+                if (targetSet.size > 0) {
+                    const actualTargetState = getSetWithKeysOfGiven(
+                        AFDMap,
+                        targetSet
+                    );
+                    if (!actualTargetState) {
+                        targetIndex = AFDMap.length;
+                        AFDMap.push(targetSet);
+                        queue.push(targetSet);
+                        //AFDSets.add(targetSet);
+                    } else {
+                        targetIndex = AFDMap.indexOf(actualTargetState);
+                    }
+                    afd.createTransition(index, symbol, null, targetIndex);
                 }
             });
-            currentSet = queue.shift();
+            // Si el conjunto set tiene algún estado de aceptación de afn,
+            // se agrega al conjunto de estados de aceptación de afd.
+            [...afn.getAcceptStates()].forEach(acceptState => {
+                if (set.has(acceptState)) {
+                    afd.getAcceptStates().add(
+                        [...afd.getStates()].find(
+                            state => state.getId() === index
+                        )
+                    );
+                }
+            });
         }
+
+        // Atributos del nuevo autómata
+        afd.startState = [...afd.states].find(state => state.getId() === 0);
+        afd.sigma.delete(Misc.EPSILON); // Creo que esta no importa.
+        console.log(afn.getName() + " hecho AFD");
+        return afd;
     };
 
     /**
@@ -144,7 +179,10 @@ class Misc {
      * @param {string} limitSymbol
      * @returns
      */
-    public static readonly getSymbolsFromRange = (symbol: string, limitSymbol: string) => {
+    public static readonly getSymbolsFromRange = (
+        symbol: string,
+        limitSymbol: string
+    ) => {
         if (symbol.length !== 1 || limitSymbol.length !== 1) {
             return null;
         }

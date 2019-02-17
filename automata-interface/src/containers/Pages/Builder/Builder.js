@@ -6,7 +6,7 @@ import Table from "./Table/Table";
 
 import classes from "./Builder.module.css";
 import { Automaton } from "../../../ts/Automaton/Automaton";
-//import { Automaton } from "../../../ts/Automaton/Automaton";
+import Misc from "../../../ts/Misc/Misc";
 
 class Builder extends Component {
     state = {
@@ -94,13 +94,26 @@ class Builder extends Component {
     };
 
     unaryOperationHandler = () => {
-        const automaton = this.props.automata.find(
+        let automaton = this.props.automata.find(
             a => a.getName() === this.state.automaton1
         );
 
-        automaton[this.state.operation]();
+        if (this.state.operation === "makeAFD") {
+            const index = this.props.automata.indexOf(automaton);
+            const newAuto = Misc.afnToAfd(automaton.copy());
+            delete this.props.automata[index];
+            this.props.automata[index] = newAuto;
+        } else {
+            automaton[this.state.operation]();
+        }
 
-        this.setState({ automaton1: automaton.getName() });
+        this.setState(prevState => {
+            return {
+                automaton1: prevState.automaton1,
+                operation: prevState.operation,
+                automaton2: prevState.automaton2
+            };
+        });
     };
 
     binaryOperationHandler = () => {
@@ -123,10 +136,10 @@ class Builder extends Component {
                 automaton1: this.props.automata[0].getName()
             });
         }
+        this.setState({ operation: "makeOptional" });
     };
 
     render() {
-        const classesBtn = classes.BuilderBtn;
         return (
             <main className={classes.Builder}>
                 <h1>Constructor de autómatas</h1>
@@ -161,22 +174,22 @@ class Builder extends Component {
                                 "makeOptional",
                                 "makePositive",
                                 "makeKleene",
-                                "makeAFD",
+                                "concatenarAFN",
                                 "unirAFN",
-                                "concatenarAFN"
+                                "makeAFD"
                             ]}
                             options={[
                                 "Hacer opcional",
                                 "Hacer positivo",
                                 "Hacer Kleene",
-                                "Hacer AFD",
+                                "Concatenar",
                                 "Unir",
-                                "Concatenar"
+                                "Hacer AFD"
                             ]}
                         />
                         {this.state.showA2 ? null : (
                             <button
-                                className={classesBtn}
+                                className={classes.BuilderBtn}
                                 onClick={this.unaryOperationHandler}
                             >
                                 Ejecutar
@@ -198,7 +211,7 @@ class Builder extends Component {
                             )}
                         />
                         <button
-                            className={classesBtn}
+                            className={classes.BuilderBtn}
                             onClick={this.binaryOperationHandler}
                         >
                             Ejecutar
@@ -210,13 +223,15 @@ class Builder extends Component {
                 en la primer caja*/}
                 <div style={{ textAlign: "center" }}>
                     {this.state.automaton1.length > 0 ? (
-                        <Table
-                            automaton={this.props.automata.find(
-                                automaton =>
-                                    automaton.getName() ===
-                                    this.state.automaton1
-                            )}
-                        />
+                        <div>
+                            <Table
+                                automaton={this.props.automata.find(
+                                    automaton =>
+                                        automaton.getName() ===
+                                        this.state.automaton1
+                                )}
+                            />
+                        </div>
                     ) : null}
                 </div>
             </main>

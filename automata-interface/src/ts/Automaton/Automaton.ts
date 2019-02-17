@@ -322,6 +322,8 @@ class Automaton {
             );
         });
 
+        copy.sigma.delete(Misc.EPSILON);
+
         return copy;
     };
 
@@ -341,7 +343,7 @@ class Automaton {
      * @param {number} targetStateID
      * @memberof Automaton
      */
-    private createTransition = (
+    public readonly createTransition = (
         originStateID: number,
         symbol: string,
         limitSymbol: string,
@@ -398,6 +400,7 @@ class Automaton {
         });
         return true;
     };
+
 }
 
 export { Automaton };

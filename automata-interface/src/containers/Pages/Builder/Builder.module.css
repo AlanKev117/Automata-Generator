@@ -1,8 +1,9 @@
 .Builder {
     background: #eaeaea;
     padding: 10px;
-    height: calc(100% + 80px);
+    height: 100%;
     margin-top: 42px;
+    padding-bottom: 42px;
 }
 
 .Builder h1 {
