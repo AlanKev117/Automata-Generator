@@ -195,33 +195,48 @@ class Misc {
 
     public static readonly unirAFNAnalisis = (automata: Automaton[], lexicName: string) => {
 		let stateIni = new State(0);
+		let newStates;
 		let initialTransitionAFN: Transition = new Transition(
 			Misc.EPSILON,
 			automata[0].startState
 		);
 		// Se agregan los estados nuevos al conjunto de estados.
 		automata[0].states.add(stateIni);
+		stateIni.addTransition(initialTransitionAFN);
 		// Se reemplaza el nuevo estado inicial.
 		automata[0].startState = stateIni;
-		automata[0].startState.addTransition(initialTransitionAFN);
-		for(let i = 0; i < automata.length; i++){
+		//automata[0].startState.addTransition(initialTransitionAFN);
+		for(let i = 1; i < automata.length; i++){
 			initialTransitionAFN = new Transition(
 				Misc.EPSILON,
 				automata[i].startState
 			);
-			const newStates = [...automata[i].states];
-			newStates.forEach((state, index) => {
-				state.setId(automata[0].states.size + index);
-			});
+			newStates = [...automata[i].states];
 			newStates.forEach(state => {
 				automata[0].states.add(state);
 			});
 			[...automata[i].sigma].forEach(symbol => {
 				automata[0].sigma.add(symbol);
 			});
+			[...automata[i].acceptStates].forEach(state => {
+				automata[0].acceptStates.add(state);
+			});
 			// Se le agregan las transiciones al inicio del automata de analisis
 			automata[0].startState.addTransition(initialTransitionAFN);  
 		}
+		let flag: boolean = false;
+		automata[0].startState.setId(0);
+		newStates = [...automata[0].states];
+			newStates.forEach((state, index) => {
+				if(state != automata[0].startState && flag == false) state.setId(index + 1);
+				else{
+					if(flag == false){
+						state.setId(0);
+						flag = true;
+					}
+					else state.setId(index);
+				}
+		});
 		automata[0].setName(lexicName);
 		return automata[0];
 	};
