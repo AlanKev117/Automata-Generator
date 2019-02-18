@@ -185,6 +185,48 @@ class Misc {
 		return afd;
 	};
 
+/**
+     * Concatena un automata con otro para analisis lexico (teniendo 2 o mas estados
+     * de aceptacion y conservandolos)
+     * 
+     * @param {Automaton} automaton {es el automata que se va a unir con this}
+     * @memberof Automaton
+     */
+
+    public readonly unirAFNAnalisis = (automaton1: Automaton, automaton2: Automaton) => {
+        let stateIni = new State(0);
+        const initialTransitionAFN_1 = new Transition(
+            Misc.EPSILON,
+            automaton1.startState
+        );
+        const initialTransitionAFN_2 = new Transition(
+            Misc.EPSILON,
+            automaton2.startState
+        );
+
+        // Reasignamos id a estados del autómata argumento y los agregamos al
+        // conjunto de estados de autómata this.
+        const newStates = [...automaton2.states];
+        newStates.forEach((state, index) => {
+            state.setId(automaton1.states.size + index);
+        });
+        newStates.forEach(state => {
+            automaton1.states.add(state);
+        });
+
+        //Se agregan los simbolos del AFN2 al AFN1
+        [...automaton2.sigma].forEach(symbol => {
+            automaton1.sigma.add(symbol);
+        });
+        // Se agregan los estados nuevos al conjunto de estados.
+        automaton1.states.add(stateIni);
+                // Se reemplaza el nuevo estado inicial.
+        automaton1.startState = stateIni;
+        // Se le agregan las transiciones al inicio antiguo del autómata.
+        automaton1.startState.addTransition(initialTransitionAFN_1);
+        automaton1.startState.addTransition(initialTransitionAFN_2);
+	}
+
 	/**
 	 * Obtiene un arreglo con caracteres cuyo valor ASCII se encuentra
 	 * entre dos caracteres dados.
