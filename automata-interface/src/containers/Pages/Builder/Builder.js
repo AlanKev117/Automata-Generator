@@ -29,7 +29,7 @@ class Builder extends Component {
 			}})
 			.then(function(dataUrl) {
 				var link = document.createElement("a");
-				link.download = "my-table.jpeg";
+				link.download = "automaton.jpeg";
 				link.href = dataUrl;
 				link.click();
 			});

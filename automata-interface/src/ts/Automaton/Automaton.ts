@@ -68,7 +68,11 @@ class Automaton {
     public readonly getSigma = () => this.sigma;
     public readonly getStates = () => this.states;
     public readonly getStartState = () => this.startState;
-    public readonly getAcceptStates = () => this.acceptStates;
+	public readonly getAcceptStates = () => this.acceptStates;
+	
+	public readonly setName = (name: string) => {
+		this.name = name;
+	}
 
     /**
      * Crea un autómata básico de una transición con el símbolo symbol.

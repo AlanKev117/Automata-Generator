@@ -193,36 +193,38 @@ class Misc {
      * @memberof Automaton
      */
 
-    public readonly unirAFNAnalisis = (automatons: Automaton[]) => {
+    public static readonly unirAFNAnalisis = (automata: Automaton[], lexicName: string) => {
 		let stateIni = new State(0);
 		let initialTransitionAFN: Transition = new Transition(
 			Misc.EPSILON,
-			automatons[0].startState
+			automata[0].startState
 		);
 		// Se agregan los estados nuevos al conjunto de estados.
-		automatons[0].states.add(stateIni);
+		automata[0].states.add(stateIni);
 		// Se reemplaza el nuevo estado inicial.
-		automatons[0].startState = stateIni;
-		automatons[0].startState.addTransition(initialTransitionAFN);
-		for(let i = 0; i < automatons.length; i++){
+		automata[0].startState = stateIni;
+		automata[0].startState.addTransition(initialTransitionAFN);
+		for(let i = 0; i < automata.length; i++){
 			initialTransitionAFN = new Transition(
 				Misc.EPSILON,
-				automatons[i].startState
+				automata[i].startState
 			);
-			const newStates = [...automatons[i].states];
+			const newStates = [...automata[i].states];
 			newStates.forEach((state, index) => {
-				state.setId(automatons[0].states.size + index);
+				state.setId(automata[0].states.size + index);
 			});
 			newStates.forEach(state => {
-				automatons[0].states.add(state);
+				automata[0].states.add(state);
 			});
-			[...automatons[i].sigma].forEach(symbol => {
-				automatons[0].sigma.add(symbol);
+			[...automata[i].sigma].forEach(symbol => {
+				automata[0].sigma.add(symbol);
 			});
 			// Se le agregan las transiciones al inicio del automata de analisis
-			automatons[0].startState.addTransition(initialTransitionAFN);  
+			automata[0].startState.addTransition(initialTransitionAFN);  
 		}
-	}
+		automata[0].setName(lexicName);
+		return automata[0];
+	};
 
 	/**
 	 * Obtiene un arreglo con caracteres cuyo valor ASCII se encuentra
