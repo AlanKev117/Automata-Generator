@@ -67,7 +67,7 @@ class Lexic extends Component {
 								<button
 									onClick={this.createLexicAnalizerHandler}
 								>
-									Crear analizador léxico
+									Unir para analizador léxico
 								</button>
 							</div>
 						) : null}

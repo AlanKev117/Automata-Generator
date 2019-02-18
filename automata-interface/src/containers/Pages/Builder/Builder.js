@@ -23,10 +23,12 @@ class Builder extends Component {
 
 	downloadImg = () => {
 		domtoimage
-			.toPng(this.tableRef.current, {style: {
-				height: "100vh",
-				width: "auto",
-			}})
+			.toPng(this.tableRef.current, {
+				style: {
+					height: "100vh",
+					width: "auto"
+				}
+			})
 			.then(function(dataUrl) {
 				var link = document.createElement("a");
 				link.download = "automaton.jpeg";
@@ -90,6 +92,7 @@ class Builder extends Component {
 		const range = this.state.symbol.split("-");
 		const name = this.state.name;
 		const newAutom = new Automaton(name);
+
 		switch (range.length) {
 			case 1:
 				newAutom.createBasic(range[0]);

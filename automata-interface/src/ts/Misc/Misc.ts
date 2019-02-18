@@ -168,13 +168,13 @@ class Misc {
 			});
 			// Si el conjunto set tiene algún estado de aceptación de afn,
 			// se agrega al conjunto de estados de aceptación de afd.
+			const AFDAcceptState = [...afd.getStates()].find(state => {
+				return state.getId() === index;
+			});
 			[...afn.getAcceptStates()].forEach(acceptState => {
 				if (set.has(acceptState)) {
-					afd.getAcceptStates().add(
-						[...afd.getStates()].find(
-							state => state.getId() === index
-						)
-					);
+					AFDAcceptState.setToken(acceptState.getToken());
+					afd.getAcceptStates().add(AFDAcceptState);
 				}
 			});
 		}
@@ -185,15 +185,18 @@ class Misc {
 		return afd;
 	};
 
-/**
-     * Concatena un automata con otro para analisis lexico (teniendo 2 o mas estados
-     * de aceptacion y conservandolos)
-     * 
-     * @param {Automaton} automaton {es el automata que se va a unir con this}
-     * @memberof Automaton
-     */
+	/**
+	 * Concatena un automata con otro para analisis lexico (teniendo 2 o mas estados
+	 * de aceptacion y conservandolos)
+	 *
+	 * @param {Automaton} automaton {es el automata que se va a unir con this}
+	 * @memberof Automaton
+	 */
 
-    public static readonly unirAFNAnalisis = (automata: Automaton[], lexicName: string) => {
+	public static readonly unirAFNAnalisis = (
+		automata: Automaton[],
+		lexicName: string
+	) => {
 		let stateIni = new State(0);
 		let newStates;
 		let initialTransitionAFN: Transition = new Transition(
@@ -206,7 +209,7 @@ class Misc {
 		// Se reemplaza el nuevo estado inicial.
 		automata[0].startState = stateIni;
 		//automata[0].startState.addTransition(initialTransitionAFN);
-		for(let i = 1; i < automata.length; i++){
+		for (let i = 1; i < automata.length; i++) {
 			initialTransitionAFN = new Transition(
 				Misc.EPSILON,
 				automata[i].startState
@@ -222,20 +225,20 @@ class Misc {
 				automata[0].acceptStates.add(state);
 			});
 			// Se le agregan las transiciones al inicio del automata de analisis
-			automata[0].startState.addTransition(initialTransitionAFN);  
+			automata[0].startState.addTransition(initialTransitionAFN);
 		}
 		let flag: boolean = false;
 		automata[0].startState.setId(0);
 		newStates = [...automata[0].states];
-			newStates.forEach((state, index) => {
-				if(state != automata[0].startState && flag == false) state.setId(index + 1);
-				else{
-					if(flag == false){
-						state.setId(0);
-						flag = true;
-					}
-					else state.setId(index);
-				}
+		newStates.forEach((state, index) => {
+			if (state != automata[0].startState && flag == false)
+				state.setId(index + 1);
+			else {
+				if (flag == false) {
+					state.setId(0);
+					flag = true;
+				} else state.setId(index);
+			}
 		});
 		automata[0].setName(lexicName);
 		return automata[0];
@@ -295,32 +298,33 @@ class Misc {
 		let lexems: [string, number][] = [];
 		let acceptStatesSeen: Set<State>;
 		let i = 0;
-		let indexStart = 0, indexEnd = 0;
+		let indexStart = 0,
+			indexEnd = 0;
 		let j = 0;
 		let transicion: Transition[];
 		let state: State = analizer.startState;
 		acceptStatesSeen.clear();
-		while(i < input.length){
-			if(state.getTransitionsBySymbol(input[i])){
+		while (i < input.length) {
+			if (state.getTransitionsBySymbol(input[i])) {
 				transicion = state.getTransitionsBySymbol(input[i]);
 				state = [...transicion][0].getTargetState(); //Se asume que solo se tuvo una transicion
 				i++;
-				if([...analizer.acceptStates].includes(state)){
+				if ([...analizer.acceptStates].includes(state)) {
 					acceptStatesSeen.add(state);
 					indexEnd = i;
-				} 
-				else{
-					if(acceptStatesSeen.size == 0){
-						console.log("ERROR lexico");
-						i++;
-						return null;
-					}
-
-					else{
-						lexems[j] = [input.substring(indexStart, indexEnd), state.getToken()]; //Se guarda el caracter y el token
-						j++;
-						indexStart = indexEnd;
-					}
+				}
+			} else {
+				if (acceptStatesSeen.size === 0) {
+					console.log("ERROR lexico en " + i);
+					// i++;
+					return null;
+				} else {
+					lexems[j] = [
+						input.substring(indexStart, indexEnd),
+						state.getToken()
+					]; //Se guarda el caracter y el token
+					j++;
+					indexStart = indexEnd;
 				}
 			}
 		}
