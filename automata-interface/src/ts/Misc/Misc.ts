@@ -278,9 +278,37 @@ class Misc {
 	 * @memberof Misc
 	 */
 	public static lexicAnalisis(analizer: Automaton, input: string) {
-		const lexems: [string, number][] = [];
-		// Aplican el algoritmo de Damian para separar la entrada en los lexemas que
-		// la conforman
+		let lexems: [string, number][] = [];
+		let acceptStatesSeen: Set<State>;
+		let i = 0;
+		let indexStart = 0, indexEnd = 0;
+		let j = 0;
+		let transicion: Transition[];
+		let state: State = analizer.startState;
+		acceptStatesSeen.clear();
+		while(i < input.length){
+			if(state.getTransitionsBySymbol(input[i])){
+				transicion = state.getTransitionsBySymbol(input[i]);
+				state = [...transicion][0].getTargetState(); //Se asume que solo se tuvo una transicion
+				i++;
+				if([...analizer.acceptStates].includes(state)){
+					acceptStatesSeen.add(state);
+					indexEnd = i;
+				} 
+				else{
+					if(acceptStatesSeen.size == 0){
+						console.log("ERROR lexico");
+						i++;
+						return null;
+					}
+
+					else{
+						lexems[j] = [input.substring(indexStart, indexEnd), state.getToken()]; //Se guarda el caracter y el token
+						j++;
+					}
+				}
+			}
+		}
 		return lexems;
 	}
 }
