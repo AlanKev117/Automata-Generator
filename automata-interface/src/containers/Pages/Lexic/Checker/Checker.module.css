@@ -8,7 +8,7 @@
 }
 
 .container {
-	display: block;
+	display: inline-block;
 	position: relative;
 	padding-left: 35px;
 	margin: 12px;

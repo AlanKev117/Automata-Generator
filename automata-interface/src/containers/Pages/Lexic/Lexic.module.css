@@ -15,3 +15,32 @@
 	text-align: center;
 	padding: 30px;
 }
+
+.Lexic button {
+	background: #7a94a3;
+	border: 1px solid #7a94a3;
+	margin: 3px;
+	border-radius: 3px;
+	font-size: 16px;
+	padding: 5px;
+	box-shadow: 2px 2px 2px #555;
+}
+
+.Lexic button:hover {
+	cursor: pointer;
+	border: 1px solid grey;
+	color: white;
+}
+
+.Lexic button:active {
+	background: grey;
+}
+
+.Lexic input {
+	border: 1px solid grey;
+	background: white;
+	margin: 3px;
+	border-radius: 3px;
+	font-size: 16px;
+	padding: 5px;
+}
