@@ -33,10 +33,43 @@ class Lexic extends Component {
             tokens[autoName] = tokenNumber;
             return { tokens: tokens };
         });
-        console.log(this.state.tokens);
     };
 
     createLexicAnalizerHandler = () => {
+        // Validación del nombre del analizador léxico.
+        if (
+            this.props.automata.find(
+                automaton => automaton.getName() === this.state.lexicName
+            )
+        ) {
+            alert("Ingrese otro nombre para el analizador léxico.");
+            return;
+        }
+
+        // Validación de tokens repetidos o vacíos.
+        const count = {};
+        let repeated = false;
+        let noToken = false;
+        for (let key in this.state.tokens)
+            if (!this.state.tokens[key]) {
+                noToken = true;
+            } else if (count[this.state.tokens[key]]) {
+                count[this.state.tokens[key]] = 1;
+            } else {
+                repeated = true;
+            }
+
+        if (repeated) {
+            alert("Alguno de los tokens está repetido.");
+            return;
+        }
+
+        if (noToken) {
+            alert("Hay un token sin asignar.");
+            return;
+        }
+
+        // Se genera el analizador léxico.
         const selectedAutos = this.props.automata
             .filter(automaton =>
                 this.state.checkedAutomata.has(automaton.getName())
@@ -50,8 +83,8 @@ class Lexic extends Component {
         const newAnalizer = Misc.unirAFNAnalisis(
             selectedAutos,
             this.state.lexicName
-		);
-		console.log(newAnalizer);
+        );
+
         this.props.automata.push(newAnalizer);
     };
 
