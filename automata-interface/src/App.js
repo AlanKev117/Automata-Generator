@@ -8,22 +8,29 @@ import Lexic from "./containers/Pages/Lexic/Lexic";
 
 class App extends Component {
 	automata = [];
-    render() {
-        return (
-            <Auxiliary>
-                <Header />
-                <Switch>
-                    <Route path="/lexic" render={() => <Lexic automata={this.automata}/>} />
-                    <Route
-                        path="/"
-                        render={() => (
-                            <Builder automata={this.automata} />
-                        )}
-                    />
-                </Switch>
-            </Auxiliary>
-        );
-    }
+	analyzers = [];
+	render() {
+		return (
+			<Auxiliary>
+				<Header />
+				<Switch>
+					<Route
+						path="/lexic"
+						render={() => (
+							<Lexic
+								automata={this.automata}
+								analyzers={this.analyzers}
+							/>
+						)}
+					/>
+					<Route
+						path="/"
+						render={() => <Builder automata={this.automata} />}
+					/>
+				</Switch>
+			</Auxiliary>
+		);
+	}
 }
 
 export default App;

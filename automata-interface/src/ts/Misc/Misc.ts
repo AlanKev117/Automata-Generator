@@ -267,69 +267,7 @@ class Misc {
 		}
 		return symbols;
 	};
-
-	/**
-	 * Crea un autómata que sirve como analizador léxico.
-	 *
-	 * @static
-	 * @param {Automaton[]} automata
-	 * @returns {Automaton}
-	 * @memberof Misc
-	 */
-	public static readonly createLexicAnalizer = (automata: Automaton[]) => {
-		const analizer: Automaton = new Automaton("nombre");
-		// Unen los estados iniciales a uno solo con transiciones épsilon
-		// Unen todos los estados finales de los automatas en el conjunto de estados finales de analizer.
-		// Unen los alfabetos en el alfabeto de analizer (excluyan a épsilon)
-		// Unen todos los estados en los estados de analizer.
-		return analizer;
-	};
-
-	/**
-	 * Separa la entrada dada en un arreglo de lexemas con su token asociado.
-	 *
-	 * @static
-	 * @param {Automaton} analizer
-	 * @param {string} input
-	 * @returns {[string, number][]}
-	 * @memberof Misc
-	 */
-	public static lexicAnalisis(analizer: Automaton, input: string) {
-		let lexems: [string, number][] = [];
-		let acceptStatesSeen: Set<State>;
-		let i = 0;
-		let indexStart = 0,
-			indexEnd = 0;
-		let j = 0;
-		let transicion: Transition[];
-		let state: State = analizer.startState;
-		acceptStatesSeen.clear();
-		while (i < input.length) {
-			if (state.getTransitionsBySymbol(input[i])) {
-				transicion = state.getTransitionsBySymbol(input[i]);
-				state = [...transicion][0].getTargetState(); //Se asume que solo se tuvo una transicion
-				i++;
-				if ([...analizer.acceptStates].includes(state)) {
-					acceptStatesSeen.add(state);
-					indexEnd = i;
-				}
-			} else {
-				if (acceptStatesSeen.size === 0) {
-					console.log("ERROR lexico en " + i);
-					// i++;
-					return null;
-				} else {
-					lexems[j] = [
-						input.substring(indexStart, indexEnd),
-						state.getToken()
-					]; //Se guarda el caracter y el token
-					j++;
-					indexStart = indexEnd;
-				}
-			}
-		}
-		return lexems;
-	}
+	
 }
 
 export default Misc;

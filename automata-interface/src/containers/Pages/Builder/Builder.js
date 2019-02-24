@@ -184,7 +184,7 @@ class Builder extends Component {
 							values={this.props.automata.map(automaton =>
 								automaton.getName()
 							)}
-							defValue={this.state.automaton1}
+							current={this.state.automaton1}
 						/>
 						<Chooser
 							text="Operación"
@@ -205,6 +205,7 @@ class Builder extends Component {
 								"Unir",
 								"Hacer AFD"
 							]}
+							current={this.state.operation}
 						/>
 						{this.state.showA2 ? null : (
 							<button
@@ -244,7 +245,13 @@ class Builder extends Component {
 					{this.state.automaton1.length > 0 ? (
 						<div>
 							<div>
-								<button onClick={this.downloadImg}>
+								<button
+									onClick={this.downloadImg}
+									className={[
+										classes.BuilderBtn,
+										classes.Btn2
+									].join(" ")}
+								>
 									Descargar
 								</button>
 							</div>

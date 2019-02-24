@@ -12,7 +12,7 @@ const chooser = props => {
     return (
         <div className={classes.Chooser}>
             <label>{props.text}</label>
-            <select onChange={props.changed} value={props.defValue}>{content}</select>
+            <select onChange={props.changed} value={props.current}>{content}</select>
         </div>
     );
 };

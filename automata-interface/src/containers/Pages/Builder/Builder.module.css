@@ -23,6 +23,11 @@
     box-shadow: 3px 3px 3px #555555;
 }
 
+.BuilderBtn.Btn2 {
+	background: #7a94a3;
+	padding: 5px;
+}
+
 .BuilderBtn:focus {
     outline: none;
 }
@@ -33,6 +38,6 @@
 }
 
 .BuilderBtn:active {
-    background: #57849e;
+    background: grey;
     color: white;
 }
