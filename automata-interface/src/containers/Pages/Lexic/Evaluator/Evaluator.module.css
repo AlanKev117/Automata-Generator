@@ -1,0 +1,25 @@
+.Evaluator {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 10px;
+    margin: 15px;
+    border-radius: 4px;
+    background: #a0d3fd;
+    box-shadow: 3px 3px 3px #555555;
+}
+
+.Evaluator label {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.Evaluator select,
+.Evaluator input
+{
+    background: white;
+    border: 2px solid #eaeaea;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 16px;
+}
