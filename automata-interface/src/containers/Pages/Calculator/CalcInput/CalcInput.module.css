@@ -1,0 +1,44 @@
+.CalcInput {
+	background: #4b7288;
+	border-radius: 5px;
+	box-shadow: 3px 3px 3px gray;
+	padding: 20px;
+	width: 70%;
+	margin: initial auto;
+}
+
+.CalcInput .FlexContainer {
+	display: flex;
+	justify-content: space-between;
+}
+
+.CalcInput h2 {
+	margin-top: 5px;
+}
+
+.CalcInput input {
+	width: 80%;
+	border: 1px solid grey;
+	border-radius: 3px;
+	padding: 3px;
+	font-size: 18px;
+	font-family: consolas;
+}
+
+.CalcInput button {
+	background: #96bed4;
+	border: 1px solid #96bed4;
+	padding: 5px 15px;
+	border-radius: 4px;
+	font-size: 18px;
+}
+
+.CalcInput button:hover {
+	color: white;
+	cursor: pointer;
+}
+
+.CalcInput button:active {
+	background:#555;
+	border-color: #555;
+}

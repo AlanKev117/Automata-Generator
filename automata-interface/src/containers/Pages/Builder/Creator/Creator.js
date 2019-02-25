@@ -17,6 +17,7 @@ const creator = props => (
 			placeholder="Símbolo/rango"
 			onChange={props.symbolChanged}
 			value={props.symbol}
+			maxLength="3"
 		/>
 		<button onClick={props.automataCreated}>Crear</button>
 	</div>

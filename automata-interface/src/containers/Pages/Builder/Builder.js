@@ -73,7 +73,8 @@ class Builder extends Component {
 	};
 
 	createAutomatonHandler = () => {
-		if (this.state.length === 0) {
+		// Validación del nombre.
+		if (this.state.name.length === 0) {
 			alert("Ingrese un nombre para el autómata.");
 			return;
 		} else if (
@@ -85,6 +86,7 @@ class Builder extends Component {
 			return;
 		}
 
+		// Validación del símbolo.
 		if (this.state.symbol.length === 0) {
 			alert("Ingrese un símbolo/rango de transición.");
 			return;
@@ -95,9 +97,17 @@ class Builder extends Component {
 
 		switch (range.length) {
 			case 1:
+				if (range[0].length > 1) {
+					alert("Símbolo muy grande");
+					return;
+				}
 				newAutom.createBasic(range[0]);
 				break;
 			case 2:
+				if (range[0] === "" || range[1] === "") {
+					alert("Rango no válido.");
+					return;
+				}
 				newAutom.createBasic(range[0], range[1]);
 				break;
 			default:

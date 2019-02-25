@@ -28,6 +28,16 @@ const header = props => (
                         Analizador Léxico
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink
+                        to="/calculator"
+                        activeStyle={{
+                            color: "white"
+                        }}
+                    >
+                        Calculadora
+                    </NavLink>
+                </li>
             </ul>
         </nav>
     </header>
