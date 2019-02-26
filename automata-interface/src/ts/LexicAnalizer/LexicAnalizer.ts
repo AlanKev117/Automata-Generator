@@ -58,29 +58,47 @@ class LexicAnalyzer {
 	public lexicAnalysis(input: string) {
 		let i: number = 0;
 		let j: number = 0;
+		this.state = this.automaton.startState;
+		this.acceptStatesSeen.clear();
+		this.indexStart = 0;
+		this.indexEnd = 0;
+		this.transiciones = [];
+		let errorFlag: boolean = false;
 		while (i < input.length) {
-			if (this.state.getTransitionsBySymbol(input[i])) {
+			if (this.state.getTransitionsBySymbol(input[i]).length > 0) {
 				this.transiciones = this.state.getTransitionsBySymbol(input[i]);
 				this.state = [...this.transiciones][0].getTargetState(); //Se asume que solo se tuvo una transicion
 				i++;
-				if ([...this.automaton.acceptStates].includes(this.state)) {
+				if ([...this.automaton.acceptStates].includes(this.state)){
 					this.acceptStatesSeen.add(this.state);
 					this.indexEnd = i;
 				}
-			} else {
+			}
+			else {
 				if (this.acceptStatesSeen.size === 0) {
-					console.log("ERROR léxico en " + i);
-					// i++;
-				} else {
-					this.lexems[j] = [
-						input.substring(this.indexStart, this.indexEnd),
-						this.state.getToken()
-					]; //Se guarda el caracter y el token
+					alert("ERROR léxico en " + i);
+					errorFlag = true;
+					break;
+				} 
+				else{
+					this.setLexems(j, this.indexStart, this.indexEnd, input, this.state);
 					j++;
 					this.indexStart = this.indexEnd;
+					this.state = this.automaton.startState;
+					this.acceptStatesSeen.clear();
 				}
 			}
 		}
+		if(i == input.length) this.setLexems(j, this.indexStart, this.indexEnd, input, this.state);
+		if(!errorFlag) alert("CADENA CORRECTA");
+	}
+
+	public setLexems(j: number, indexStart: number, indexEnd: number, input: string, state){
+		this.lexems[j] = [
+			input.substring(indexStart, indexEnd),
+			state.getToken()
+		]; //Se guarda el caracter y el token
+		console.log("Se recibio un token [" + this.state.getToken() + "]");
 	}
 }
 
