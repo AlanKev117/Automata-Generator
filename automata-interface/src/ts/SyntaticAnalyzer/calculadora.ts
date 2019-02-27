@@ -5,14 +5,22 @@ import { Transition } from "../Transition/Transition";
 import { LexicAnalyzer } from "../LexicAnalizer/LexicAnalizer";
 
 class calculadora{
-    public MAS ;
-    public MENOS ;
-    public PROD ;
-    public DIV ;
-    public POR ;
-    public POT ;
-    public PAR_I ;
-    public PAR_D;
+    //Declaramos todos los tokens
+    public MAS:number;
+    public MENOS:number;
+    public PROD:number;
+    public DIV:number;
+    public POR:number;
+    public POT:number;
+    public PAR_I:number;
+    public PAR_D:number;
+    //operaciones adicionales TENEMOS QUE CREAR LOS LEXICOS DE CADA UNO PARA QUE TENGAN UN TOKEN
+    public SIN:number;
+    public COS:number;
+    public TAN:number;
+    public EXP:number;
+    public LN:number;
+    public LOG:number;
     public NUM:number;    
     public v:number;
     public lexico:LexicAnalyzer;
@@ -20,13 +28,30 @@ class calculadora{
 
 
     constructor(Cadena: string, Lexico: LexicAnalyzer){
+    //INICIALIZAMOS NUESTROS TOKENS
+    //Declaramos todos los tokens
+    this.MAS = 10;
+    this.MENOS = 20;
+    this.PROD = 30;
+    this.DIV = 40;
+    this.POR = 50;
+    this.POT = 60;
+    this.PAR_I = 70;
+    this.PAR_D = 80;
+    //operaciones adicionales TENEMOS QUE CREAR LOS LEXICOS DE CADA UNO PARA QUE TENGAN UN TOKEN
+    this.SIN = 90;
+    this.COS = 100;
+    this.TAN = 110;
+    this.EXP =120;
+    this.LN =130;
+    this.LOG =140;
     this.lexico = Lexico;
     this.cadena = Cadena;
-    this.v;
+    var V = 0; 
     }
 
     G = (v: number) =>{
-        let tok: any;
+        let tok: number;
         if(this.E(v)){
             tok =this.lexico.getToken();
             if (tok == this.NUM )
@@ -42,7 +67,7 @@ class calculadora{
         }return false;
     };
     Ep = (v:number) =>{
-        let tok: any;
+        let tok: number;
         let v1: number;
         tok = this.lexico.getToken();
         if (tok == this.MAS || tok == this.MENOS) {
@@ -116,13 +141,36 @@ class calculadora{
         switch (tok) {
             case this.PAR_I:
             if (this.E(v)) {
-                
                 tok = this.lexico.getToken();
                 if (tok == this.PAR_D) {
-                    return true
+                    return true;
                 }   
             }return false
+           
+            case this.SIN:
 
+            return true;
+            
+            case this.COS:
+
+            return true;
+
+            case this.TAN:
+
+            return true;
+
+            
+            case this.EXP:
+            
+            return true;
+
+            case this.LN:
+            
+            return true;
+
+            case this.LOG:
+            
+            return true;
             default:
                 break;
         }
