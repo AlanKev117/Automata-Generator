@@ -10,8 +10,9 @@ class calculadora{
     public PROD ;
     public DIV ;
     public POR ;
+    public POT ;
     public PAR_I ;
-    public PAR_D:string ;
+    public PAR_D;
     public NUM:number;    
     public v:number;
     public lexico:LexicAnalyzer;
@@ -24,7 +25,7 @@ class calculadora{
     this.v;
     }
 
-    G = (v: any) =>{
+    G = (v: number) =>{
         let tok: any;
         if(this.E(v)){
             tok =this.lexico.getToken();
@@ -34,13 +35,13 @@ class calculadora{
         return false
     };
 
-    E = (v:any) =>{
+    E = (v:number) =>{
         if(this.T(v)){
             if(this.Ep(v))
             return true;
         }return false;
     };
-    Ep = (v:any) =>{
+    Ep = (v:number) =>{
         let tok: any;
         let v1: number;
         tok = this.lexico.getToken();
@@ -57,14 +58,14 @@ class calculadora{
 
     };
 
-    T = (v:any) =>{
+    T = (v:number) =>{
         if (this.P(v)) {
             if(this.Pp(v))
             return true;
         }return false;
     };
 
-    Tp = (v:any) =>{
+    Tp = (v:number) =>{
     let tok:number;
     let v1:number;
     tok = this.lexico.getToken();
@@ -76,18 +77,55 @@ class calculadora{
             return false;
         }
     }
-    };
-    
-    P = (v:any) =>{
-        return false;
+    this.lexico.regresarToken();
+    return true;
     };
 
-    Pp = (v:any) =>{
+    
+    P = (v:number) =>{
+        if (this.F(v)){
+            if (this.Pp(v))
+                return true;
+        }else 
+            return false;
+    };
+
+    Pp = (v:number) =>{
+        let tok:number;
+        let v1:number;
+        tok = this.lexico.getToken();
+        
+        if (tok == this.POT){
+            if (this.F(v1)) {
+                v= Math.pow(v,v1);
+
+                if (this.Pp(v)) {
+                    return true;
+                }else 
+                    return false;
+            }
+        }
+        this.lexico.regresarToken();
         return true;
     };
 
-    F = (v:any) =>{
+    F = (v:number) =>{
+        let tok:number;
+        tok = this.lexico.getToken();
 
+        switch (tok) {
+            case this.PAR_I:
+            if (this.E(v)) {
+                
+                tok = this.lexico.getToken();
+                if (tok == this.PAR_D) {
+                    return true
+                }   
+            }return false
+
+            default:
+                break;
+        }
     }
 };
 export { calculadora };

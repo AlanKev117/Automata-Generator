@@ -28,7 +28,7 @@ class LexicAnalyzer {
 		this.transiciones = [];
 		this.state = this.automaton.startState;
 	}
-
+	getToken = () => 0;
 	getAutomaton = () => this.automaton;
 	getLexems = () => this.lexems;
 
