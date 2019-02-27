@@ -16,10 +16,12 @@ class calculadora{
     public v:number;
     public lexico:LexicAnalyzer;
     public cadena:string;
+
+
     constructor(Cadena: string, Lexico: LexicAnalyzer){
     this.lexico = Lexico;
     this.cadena = Cadena;
-    this.v=0;
+    this.v;
     }
 
     G = (v: any) =>{
@@ -33,7 +35,7 @@ class calculadora{
     };
 
     E = (v:any) =>{
-        if(T(v)){
+        if(this.T(v)){
             if(this.Ep(v))
             return true;
         }return false;
@@ -42,29 +44,49 @@ class calculadora{
         let tok: any;
         let v1: number;
         tok = this.lexico.getToken();
-        if (tok == MAS || tok == MENOS) {
-            
+        if (tok == this.MAS || tok == this.MENOS) {
+            if (this.T(v1)) {
+               v +=  (tok == this.MAS)? v1: -v1;
+               if (this.Ep(v) ){
+                    return true;
+               }return false;
+            }
         }
+        this.lexico.regresarToken();
+        return true;
 
     };
 
-    T = () =>{
-
+    T = (v:any) =>{
+        if (this.P(v)) {
+            if(this.Pp(v))
+            return true;
+        }return false;
     };
 
-    Tp = () =>{
-
+    Tp = (v:any) =>{
+    let tok:number;
+    let v1:number;
+    tok = this.lexico.getToken();
+    if (tok == this.PROD || tok == this.DIV) {
+        if (this.P(v1)) {
+            v *= (tok == this.PROD)? v1: 1.0/v1; 
+            if (this.Tp(v)) 
+                return true;
+            return false;
+        }
+    }
     };
     
-    p = () =>{
-
+    P = (v:any) =>{
+        return false;
     };
 
-    Pp = () =>{
-
+    Pp = (v:any) =>{
+        return true;
     };
 
-    F = () =>{
+    F = (v:any) =>{
 
     }
 };
