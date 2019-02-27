@@ -47,7 +47,7 @@ class Calculadora{
     this.LOG =140;
     this.lexico = Lexico;
     this.cadena = Cadena;
-    var V = 0; 
+    var result = 0; 
     }
 
     G = (v: number) =>{
@@ -148,31 +148,91 @@ class Calculadora{
             }return false
            
             case this.SIN:
-
-            return true;
+            tok = this.lexico.getToken();
+                if (tok == this.PAR_I) {
+                    if (this.E(v)) {
+                        tok = this.lexico.getToken();
+                        if (tok == this.PAR_D) {
+                            v = Math.sin(v);
+                            return true;
+                        }
+                    }   
+                }
+                return false;
             
             case this.COS:
-
-            return true;
+            tok = this.lexico.getToken();
+                if (tok == this.PAR_I) {
+                    if (this.E(v)) {
+                        tok = this.lexico.getToken();
+                        if (tok == this.PAR_D) {
+                            v = Math.cos(v);
+                            return true;
+                        }
+                    }   
+                }
+                return false;
 
             case this.TAN:
-
-            return true;
-
+            tok = this.lexico.getToken();
+                if (tok == this.PAR_I) {
+                    if (this.E(v)) {
+                        tok = this.lexico.getToken();
+                        if (tok == this.PAR_D) {
+                            v = Math.tan(v);
+                            return true;
+                        }
+                    }   
+                }
+                return false;
             
             case this.EXP:
-            
-            return true;
+            tok = this.lexico.getToken();
+                if (tok == this.PAR_I) {
+                    if (this.E(v)) {
+                        tok = this.lexico.getToken();
+                        if (tok == this.PAR_D) {
+                            v = Math.exp(v);
+                            return true;
+                        }
+                    }   
+                }
+                return false;
 
             case this.LN:
             
-            return true;
+            tok = this.lexico.getToken();
+            if (tok == this.PAR_I) {
+                if (this.E(v)) {
+                    tok = this.lexico.getToken();
+                    if (tok == this.PAR_D) {
+                        v = Math.log(v);
+                        return true;
+                    }
+                }   
+            }
+            return false;
 
             case this.LOG:
-            
-            return true;
+                        tok = this.lexico.getToken();
+                if (tok == this.PAR_I) {
+                    if (this.E(v)) {
+                        tok = this.lexico.getToken();
+                        if (tok == this.PAR_D) {
+                            v = Math.log10(v);
+                            return true;
+                        }
+                    }   
+                }
+
+                return false;
+
+            case this.NUM:
+                return v = parseFloat(this.lexico.getLexem());
             default:
-                break;
+            console.error("Error");
+            
+            return false;
         }
     }
 };
