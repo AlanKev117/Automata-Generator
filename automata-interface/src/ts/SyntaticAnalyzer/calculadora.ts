@@ -4,7 +4,7 @@ import { State } from "../State/State";
 import { Transition } from "../Transition/Transition";
 import { LexicAnalyzer } from "../LexicAnalizer/LexicAnalizer";
 
-class calculadora{
+class Calculadora{
     //Declaramos todos los tokens
     public MAS:number;
     public MENOS:number;
@@ -176,4 +176,4 @@ class calculadora{
         }
     }
 };
-export { calculadora };
+export { Calculadora };
