@@ -42,7 +42,9 @@ class LexicAnalyzer {
 	public getToken = () => {
 		if(this.top >= 0){
 			this.top--;
-			return this.lexems[this.top + 1];
+			console.log("Se desempilo el token:" + this.lexems[this.top + 1][1]); 
+			return this.lexems[this.top + 1][1];
+			
 		}
 		console.log("ERROR: Subdesbordamiento de pila");
 	}
