@@ -29,7 +29,7 @@ class LexicAnalyzer {
 		this.indexEnd = 0;
 		this.transiciones = [];
 		this.state = this.automaton.startState;
-		this.top = -1;
+		this.top = 0;
 	}
 
 	getAutomaton = () => this.automaton;
@@ -50,7 +50,7 @@ class LexicAnalyzer {
 			return null;
 		}
 		*/
-		if(this.top > 0) return this.lexems[this.top++][1];
+		if(this.top >= 0) return this.lexems[this.top++][1];
 		else return null;
 	}
 
