@@ -40,13 +40,8 @@ class LexicAnalyzer {
 	 * @memberof LexicAnalyzer
 	 */
 	public getToken = () => {
-		if(this.top >= 0){
-			this.top--;
-			console.log("Se desempilo el token:" + this.lexems[this.top + 1][1]); 
-			return this.lexems[this.top + 1][1];
-			
-		}
-		console.log("ERROR: Subdesbordamiento de pila");
+		this.top++;
+		return this.lexems[this.top - 1][1];
 	}
 
 	/**
@@ -56,7 +51,9 @@ class LexicAnalyzer {
 	 * @memberof LexicAnalyzer
 	 */
 	public returnToken = () => {
-		this.top++;
+		if(this.top > 0)
+			this.top--;
+		else console.log("ERROR: Subdesbordamiento de pila");
 	}
 
 	/**
@@ -116,7 +113,11 @@ class LexicAnalyzer {
 			}
 			alert("Errores lexicos en los caracteres: " + errorString);
 		}
-		this.top = this.lexems.length - 1;
+		this.top = 0;
+		this.getToken();
+		this.returnToken();
+		this.getToken();
+		this.getToken();
 	}
 
 	public setLexems(j: number, indexStart: number, indexEnd: number, input: string, state){
