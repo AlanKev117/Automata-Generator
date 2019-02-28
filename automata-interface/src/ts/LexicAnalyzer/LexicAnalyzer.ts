@@ -44,13 +44,14 @@ class LexicAnalyzer {
 	 * @memberof LexicAnalyzer
 	 */
 	public getToken = () => {
+		this.top++;
 		/*
 		if(this.top >= this.lexems.length){ //Validacion
 			console.log("ERROR: Desbordamiento de pila");
 			return null;
 		}
 		*/
-		if(this.top >= 0) return this.lexems[this.top++][1];
+		if(this.top > 0) return this.lexems[this.top - 1][1];
 		else return null;
 	}
 
@@ -124,6 +125,9 @@ class LexicAnalyzer {
 			alert("Errores lexicos en los caracteres: " + errorString);
 		}
 		this.lexemsStack = this.lexems;
+		this.getToken();
+		this.getToken();
+		this.getCurrentLexem();
 	}
 
 	public setLexems(j: number, indexStart: number, indexEnd: number, input: string, state){
