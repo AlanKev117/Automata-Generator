@@ -34,7 +34,7 @@ class LexicAnalyzer {
 
 	getAutomaton = () => this.automaton;
 	getCurrentLexem = () => {
-		return this.lexems[this.top][0];
+		return this.lexems[this.top - 1][0];
 	} 
 
 	/**

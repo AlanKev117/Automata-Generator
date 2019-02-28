@@ -22,7 +22,7 @@ class SyntaxAnalyzerCalc {
 	public lexico: LexicAnalyzer;
 
 	constructor() {
-		const tokens = {...Token};
+		const tokens = { ...Token };
 		const automata = this.createAutomataForLexic();
 		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora Chida");
 	}
@@ -122,7 +122,7 @@ class SyntaxAnalyzerCalc {
 			autoLOG,
 			autoNUM
 		];
-	}
+	};
 
 	public solve = (input: string) => {
 		this.lexico.lexicAnalysis(input);
@@ -132,13 +132,15 @@ class SyntaxAnalyzerCalc {
 		} else {
 			console.log("p2");
 		}
-	}
+	};
 
 	G = (v: number[]) => {
 		let tok: number;
 		if (this.E(v)) {
 			tok = this.lexico.getToken();
-			if (tok === Token.NUM) return true;
+			if (!tok) {
+				return true;
+			}
 		}
 		return false;
 	};
@@ -160,8 +162,8 @@ class SyntaxAnalyzerCalc {
 				if (this.Ep(v)) {
 					return true;
 				}
-				return false;
 			}
+			return false;
 		}
 		this.lexico.returnToken();
 		return true;
@@ -169,7 +171,7 @@ class SyntaxAnalyzerCalc {
 
 	T = (v: number[]) => {
 		if (this.P(v)) {
-			if (this.Pp(v)) return true;
+			if (this.Tp(v)) return true;
 		}
 		return false;
 	};
@@ -182,8 +184,8 @@ class SyntaxAnalyzerCalc {
 			if (this.P(v1)) {
 				v[0] *= tok === Token.PROD ? v1[0] : 1.0 / v1[0];
 				if (this.Tp(v)) return true;
-				return false;
 			}
+			return false;
 		}
 		this.lexico.returnToken();
 		return true;
@@ -192,7 +194,8 @@ class SyntaxAnalyzerCalc {
 	P = (v: number[]) => {
 		if (this.F(v)) {
 			if (this.Pp(v)) return true;
-		} else return false;
+		}
+		return false;
 	};
 
 	Pp = (v: number[]) => {
@@ -203,11 +206,11 @@ class SyntaxAnalyzerCalc {
 		if (tok === Token.POT) {
 			if (this.F(v1)) {
 				v[0] = Math.pow(v[0], v1[0]);
-
 				if (this.Pp(v)) {
 					return true;
-				} else return false;
+				}
 			}
+			return false;
 		}
 		this.lexico.returnToken();
 		return true;
