@@ -45,7 +45,7 @@ class LexicAnalyzer {
 	 */
 	public getToken = () => {
 		this.top++;
-		if(this.top >= this.lexems.length){ //Validacion
+		if(this.top > this.lexems.length){ //Validacion
 			console.log("ERROR: Desbordamiento de pila");
 			return null;
 		}
