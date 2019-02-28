@@ -28,7 +28,7 @@ class LexicAnalyzer {
 		this.transiciones = [];
 		this.state = this.automaton.startState;
 	}
-	getToken = () => 0;
+
 	getAutomaton = () => this.automaton;
 	getLexems = () => this.lexems;
 
@@ -38,7 +38,7 @@ class LexicAnalyzer {
 	 * @returns {string}
 	 * @memberof LexicAnalyzer
 	 */
-	getLexem = () => {};
+	getToken = () => {};
 
 	/**
 	 * Regresa un lexema dado a la pila de lexemas.
@@ -46,13 +46,12 @@ class LexicAnalyzer {
 	 * @param {string} lexem
 	 * @memberof LexicAnalyzer
 	 */
-	pushLexem = (lexem: string) => {};
+	returnToken = () => {};
 
 	/**
 	 * Separa la entrada dada en un arreglo de lexemas con su token asociado.
 	 *
 	 * @param {string} input
-	 * @returns {[string, number][]}
 	 * @memberof Misc
 	 */
 	public lexicAnalysis(input: string) {
