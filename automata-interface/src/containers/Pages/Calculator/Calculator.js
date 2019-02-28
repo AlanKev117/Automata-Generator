@@ -14,9 +14,16 @@ class Calculator extends Component {
 
 	calcInputHandlers = {
 		expressionChangedHandler: event => {
-			this.setState({calcInput: {expression: event.target.value}});
+			this.setState({ calcInput: { expression: event.target.value } });
 		},
 		analizeExpHandler: () => {
+			const hola = (v) => {
+				v[0]++;
+			};
+
+			let x = [2];
+			hola(x);
+			console.log(x[0]);
 			console.log("Se evaluará: " + this.state.calcInput.expression);
 		}
 	};
