@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import CalcInput from "./CalcInput/CalcInput";
 
+import { SyntaxAnalyzerCalc } from "../../../ts/Calculator/SyntaxAnalyzerCalc";
+
 import classes from "./Calculator.module.css";
 
 class Calculator extends Component {
@@ -17,14 +19,10 @@ class Calculator extends Component {
 			this.setState({ calcInput: { expression: event.target.value } });
 		},
 		analizeExpHandler: () => {
-			const hola = (v) => {
-				v[0]++;
-			};
-
-			let x = [2];
-			hola(x);
-			console.log(x[0]);
-			console.log("Se evaluará: " + this.state.calcInput.expression);
+			const expression = this.state.calcInput.expression;
+			console.log("Se evaluará: " + expression);
+			const an = new SyntaxAnalyzerCalc();
+			an.solve(expression);
 		}
 	};
 

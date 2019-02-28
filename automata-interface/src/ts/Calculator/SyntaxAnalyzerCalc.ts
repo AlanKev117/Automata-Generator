@@ -1,4 +1,4 @@
-import { LexicAnalyzer } from "../LexicAnalizer/LexicAnalizer";
+import { LexicAnalyzer } from "../LexicAnalyzer/LexicAnalyzer";
 import { Automaton } from "../Automaton/Automaton";
 
 enum Token {
@@ -18,13 +18,13 @@ enum Token {
 	NUM
 }
 
-class Calculadora {
+class SyntaxAnalyzerCalc {
 	public lexico: LexicAnalyzer;
 
 	constructor() {
 		const tokens = {...Token};
 		const automata = this.createAutomataForLexic();
-		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora");
+		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora Chida");
 	}
 
 	private createAutomataForLexic = () => {
@@ -38,13 +38,13 @@ class Calculadora {
 		const autoS = new Automaton("S");
 		autoS.createBasic("s");
 		const autoA = new Automaton("A");
-		autoS.createBasic("a");
+		autoA.createBasic("a");
 		const autoX = new Automaton("X");
-		autoS.createBasic("x");
+		autoX.createBasic("x");
 		const autoP = new Automaton("P");
-		autoS.createBasic("p");
+		autoP.createBasic("p");
 		const autoG = new Automaton("G");
-		autoS.createBasic("g");
+		autoG.createBasic("g");
 		const autoDIGS = new Automaton("DIGS");
 		autoDIGS.createBasic("0", "9");
 		autoDIGS.makePositive();
@@ -122,6 +122,16 @@ class Calculadora {
 			autoLOG,
 			autoNUM
 		];
+	}
+
+	public solve = (input: string) => {
+		this.lexico.lexicAnalysis(input);
+		const result = [0];
+		if (this.G(result)) {
+			console.log("El resultado es: " + result[0]);
+		} else {
+			console.log("p2");
+		}
 	}
 
 	G = (v: number[]) => {
@@ -283,11 +293,11 @@ class Calculadora {
 				return false;
 
 			case Token.NUM:
-				v[0] = +this.lexico.getLexem();
+				v[0] = +this.lexico.getCurrentLexem();
 				return true;
 			default:
 				return false;
 		}
 	};
 }
-export { Calculadora, Token };
+export { SyntaxAnalyzerCalc };

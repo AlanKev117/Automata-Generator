@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import domtoimage from "dom-to-image";
 
-import { LexicAnalyzer } from "../../../ts/LexicAnalizer/LexicAnalizer";
+import { LexicAnalyzer } from "../../../ts/LexicAnalyzer/LexicAnalyzer";
 import Checker from "./Checker/Checker";
 import Evaluator from "./Evaluator/Evaluator";
 import Table from "../Builder/Table/Table";
