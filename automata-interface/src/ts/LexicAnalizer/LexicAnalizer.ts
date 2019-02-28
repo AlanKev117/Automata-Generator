@@ -11,6 +11,7 @@ class LexicAnalyzer {
 	private indexEnd: number;
 	private transiciones: Transition[];
 	private state: State;
+	private top: number;
 
 	constructor(automata: Automaton[], tokens: Object, lexicName: string) {
 		const copies = automata.map(auto => auto.copy());
@@ -56,6 +57,7 @@ class LexicAnalyzer {
 	 * @memberof Misc
 	 */
 	public lexicAnalysis(input: string) {
+		let errorString: string;
 		let i: number = 0;
 		let j: number = 0;
 		this.state = this.automaton.startState;
@@ -64,6 +66,7 @@ class LexicAnalyzer {
 		this.indexEnd = 0;
 		this.transiciones = [];
 		let errorFlag: boolean = false;
+		let lexicErrors = new Array();
 		while (i < input.length) {
 			if (this.state.getTransitionsBySymbol(input[i]).length > 0) {
 				this.transiciones = this.state.getTransitionsBySymbol(input[i]);
@@ -76,9 +79,12 @@ class LexicAnalyzer {
 			}
 			else {
 				if (this.acceptStatesSeen.size === 0) {
-					alert("ERROR léxico en " + i);
+					console.log("ERROR léxico en " + i);
+					lexicErrors.push(i);
 					errorFlag = true;
-					break;
+					this.indexEnd--;
+					this.indexStart++;
+					i++;
 				} 
 				else{
 					this.setLexems(j, this.indexStart, this.indexEnd, input, this.state);
@@ -91,14 +97,39 @@ class LexicAnalyzer {
 		}
 		if(i == input.length) this.setLexems(j, this.indexStart, this.indexEnd, input, this.state);
 		if(!errorFlag) alert("CADENA CORRECTA");
+		else{
+			for(let n = 0; n < lexicErrors.length; n++){
+				if(n == 0) errorString = lexicErrors[n] + ", ";
+				else{
+					if(n < lexicErrors.length - 1) errorString = errorString + lexicErrors[n] + ", ";
+					else errorString = errorString + lexicErrors[n];
+				}
+			}
+			alert("Errores lexicos en los caracteres: " + errorString);
+		}
+		this.top = this.lexems.length - 1;
 	}
 
 	public setLexems(j: number, indexStart: number, indexEnd: number, input: string, state){
-		this.lexems[j] = [
-			input.substring(indexStart, indexEnd),
-			state.getToken()
-		]; //Se guarda el caracter y el token
-		console.log("Se recibio un token [" + this.state.getToken() + "]");
+		if(state.getToken() != undefined){
+			this.lexems[j] = [
+				input.substring(indexStart, indexEnd),
+				state.getToken()
+			]; //Se guarda el caracter y el token
+			console.log("Se recibio un token [" + this.state.getToken() + "]");
+		}
+	}
+
+	public getToken = () => {
+		if(this.top >= 0){
+			this.top--;
+			return this.lexems[this.top + 1];
+		}
+		console.log("ERROR: Subdesbordamiento de pila");
+	}
+
+	public returnToken = () => {
+		this.top++;
 	}
 }
 
