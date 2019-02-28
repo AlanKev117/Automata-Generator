@@ -33,7 +33,9 @@ class LexicAnalyzer {
 	}
 
 	getAutomaton = () => this.automaton;
+	getLexems = () => this.lexems;
 	getCurrentLexem = () => {
+		console.log("Se tiene el lexema: " + this.lexems[this.top - 1][0]);
 		return this.lexems[this.top - 1][0];
 	} 
 
@@ -51,6 +53,7 @@ class LexicAnalyzer {
 			return null;
 		}
 		*/
+		console.log("Se desmpilo" + this.lexems[this.top - 1][1])
 		if(this.top > 0) return this.lexems[this.top - 1][1];
 		else return null;
 	}
