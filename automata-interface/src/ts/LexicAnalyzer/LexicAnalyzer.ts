@@ -13,7 +13,6 @@ class LexicAnalyzer {
 	private transiciones: Transition[];
 	private state: State;
 	private top: number;
-	private topLexemStack: number;
 
 	constructor(automata: Automaton[], tokens: Object, lexicName: string) {
 		const copies = automata.map(auto => auto.copy());
@@ -30,15 +29,12 @@ class LexicAnalyzer {
 		this.indexEnd = 0;
 		this.transiciones = [];
 		this.state = this.automaton.startState;
-		this.topLexemStack = 0;
 		this.top = 0;
 	}
 
 	getAutomaton = () => this.automaton;
-	getLexems = () => {
-		this.topLexemStack++;
-		console.log("Lexema desempilado: " + this.lexemsStack[this.topLexemStack - 1][0]);
-		return this.lexemsStack[this.topLexemStack - 1][0]; //Regresa el lexema del tope anterior (nuevo tope se incremento)
+	getCurrentLexem = () => {
+		return this.lexems[this.top][0];
 	} 
 
 	/**

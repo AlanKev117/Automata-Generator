@@ -283,11 +283,11 @@ class Calculadora {
 				return false;
 
 			case Token.NUM:
-				v[0] = +this.lexico.getLexem();
+				v[0] = +this.lexico.getCurrentLexem();
 				return true;
 			default:
 				return false;
 		}
 	};
 }
-export { Calculadora, Token };
+export { Calculadora };
