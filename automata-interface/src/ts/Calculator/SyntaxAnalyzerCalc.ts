@@ -1,4 +1,4 @@
-import { LexicAnalyzer } from "../LexicAnalizer/LexicAnalizer";
+import { LexicAnalyzer } from "../LexicAnalyzer/LexicAnalyzer";
 import { Automaton } from "../Automaton/Automaton";
 
 enum Token {
@@ -24,7 +24,7 @@ class Calculadora {
 	constructor() {
 		const tokens = {...Token};
 		const automata = this.createAutomataForLexic();
-		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora");
+		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora Chida");
 	}
 
 	private createAutomataForLexic = () => {
