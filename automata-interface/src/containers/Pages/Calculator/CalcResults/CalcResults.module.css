@@ -1,0 +1,46 @@
+.CalcResults {
+	background: #7fa1b4;
+	border-radius: 5px;
+	box-shadow: 3px 3px 3px gray;
+	padding: 20px;
+	width: 70%;
+	margin: 30px auto;
+}
+
+.CalcResults .FlexContainer {
+	display: flex;
+	justify-content: space-between;
+}
+
+.CalcResults h2 {
+	margin-top: 5px;
+	font-size: 45px;
+	font-weight: lighter;
+}
+
+.CalcResults input {
+	width: 80%;
+	border: 1px solid grey;
+	border-radius: 3px;
+	padding: 3px;
+	font-size: 18px;
+	font-family: consolas;
+}
+
+.CalcResults button {
+	background: #96bed4;
+	border: 1px solid #96bed4;
+	padding: 5px 15px;
+	border-radius: 4px;
+	font-size: 18px;
+}
+
+.CalcResults button:hover {
+	color: white;
+	cursor: pointer;
+}
+
+.CalcResults button:active {
+	background:#555;
+	border-color: #555;
+}

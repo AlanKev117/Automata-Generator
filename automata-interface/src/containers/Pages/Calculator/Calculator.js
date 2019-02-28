@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import CalcInput from "./CalcInput/CalcInput";
+import CalcResults from "./CalcResults/CalcResults";
 
 import { SyntaxAnalyzerCalc } from "../../../ts/Calculator/SyntaxAnalyzerCalc";
 
@@ -11,7 +12,10 @@ class Calculator extends Component {
 			expression: ""
 		},
 
-		calcOutput: {}
+		calcOutput: {
+			value: 0,
+			notation: ""
+		}
 	};
 
 	calcInputHandlers = {
@@ -19,10 +23,16 @@ class Calculator extends Component {
 			this.setState({ calcInput: { expression: event.target.value } });
 		},
 		analizeExpHandler: () => {
-			const expression = this.state.calcInput.expression;
-			console.log("Se evaluará: " + expression);
 			const an = new SyntaxAnalyzerCalc();
-			an.solve(expression);
+			const results = an.solve(this.state.calcInput.expression);
+			if (results !== null) {
+				this.setState({
+					calcOutput: {
+						value: results._val,
+						notation: results._str
+					}
+				});
+			}
 		}
 	};
 
@@ -37,6 +47,12 @@ class Calculator extends Component {
 					}
 					analizeExp={this.calcInputHandlers.analizeExpHandler}
 				/>
+				{
+					<CalcResults
+						value={this.state.calcOutput.value}
+						notation={this.state.calcOutput.notation}
+					/>
+				}
 			</main>
 		);
 	}

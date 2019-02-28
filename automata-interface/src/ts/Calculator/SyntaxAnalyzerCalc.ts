@@ -132,10 +132,12 @@ class SyntaxAnalyzerCalc {
 		const val: number[] = [];
 		const str: string[] = [];
 		if (this.G(val, str)) {
-			console.log("El resultado es: " + val[0]);
-			console.log("La notación es: " + str[0]);
+			const _val = val[0];
+			const _str = str[0];
+			return {_val, _str};
 		} else {
-			console.log("p2");
+			alert("Error sintáxtico");
+			return null;
 		}
 	};
 
@@ -216,7 +218,7 @@ class SyntaxAnalyzerCalc {
 		if (tok !== undefined && tok === Token.POT) {
 			if (this.F(v1, s1)) {
 				v[0] = Math.pow(v[0], v1[0]);
-				s[0] = `^ ${s[0]} ${s[1]}`;
+				s[0] = `^ ${s[0]} ${s1[0]}`;
 				if (this.Pp(v,s)) {
 					return true;
 				}

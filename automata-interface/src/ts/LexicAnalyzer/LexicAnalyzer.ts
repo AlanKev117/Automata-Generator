@@ -119,7 +119,7 @@ class LexicAnalyzer {
 				input,
 				this.state
 			);
-		if (!errorFlag) console.log("CADENA NO INCORRECTA");
+		if (!errorFlag) alert("CADENA ACEPTADA");
 		else {
 			for (let n = 0; n < lexicErrors.length; n++) {
 				if (n == 0) errorString = lexicErrors[n] + ", ";

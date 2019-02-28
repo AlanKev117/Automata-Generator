@@ -12,7 +12,9 @@ const calcInput = props => {
 					value={props.expression}
 					onChange={props.expressionChanged}
 				/>
-				<button onClick={props.analizeExp}>Analizar</button>
+				{props.expression.length > 0 ? (
+					<button onClick={props.analizeExp}>Analizar</button>
+				) : null}
 			</div>
 		</div>
 	);
