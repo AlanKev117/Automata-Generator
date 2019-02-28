@@ -159,7 +159,7 @@ class SyntaxAnalyzerCalc {
 		let tok: number;
 		let v1: number[] = [];
 		tok = this.lexico.getToken();
-		if (tok && (tok === Token.MAS || tok === Token.MENOS)) {
+		if (tok !== undefined && (tok === Token.MAS || tok === Token.MENOS)) {
 			if (this.T(v1)) {
 				v[0] += tok === Token.MAS ? v1[0] : -v1[0];
 				if (this.Ep(v)) {
@@ -168,7 +168,7 @@ class SyntaxAnalyzerCalc {
 			}
 			return false;
 		}
-		this.lexico.returnToken();
+		if (tok !== undefined) this.lexico.returnToken();
 		return true;
 	};
 
@@ -183,14 +183,14 @@ class SyntaxAnalyzerCalc {
 		let tok: number;
 		let v1: number[] = [];
 		tok = this.lexico.getToken();
-		if (tok && (tok === Token.PROD || tok === Token.DIV)) {
+		if (tok !== undefined && (tok === Token.PROD || tok === Token.DIV)) {
 			if (this.P(v1)) {
 				v[0] *= tok === Token.PROD ? v1[0] : 1.0 / v1[0];
 				if (this.Tp(v)) return true;
 			}
 			return false;
 		}
-		this.lexico.returnToken();
+		if (tok !== undefined) this.lexico.returnToken();
 		return true;
 	};
 
@@ -206,7 +206,7 @@ class SyntaxAnalyzerCalc {
 		let v1: number[] = [];
 		tok = this.lexico.getToken();
 
-		if (tok && tok === Token.POT) {
+		if (tok !== undefined && tok === Token.POT) {
 			if (this.F(v1)) {
 				v[0] = Math.pow(v[0], v1[0]);
 				if (this.Pp(v)) {
@@ -215,7 +215,7 @@ class SyntaxAnalyzerCalc {
 			}
 			return false;
 		}
-		this.lexico.returnToken();
+		if (tok !== undefined) this.lexico.returnToken();
 		return true;
 	};
 

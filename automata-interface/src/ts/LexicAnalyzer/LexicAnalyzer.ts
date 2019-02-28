@@ -6,7 +6,6 @@ import { Transition } from "../Transition/Transition";
 class LexicAnalyzer {
 	private automaton: Automaton;
 	private lexems: [string, number][];
-	private lexemsStack: [string, number][];
 	private acceptStatesSeen: Set<State>;
 	private indexStart: number;
 	private indexEnd: number;
@@ -120,7 +119,7 @@ class LexicAnalyzer {
 				input,
 				this.state
 			);
-		if (!errorFlag) alert("CADENA CORRECTA");
+		if (!errorFlag) console.log("CADENA NO INCORRECTA");
 		else {
 			for (let n = 0; n < lexicErrors.length; n++) {
 				if (n == 0) errorString = lexicErrors[n] + ", ";
@@ -132,10 +131,6 @@ class LexicAnalyzer {
 			}
 			alert("Errores lexicos en los caracteres: " + errorString);
 		}
-		this.lexemsStack = this.lexems;
-		this.getToken();
-		this.getToken();
-		this.getCurrentLexem();
 	}
 
 	public setLexems(
