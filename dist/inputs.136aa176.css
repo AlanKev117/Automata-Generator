@@ -1,0 +1,80 @@
+/*General*/
+#inputs > div,
+#inputs-lexic > div {
+	display: inline-block;
+	padding: 10px;
+	margin: 15px 10px;
+	border-radius: 4px;
+	box-shadow: 2px 2px 2px gray;
+	/*height: 100px;
+	width: 300px;*/
+}
+
+label {
+	display: block;
+	font-size: 20px;
+	margin-bottom: 5px;
+}
+
+button {
+	background: #eaeaea;
+	border: 2px solid #eaeaea;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-size: 16px;
+}
+
+select {
+	background: white;
+	border: 2px solid #eaeaea;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-size: 16px;
+}
+
+button:focus {
+	outline: none;
+}
+
+button:hover {
+	cursor: pointer;
+	border: 2px solid #57849e;
+}
+
+button:active {
+	background: #57849e;
+	color: white;
+}
+
+input[type="text"] {
+	border: 2px solid #eaeaea;
+	border-radius: 4px;
+	padding: 5px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+/*Creador de autómatas simple*/
+#creator,
+#afd-chooser {
+	background: #a4eaff;
+}
+
+#chooser {
+	background: #ffbea4;
+}
+
+#tools {
+	background: #a4ffe4;
+}
+
+#target {
+	background: #ffbea4;
+}
+
+input:focus,
+button:focus,
+select:focus {
+	outline: none;
+	border: 2px solid #57849e;
+}

@@ -119,7 +119,10 @@ class LexicAnalyzer {
 				input,
 				this.state
 			);
-		if (!errorFlag) alert("CADENA ACEPTADA");
+		if (!errorFlag){
+			alert("CADENA ACEPTADA \n Lexemas: " + this.lexems);
+
+		}
 		else {
 			for (let n = 0; n < lexicErrors.length; n++) {
 				if (n == 0) errorString = lexicErrors[n] + ", ";

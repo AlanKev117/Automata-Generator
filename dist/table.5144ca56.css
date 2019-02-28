@@ -1,0 +1,36 @@
+#automaton-table {
+	overflow-x: auto;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table th,
+table td {
+	border: 1px solid black;
+	font-size: 18px;
+	padding: 5px;
+	text-align: center;
+	width: 100px;
+}
+
+table th {
+	background: #57849e;
+}
+
+.state-cell {
+	background: #72f6ff;
+}
+
+.state-cell.start {
+	background: #64fdb5;
+}
+
+.state-cell.accept {
+	background: #fda964;
+}
+
+tr:nth-child(2n + 1) {
+	background: #cfcfcf;
+}
