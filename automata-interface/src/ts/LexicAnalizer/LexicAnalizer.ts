@@ -39,7 +39,13 @@ class LexicAnalyzer {
 	 * @returns {string}
 	 * @memberof LexicAnalyzer
 	 */
-	getToken = () => {};
+	public getToken = () => {
+		if(this.top >= 0){
+			this.top--;
+			return this.lexems[this.top + 1];
+		}
+		console.log("ERROR: Subdesbordamiento de pila");
+	}
 
 	/**
 	 * Regresa un lexema dado a la pila de lexemas.
@@ -47,7 +53,9 @@ class LexicAnalyzer {
 	 * @param {string} lexem
 	 * @memberof LexicAnalyzer
 	 */
-	returnToken = () => {};
+	public returnToken = () => {
+		this.top++;
+	}
 
 	/**
 	 * Separa la entrada dada en un arreglo de lexemas con su token asociado.
@@ -119,17 +127,6 @@ class LexicAnalyzer {
 		}
 	}
 
-	public getToken = () => {
-		if(this.top >= 0){
-			this.top--;
-			return this.lexems[this.top + 1];
-		}
-		console.log("ERROR: Subdesbordamiento de pila");
-	}
-
-	public returnToken = () => {
-		this.top++;
-	}
 }
 
 export { LexicAnalyzer };
