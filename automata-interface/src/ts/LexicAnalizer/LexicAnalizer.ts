@@ -31,7 +31,16 @@ class LexicAnalyzer {
 	}
 
 	getAutomaton = () => this.automaton;
-	getLexems = () => this.lexems;
+	
+	/**
+	 * Obtiene el lexema actual de la pila.
+	 *
+	 * @returns {string}
+	 * @memberof LexicAnalyzer
+	 */
+	getLexem = () => {
+
+	};
 
 	/**
 	 * Obtiene el siguiente lexema que idetifica el analizador.

@@ -1,11 +1,11 @@
 import { LexicAnalyzer } from "../LexicAnalizer/LexicAnalizer";
+import { Automaton } from "../Automaton/Automaton";
 
 enum Token {
 	MAS,
 	MENOS,
 	PROD,
 	DIV,
-	POR,
 	POT,
 	PAR_I,
 	PAR_D,
@@ -20,11 +20,108 @@ enum Token {
 
 class Calculadora {
 	public lexico: LexicAnalyzer;
-	public cadena: string;
 
-	constructor(Cadena: string, Lexico: LexicAnalyzer) {
-		this.lexico = Lexico;
-		this.cadena = Cadena;
+	constructor() {
+		const tokens = {...Token};
+		const automata = this.createAutomataForLexic();
+		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora");
+	}
+
+	private createAutomataForLexic = () => {
+		// Creación de autómatas básicos auxiliares.
+		const autoI = new Automaton("I");
+		autoI.createBasic("i");
+		const autoN = new Automaton("N");
+		autoN.createBasic("n");
+		const autoO = new Automaton("O");
+		autoO.createBasic("o");
+		const autoS = new Automaton("S");
+		autoS.createBasic("s");
+		const autoA = new Automaton("A");
+		autoS.createBasic("a");
+		const autoX = new Automaton("X");
+		autoS.createBasic("x");
+		const autoP = new Automaton("P");
+		autoS.createBasic("p");
+		const autoG = new Automaton("G");
+		autoS.createBasic("g");
+		const autoDIGS = new Automaton("DIGS");
+		autoDIGS.createBasic("0", "9");
+		autoDIGS.makePositive();
+		const autoDOT = new Automaton("DOT");
+		autoDOT.createBasic(".");
+		autoDOT.concatenarAFN(autoDIGS.copy());
+		autoDOT.makeOptional();
+
+		// Creamos los autómatas que nos servirán para hacer en analizador léxico
+		// para obtener los tokens de ls expresiones matemáticas.
+		const autoMAS = new Automaton("MAS");
+		autoMAS.createBasic("+");
+		const autoMENOS = new Automaton("MENOS");
+		autoMENOS.createBasic("-");
+		const autoPROD = new Automaton("PROD");
+		autoPROD.createBasic("*");
+		const autoDIV = new Automaton("DIV");
+		autoDIV.createBasic("/");
+		const autoPOT = new Automaton("POT");
+		autoPOT.createBasic("^");
+		const autoPAR_I = new Automaton("PAR_I");
+		autoPAR_I.createBasic("(");
+		const autoPAR_D = new Automaton("PAR_D");
+		autoPAR_D.createBasic(")");
+		// Creación de autómata seno.
+		const autoSIN = new Automaton("SIN");
+		autoSIN.createBasic("s");
+		autoSIN.concatenarAFN(autoI.copy());
+		autoSIN.concatenarAFN(autoN.copy());
+		// Creación de autómata coseno.
+		const autoCOS = new Automaton("COS");
+		autoCOS.createBasic("c");
+		autoCOS.concatenarAFN(autoO.copy());
+		autoCOS.concatenarAFN(autoS.copy());
+		// Creación de autómata tangente.
+		const autoTAN = new Automaton("TAN");
+		autoTAN.createBasic("t");
+		autoTAN.concatenarAFN(autoA.copy());
+		autoTAN.concatenarAFN(autoN.copy());
+		// Autómata exp
+		const autoEXP = new Automaton("EXP");
+		autoEXP.createBasic("e");
+		autoEXP.concatenarAFN(autoX.copy());
+		autoEXP.concatenarAFN(autoP.copy());
+		// Autómata ln
+		const autoLN = new Automaton("LN");
+		autoLN.createBasic("l");
+		autoLN.concatenarAFN(autoN.copy());
+		// Autómata log
+		const autoLOG = new Automaton("LOG");
+		autoLOG.createBasic("l");
+		autoLOG.concatenarAFN(autoO.copy());
+		autoLOG.concatenarAFN(autoG.copy());
+		// Autómata para reconocer números.
+		const autoNUM = new Automaton("NUM");
+		autoNUM.createBasic("+");
+		autoNUM.unirAFN(autoMENOS.copy());
+		autoNUM.makeOptional();
+		autoNUM.concatenarAFN(autoDIGS);
+		autoNUM.concatenarAFN(autoDOT);
+
+		return [
+			autoMAS,
+			autoMENOS,
+			autoPROD,
+			autoDIV,
+			autoPOT,
+			autoPAR_I,
+			autoPAR_D,
+			autoSIN,
+			autoCOS,
+			autoTAN,
+			autoEXP,
+			autoLN,
+			autoLOG,
+			autoNUM
+		];
 	}
 
 	G = (v: number[]) => {
@@ -185,6 +282,9 @@ class Calculadora {
 				}
 				return false;
 
+			case Token.NUM:
+				v[0] = +this.lexico.getLexem();
+				return true;
 			default:
 				return false;
 		}
