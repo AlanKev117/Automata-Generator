@@ -46,7 +46,12 @@ class LexicAnalyzer {
 	 */
 	public getToken = () => {
 		this.top++;
-		return this.lexems[this.top - 1][1];
+		if(this.top >= this.lexems.length){ //Validacion
+			console.log("ERROR: Desbordamiento de pila");
+			return null;
+		}
+		if(this.top > 0) return this.lexems[this.top - 1][1];
+		else return null;
 	}
 
 	/**
