@@ -6,12 +6,14 @@ import { Transition } from "../Transition/Transition";
 class LexicAnalyzer {
 	private automaton: Automaton;
 	private lexems: [string, number][];
+	private lexemsStack: [string, number][];
 	private acceptStatesSeen: Set<State>;
 	private indexStart: number;
 	private indexEnd: number;
 	private transiciones: Transition[];
 	private state: State;
 	private top: number;
+	private topLexemStack: number;
 
 	constructor(automata: Automaton[], tokens: Object, lexicName: string) {
 		const copies = automata.map(auto => auto.copy());
@@ -28,10 +30,16 @@ class LexicAnalyzer {
 		this.indexEnd = 0;
 		this.transiciones = [];
 		this.state = this.automaton.startState;
+		this.topLexemStack = 0;
+		this.top = 0;
 	}
 
 	getAutomaton = () => this.automaton;
-	getLexems = () => this.lexems;
+	getLexems = () => {
+		this.topLexemStack++;
+		console.log("Lexema desempilado: " + this.lexemsStack[this.topLexemStack - 1][0]);
+		return this.lexemsStack[this.topLexemStack - 1][0]; //Regresa el lexema del tope anterior (nuevo tope se incremento)
+	} 
 
 	/**
 	 * Obtiene el siguiente lexema que idetifica el analizador.
@@ -113,11 +121,7 @@ class LexicAnalyzer {
 			}
 			alert("Errores lexicos en los caracteres: " + errorString);
 		}
-		this.top = 0;
-		this.getToken();
-		this.returnToken();
-		this.getToken();
-		this.getToken();
+		this.lexemsStack = this.lexems;
 	}
 
 	public setLexems(j: number, indexStart: number, indexEnd: number, input: string, state){
