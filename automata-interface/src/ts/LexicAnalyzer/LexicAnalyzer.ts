@@ -29,7 +29,7 @@ class LexicAnalyzer {
 		this.indexEnd = 0;
 		this.transiciones = [];
 		this.state = this.automaton.startState;
-		this.top = 0;
+		this.top = -1;
 	}
 
 	getAutomaton = () => this.automaton;
@@ -45,10 +45,12 @@ class LexicAnalyzer {
 	 */
 	public getToken = () => {
 		this.top++;
+		/*
 		if(this.top > this.lexems.length){ //Validacion
 			console.log("ERROR: Desbordamiento de pila");
 			return null;
 		}
+		*/
 		if(this.top > 0) return this.lexems[this.top - 1][1];
 		else return null;
 	}
