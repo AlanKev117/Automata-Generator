@@ -35,7 +35,7 @@ class LexicAnalyzer {
 	getAutomaton = () => this.automaton;
 	getCurrentLexem = () => {
 		return this.lexems[this.top - 1][0];
-	} 
+	};
 
 	/**
 	 * Obtiene el siguiente lexema que idetifica el analizador.
@@ -44,28 +44,22 @@ class LexicAnalyzer {
 	 * @memberof LexicAnalyzer
 	 */
 	public getToken = () => {
-		this.top++;
-		/*
-		if(this.top >= this.lexems.length){ //Validacion
-			console.log("ERROR: Desbordamiento de pila");
-			return null;
-		}
-		*/
-		if(this.top > 0) return this.lexems[this.top - 1][1];
-		else return null;
-	}
+		if (this.top < this.lexems.length) {
+			return this.lexems[this.top++][1];
+		} else if (this.top === this.lexems.length) {
+			return undefined;
+		};
+	};
 
 	/**
 	 * Regresa un lexema dado a la pila de lexemas.
 	 *
-	 * @param {string} lexem
 	 * @memberof LexicAnalyzer
 	 */
 	public returnToken = () => {
-		if(this.top > 0)
-			this.top--;
+		if (this.top > 0) this.top--;
 		else console.log("ERROR: Subdesbordamiento de pila");
-	}
+	};
 
 	/**
 	 * Separa la entrada dada en un arreglo de lexemas con su token asociado.
@@ -89,12 +83,11 @@ class LexicAnalyzer {
 				this.transiciones = this.state.getTransitionsBySymbol(input[i]);
 				this.state = [...this.transiciones][0].getTargetState(); //Se asume que solo se tuvo una transicion
 				i++;
-				if ([...this.automaton.acceptStates].includes(this.state)){
+				if ([...this.automaton.acceptStates].includes(this.state)) {
 					this.acceptStatesSeen.add(this.state);
 					this.indexEnd = i;
 				}
-			}
-			else {
+			} else {
 				if (this.acceptStatesSeen.size === 0) {
 					console.log("ERROR léxico en " + i);
 					lexicErrors.push(i);
@@ -102,9 +95,14 @@ class LexicAnalyzer {
 					this.indexEnd--;
 					this.indexStart++;
 					i++;
-				} 
-				else{
-					this.setLexems(j, this.indexStart, this.indexEnd, input, this.state);
+				} else {
+					this.setLexems(
+						j,
+						this.indexStart,
+						this.indexEnd,
+						input,
+						this.state
+					);
 					j++;
 					this.indexStart = this.indexEnd;
 					this.state = this.automaton.startState;
@@ -112,13 +110,21 @@ class LexicAnalyzer {
 				}
 			}
 		}
-		if(i == input.length) this.setLexems(j, this.indexStart, this.indexEnd, input, this.state);
-		if(!errorFlag) alert("CADENA CORRECTA");
-		else{
-			for(let n = 0; n < lexicErrors.length; n++){
-				if(n == 0) errorString = lexicErrors[n] + ", ";
-				else{
-					if(n < lexicErrors.length - 1) errorString = errorString + lexicErrors[n] + ", ";
+		if (i == input.length)
+			this.setLexems(
+				j,
+				this.indexStart,
+				this.indexEnd,
+				input,
+				this.state
+			);
+		if (!errorFlag) alert("CADENA CORRECTA");
+		else {
+			for (let n = 0; n < lexicErrors.length; n++) {
+				if (n == 0) errorString = lexicErrors[n] + ", ";
+				else {
+					if (n < lexicErrors.length - 1)
+						errorString = errorString + lexicErrors[n] + ", ";
 					else errorString = errorString + lexicErrors[n];
 				}
 			}
@@ -130,8 +136,14 @@ class LexicAnalyzer {
 		this.getCurrentLexem();
 	}
 
-	public setLexems(j: number, indexStart: number, indexEnd: number, input: string, state){
-		if(state.getToken() != undefined){
+	public setLexems(
+		j: number,
+		indexStart: number,
+		indexEnd: number,
+		input: string,
+		state
+	) {
+		if (state.getToken() != undefined) {
 			this.lexems[j] = [
 				input.substring(indexStart, indexEnd),
 				state.getToken()
@@ -139,7 +151,6 @@ class LexicAnalyzer {
 			console.log("Se recibio un token [" + this.state.getToken() + "]");
 		}
 	}
-
 }
 
 export { LexicAnalyzer };

@@ -100,11 +100,14 @@ class SyntaxAnalyzerCalc {
 		autoLOG.concatenarAFN(autoG.copy());
 		// Autómata para reconocer números.
 		const autoNUM = new Automaton("NUM");
-		autoNUM.createBasic("+");
-		autoNUM.unirAFN(autoMENOS.copy());
-		autoNUM.makeOptional();
-		autoNUM.concatenarAFN(autoDIGS);
-		autoNUM.concatenarAFN(autoDOT);
+		// autoNUM.createBasic("+");
+		// autoNUM.unirAFN(autoMENOS.copy());
+		// autoNUM.makeOptional();
+		// autoNUM.concatenarAFN(autoDIGS);
+		// autoNUM.concatenarAFN(autoDOT);
+		autoNUM.createBasic("0", "9");
+		autoNUM.makePositive();
+		autoNUM.concatenarAFN(autoDOT.copy());
 
 		return [
 			autoMAS,
@@ -154,9 +157,9 @@ class SyntaxAnalyzerCalc {
 
 	Ep = (v: number[]) => {
 		let tok: number;
-		let v1: number[];
+		let v1: number[] = [];
 		tok = this.lexico.getToken();
-		if (tok === Token.MAS || tok === Token.MENOS) {
+		if (tok && (tok === Token.MAS || tok === Token.MENOS)) {
 			if (this.T(v1)) {
 				v[0] += tok === Token.MAS ? v1[0] : -v1[0];
 				if (this.Ep(v)) {
@@ -178,9 +181,9 @@ class SyntaxAnalyzerCalc {
 
 	Tp = (v: number[]) => {
 		let tok: number;
-		let v1: number[];
+		let v1: number[] = [];
 		tok = this.lexico.getToken();
-		if (tok === Token.PROD || tok === Token.DIV) {
+		if (tok && (tok === Token.PROD || tok === Token.DIV)) {
 			if (this.P(v1)) {
 				v[0] *= tok === Token.PROD ? v1[0] : 1.0 / v1[0];
 				if (this.Tp(v)) return true;
@@ -200,10 +203,10 @@ class SyntaxAnalyzerCalc {
 
 	Pp = (v: number[]) => {
 		let tok: number;
-		let v1: number[];
+		let v1: number[] = [];
 		tok = this.lexico.getToken();
 
-		if (tok === Token.POT) {
+		if (tok && tok === Token.POT) {
 			if (this.F(v1)) {
 				v[0] = Math.pow(v[0], v1[0]);
 				if (this.Pp(v)) {
