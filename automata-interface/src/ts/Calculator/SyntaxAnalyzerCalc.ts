@@ -129,17 +129,19 @@ class SyntaxAnalyzerCalc {
 
 	public solve = (input: string) => {
 		this.lexico.lexicAnalysis(input);
-		const result = [0];
-		if (this.G(result)) {
-			console.log("El resultado es: " + result[0]);
+		const val: number[] = [];
+		const str: string[] = [];
+		if (this.G(val, str)) {
+			console.log("El resultado es: " + val[0]);
+			console.log("La notación es: " + str[0]);
 		} else {
 			console.log("p2");
 		}
 	};
 
-	G = (v: number[]) => {
+	G = (v: number[], s:string[]) => {
 		let tok: number;
-		if (this.E(v)) {
+		if (this.E(v,s)) {
 			tok = this.lexico.getToken();
 			if (!tok) {
 				return true;
@@ -148,21 +150,23 @@ class SyntaxAnalyzerCalc {
 		return false;
 	};
 
-	E = (v: number[]) => {
-		if (this.T(v)) {
-			if (this.Ep(v)) return true;
+	E = (v: number[], s:string[]) => {
+		if (this.T(v,s)) {
+			if (this.Ep(v,s)) return true;
 		}
 		return false;
 	};
 
-	Ep = (v: number[]) => {
+	Ep = (v: number[], s:string[]) => {
 		let tok: number;
 		let v1: number[] = [];
+		let s1: string[] = [];
 		tok = this.lexico.getToken();
 		if (tok !== undefined && (tok === Token.MAS || tok === Token.MENOS)) {
-			if (this.T(v1)) {
+			if (this.T(v1, s1)) {
 				v[0] += tok === Token.MAS ? v1[0] : -v1[0];
-				if (this.Ep(v)) {
+				s[0] = `${tok === Token.MAS ? "+" : "-"} ${s[0]} ${s1[0]}`;
+				if (this.Ep(v,s)) {
 					return true;
 				}
 			}
@@ -172,21 +176,23 @@ class SyntaxAnalyzerCalc {
 		return true;
 	};
 
-	T = (v: number[]) => {
-		if (this.P(v)) {
-			if (this.Tp(v)) return true;
+	T = (v: number[], s:string[]) => {
+		if (this.P(v,s)) {
+			if (this.Tp(v,s)) return true;
 		}
 		return false;
 	};
 
-	Tp = (v: number[]) => {
+	Tp = (v: number[], s:string[]) => {
 		let tok: number;
 		let v1: number[] = [];
+		let s1: string[] = [];
 		tok = this.lexico.getToken();
 		if (tok !== undefined && (tok === Token.PROD || tok === Token.DIV)) {
-			if (this.P(v1)) {
+			if (this.P(v1, s1)) {
 				v[0] *= tok === Token.PROD ? v1[0] : 1.0 / v1[0];
-				if (this.Tp(v)) return true;
+				s[0] = `${tok === Token.PROD ? "*" : "/"} ${s[0]} ${s1[0]}`;
+				if (this.Tp(v,s)) return true;
 			}
 			return false;
 		}
@@ -194,22 +200,24 @@ class SyntaxAnalyzerCalc {
 		return true;
 	};
 
-	P = (v: number[]) => {
-		if (this.F(v)) {
-			if (this.Pp(v)) return true;
+	P = (v: number[], s:string[]) => {
+		if (this.F(v,s)) {
+			if (this.Pp(v,s)) return true;
 		}
 		return false;
 	};
 
-	Pp = (v: number[]) => {
+	Pp = (v: number[], s:string[]) => {
 		let tok: number;
 		let v1: number[] = [];
+		let s1: string[] = [];
 		tok = this.lexico.getToken();
 
 		if (tok !== undefined && tok === Token.POT) {
-			if (this.F(v1)) {
+			if (this.F(v1, s1)) {
 				v[0] = Math.pow(v[0], v1[0]);
-				if (this.Pp(v)) {
+				s[0] = `^ ${s[0]} ${s[1]}`;
+				if (this.Pp(v,s)) {
 					return true;
 				}
 			}
@@ -219,12 +227,12 @@ class SyntaxAnalyzerCalc {
 		return true;
 	};
 
-	F = (v: number[]) => {
+	F = (v: number[], s:string[]) => {
 		let tok: number = this.lexico.getToken();
 
 		switch (tok) {
 			case Token.PAR_I:
-				if (this.E(v)) {
+				if (this.E(v,s)) {
 					tok = this.lexico.getToken();
 					if (tok === Token.PAR_D) {
 						return true;
@@ -234,9 +242,10 @@ class SyntaxAnalyzerCalc {
 
 			case Token.SIN:
 				if (this.lexico.getToken() === Token.PAR_I) {
-					if (this.E(v)) {
+					if (this.E(v,s)) {
 						if (this.lexico.getToken() === Token.PAR_D) {
 							v[0] = Math.sin(v[0]);
+							s[0] = "sin " + s[0];
 							return true;
 						}
 					}
@@ -245,9 +254,10 @@ class SyntaxAnalyzerCalc {
 
 			case Token.COS:
 				if (this.lexico.getToken() === Token.PAR_I) {
-					if (this.E(v)) {
+					if (this.E(v,s)) {
 						if (this.lexico.getToken() === Token.PAR_D) {
 							v[0] = Math.cos(v[0]);
+							s[0] = "cos " + s[0];
 							return true;
 						}
 					}
@@ -256,9 +266,10 @@ class SyntaxAnalyzerCalc {
 
 			case Token.TAN:
 				if (this.lexico.getToken() === Token.PAR_I) {
-					if (this.E(v)) {
+					if (this.E(v,s)) {
 						if (this.lexico.getToken() === Token.PAR_D) {
 							v[0] = Math.tan(v[0]);
+							s[0] = "tan " + s[0];
 							return true;
 						}
 					}
@@ -267,9 +278,10 @@ class SyntaxAnalyzerCalc {
 
 			case Token.EXP:
 				if (this.lexico.getToken() === Token.PAR_I) {
-					if (this.E(v)) {
+					if (this.E(v,s)) {
 						if (this.lexico.getToken() === Token.PAR_D) {
 							v[0] = Math.exp(v[0]);
+							s[0] = "exp " + s[0];
 							return true;
 						}
 					}
@@ -278,9 +290,10 @@ class SyntaxAnalyzerCalc {
 
 			case Token.LN:
 				if (this.lexico.getToken() === Token.PAR_I) {
-					if (this.E(v)) {
+					if (this.E(v,s)) {
 						if (this.lexico.getToken() === Token.PAR_D) {
 							v[0] = Math.log(v[0]);
+							s[0] = "ln " + s[0];
 							return true;
 						}
 					}
@@ -289,9 +302,10 @@ class SyntaxAnalyzerCalc {
 
 			case Token.LOG:
 				if (this.lexico.getToken() === Token.PAR_I) {
-					if (this.E(v)) {
+					if (this.E(v,s)) {
 						if (this.lexico.getToken() === Token.PAR_D) {
 							v[0] = Math.log10(v[0]);
+							s[0] = "log " + s[0];
 							return true;
 						}
 					}
@@ -299,7 +313,9 @@ class SyntaxAnalyzerCalc {
 				return false;
 
 			case Token.NUM:
-				v[0] = +this.lexico.getCurrentLexem();
+				const lexem = this.lexico.getCurrentLexem();
+				v[0] = +lexem;
+				s[0] = lexem;
 				return true;
 			default:
 				return false;
