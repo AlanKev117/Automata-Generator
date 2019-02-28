@@ -35,7 +35,7 @@ class LexicAnalyzer {
 	getAutomaton = () => this.automaton;
 	getLexems = () => {
 		console.log("Lexema desempilado: " + this.lexemsStack[this.top][0]);
-		return this.lexemsStack[this.top - 1][0]; //Regresa el lexema del tope anterior (nuevo tope se incremento)
+		return this.lexemsStack[this.top][0]; //Regresa el lexema del tope anterior (nuevo tope se incremento)
 	} 
 
 	/**
