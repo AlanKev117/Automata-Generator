@@ -9,11 +9,10 @@ enum Token {
 	CERR_KLEEN,
     OPC,
     PAR_I,
-    PAR_D,
-	R_SIMBm,
-	R_SIMM,
-	r_NUM,
-	
+	PAR_D,
+	SIMBm,
+	SIMBM,
+	NUM,	
 }
 
 class SyntaxAnalyzerAFN {
@@ -27,45 +26,56 @@ class SyntaxAnalyzerAFN {
 
 	private createAutomataForLexic = () => {
             // Creación de autómatas básicos auxiliares.
-			const autoGuion = new Automaton("-");
-			autoGuion.createBasic("-");
-			const autoCIZQ = new Automaton("]");
-			autoCIZQ.createBasic("]");
-			const autoDIAG = new Automaton("\");
-			autoDIAG.createBasic("\");
-
+			const autoDIGS = new Automaton("DIGS");
+			autoDIGS.createBasic("0", "9");
+			autoDIGS.makePositive();
+			const autoDOT = new Automaton("DOT");
+			autoDOT.createBasic(".");
+			autoDOT.concatenarAFN(autoDIGS.copy());
+			autoDOT.makeOptional();
             // Creamos los autómatas que nos servirán para hacer en analizador léxico
-			const autoOR = new Automaton("MAS");
+			const autoOR = new Automaton("OR");
 			autoOR.createBasic("|");
-			const autoCONC = new Automaton("MENOS");
-			autoCONC.createBasic("-");
+			const autoCONC = new Automaton("CONC");
+			autoCONC.createBasic("&");
 			const autoPROD = new Automaton("PROD");
 			autoPROD.createBasic("*");
-			const autoCERR_POS = new Automaton("DIV");
-			autoCERR_POS.createBasic("/");
-			const autoCERR_KLEEN = new Automaton("POT");
-			autoCERR_KLEEN.createBasic("^");
+			const autoCERR_POS = new Automaton("CERR_POS");
+			autoCERR_POS.createBasic("+");
+			const autoOPC = new Automaton("CERR_KLEEN");
+			autoOPC.createBasic("*");
+			const autoCERR_KLEEN = new Automaton("CERR_KLEEN");
+			autoCERR_KLEEN.createBasic("*");
 			const autoPAR_I = new Automaton("PAR_I");
 			autoPAR_I.createBasic("(");
 			const autoPAR_D = new Automaton("PAR_D");
 			autoPAR_D.createBasic(")");
-			//automata para rango de simbolos minusculos
-			const autoR_SIMBm = new Automaton("autoR_SIMBm")
-			autoR_SIMBm.createBasic("[");
+			const SIMB = new Automaton("PAR_D");
+			SIMB.createBasic(")");
 
-			//automata para rango de simbolos MAyusculos
-			const autoR_SIMM = new Automaton("autoR_SIMM")			
-			autoR_SIMM.createBasic("[");
-			autoR_SIMM.concatenarAFN(autoCIZQ.copy());
-			autoR_SIMM.concatenarAFN(autoCIZQ.copy());
-			//automata para rango de simbolos numericos
-			const autoR_NUM = new Automaton("autor_NUM")
-			autoR_NUM.createBasic("[");
-			autoR_NUM.concatenarAFN(autoDIAG.copy());
-			autoR_NUM.concatenarAFN(autoDIAG.copy());
- 
+			const autoSIMBm = new Automaton("SIMBm");
+			autoSIMBm.createBasic("a", "z");
+			autoSIMBm.makePositive();
+			const autoSIMBM = new Automaton("SIMNM");
+			autoSIMBM.createBasic("A", "Z");
+			autoSIMBM.makePositive();
+			const autoNUM = new Automaton("NUM");
+			autoNUM.createBasic("0", "9");
+			autoNUM.makePositive();
+			autoNUM.concatenarAFN(autoDOT.copy());
 			return [
-    
+				autoOR,
+				autoCONC,
+				autoPROD,
+				autoCERR_POS,
+				autoCERR_KLEEN,
+				autoOPC,
+				autoPAR_I,
+				autoPAR_D,
+				autoSIMBm,
+				autoSIMBM,
+				autoNUM,
+
             ];
 	};
 
@@ -193,9 +203,18 @@ class SyntaxAnalyzerAFN {
 				}
 				return false;
 
-            case Token.SIMB:
+            case Token.NUM:
             
-                
+				f.createBasic(this.lexico.getCurrentLexem()[0])
+				return true;
+			
+            case Token.SIMBm:
+            
+				f.createBasic(this.lexico.getCurrentLexem()[0])
+				return true;
+
+            case Token.SIMBM:
+            
 				f.createBasic(this.lexico.getCurrentLexem()[0])
 				return true;
         }
