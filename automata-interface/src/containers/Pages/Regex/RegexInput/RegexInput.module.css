@@ -1,0 +1,44 @@
+.RegexInput {
+	background: #4b7288;
+	border-radius: 5px;
+	box-shadow: 3px 3px 3px gray;
+	padding: 20px;
+	width: 70%;
+	margin: initial auto;
+}
+
+.RegexInput .FlexContainer {
+	display: flex;
+	justify-content: space-between;
+}
+
+.RegexInput h2 {
+	margin-top: 5px;
+}
+
+.RegexInput input {
+	width: 80%;
+	border: 1px solid grey;
+	border-radius: 3px;
+	padding: 3px;
+	font-size: 18px;
+	font-family: consolas;
+}
+
+.RegexInput button {
+	background: #96bed4;
+	border: 1px solid #96bed4;
+	padding: 5px 15px;
+	border-radius: 4px;
+	font-size: 18px;
+}
+
+.RegexInput button:hover {
+	color: white;
+	cursor: pointer;
+}
+
+.RegexInput button:active {
+	background:#555;
+	border-color: #555;
+}

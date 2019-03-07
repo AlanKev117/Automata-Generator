@@ -1,6 +1,5 @@
 import React from "react";
 import Misc from "../../../../ts/Misc/Misc";
-//import {Automaton} from "../../../../ts/Automaton/Automaton";
 
 import classes from "./Table.module.css";
 

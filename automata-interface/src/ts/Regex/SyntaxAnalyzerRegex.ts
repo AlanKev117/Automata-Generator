@@ -2,7 +2,7 @@ import { LexicAnalyzer } from "../LexicAnalyzer/LexicAnalyzer";
 import { Automaton } from "../Automaton/Automaton";
 
 enum Token {
-	OR,
+	OR = 1,
 	CONC,
 	CERR_POS,
 	CERR_KLEENE,
@@ -12,13 +12,13 @@ enum Token {
 	SIM
 }
 
-class SyntaxAnalyzerAFN {
+class SyntaxAnalyzerRegex {
 	public lexico: LexicAnalyzer;
 
-	constructor() {
+	constructor(input: string) {
 		const tokens = { ...Token };
 		const automata = this.createAutomataForLexic();
-		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora AFN");
+		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora AFN", input);
 	}
 
 	private createAutomataForLexic = () => {
@@ -139,8 +139,7 @@ class SyntaxAnalyzerAFN {
 		];
 	};
 
-	public solve = (input: string) => {
-		this.lexico.lexicAnalysis(input);
+	public solve = () => {
 		const val: Automaton = new Automaton("REG-EX");
 		if (this.G(val)) {
 			return val;
@@ -272,4 +271,4 @@ class SyntaxAnalyzerAFN {
 		return false;
 	};
 }
-export { SyntaxAnalyzerAFN };
+export { SyntaxAnalyzerRegex };

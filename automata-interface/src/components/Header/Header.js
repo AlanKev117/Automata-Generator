@@ -38,6 +38,16 @@ const header = props => (
                         Calculadora
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink
+                        to="/regex"
+                        activeStyle={{
+                            color: "white"
+                        }}
+                    >
+                        RegEx
+                    </NavLink>
+                </li>
             </ul>
         </nav>
     </header>

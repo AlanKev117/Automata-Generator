@@ -1,4 +1,4 @@
-.Calculator {
+.Regex {
 	background-color: #eaeaea;
     padding: 10px;
     margin-top: 42px;
@@ -7,6 +7,6 @@
 	min-height: 100%;
 }
 
-.Calculator h1 {
+.Regex h1 {
     text-align: center;
 }

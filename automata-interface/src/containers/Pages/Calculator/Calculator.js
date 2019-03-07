@@ -23,8 +23,8 @@ class Calculator extends Component {
 			this.setState({ calcInput: { expression: event.target.value } });
 		},
 		analizeExpHandler: () => {
-			const an = new SyntaxAnalyzerCalc();
-			const results = an.solve(this.state.calcInput.expression);
+			const an = new SyntaxAnalyzerCalc(this.state.calcInput.expression);
+			const results = an.solve();
 			if (results !== null) {
 				this.setState({
 					calcOutput: {
