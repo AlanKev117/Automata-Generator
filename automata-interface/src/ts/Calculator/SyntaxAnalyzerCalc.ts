@@ -129,6 +129,7 @@ class SyntaxAnalyzerCalc {
 
 	public solve = (input: string) => {
 		this.lexico.lexicAnalysis(input);
+
 		const val: number[] = [];
 		const str: string[] = [];
 		if (this.G(val, str)) {
@@ -164,7 +165,7 @@ class SyntaxAnalyzerCalc {
 		let v1: number[] = [];
 		let s1: string[] = [];
 		tok = this.lexico.getToken();
-		if (tok !== undefined && (tok === Token.MAS || tok === Token.MENOS)) {
+		if (tok !== -1 && (tok === Token.MAS || tok === Token.MENOS) && tok != 0) {
 			if (this.T(v1, s1)) {
 				v[0] += tok === Token.MAS ? v1[0] : -v1[0];
 				s[0] = `${tok === Token.MAS ? "+" : "-"} ${s[0]} ${s1[0]}`;
@@ -174,7 +175,7 @@ class SyntaxAnalyzerCalc {
 			}
 			return false;
 		}
-		if (tok !== undefined) this.lexico.returnToken();
+		if (tok !== -1 && tok != 0) this.lexico.returnToken(tok);
 		return true;
 	};
 
@@ -190,7 +191,7 @@ class SyntaxAnalyzerCalc {
 		let v1: number[] = [];
 		let s1: string[] = [];
 		tok = this.lexico.getToken();
-		if (tok !== undefined && (tok === Token.PROD || tok === Token.DIV)) {
+		if (tok !== -1 && (tok === Token.PROD || tok === Token.DIV) && tok != 0) {
 			if (this.P(v1, s1)) {
 				v[0] *= tok === Token.PROD ? v1[0] : 1.0 / v1[0];
 				s[0] = `${tok === Token.PROD ? "*" : "/"} ${s[0]} ${s1[0]}`;
@@ -198,7 +199,7 @@ class SyntaxAnalyzerCalc {
 			}
 			return false;
 		}
-		if (tok !== undefined) this.lexico.returnToken();
+		if (tok !== -1 && tok != 0) this.lexico.returnToken(tok);
 		return true;
 	};
 
@@ -215,7 +216,7 @@ class SyntaxAnalyzerCalc {
 		let s1: string[] = [];
 		tok = this.lexico.getToken();
 
-		if (tok !== undefined && tok === Token.POT) {
+		if (tok !== -1 && tok === Token.POT && tok != 0) {
 			if (this.F(v1, s1)) {
 				v[0] = Math.pow(v[0], v1[0]);
 				s[0] = `^ ${s[0]} ${s1[0]}`;
@@ -225,7 +226,7 @@ class SyntaxAnalyzerCalc {
 			}
 			return false;
 		}
-		if (tok !== undefined) this.lexico.returnToken();
+		if (tok !== -1 && tok != 0) this.lexico.returnToken(tok);
 		return true;
 	};
 

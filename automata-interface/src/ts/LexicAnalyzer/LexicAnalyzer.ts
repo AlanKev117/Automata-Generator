@@ -2,6 +2,7 @@ import { Automaton } from "../Automaton/Automaton";
 import Misc from "../Misc/Misc";
 import { State } from "../State/State";
 import { Transition } from "../Transition/Transition";
+import { getCurves } from "crypto";
 
 class LexicAnalyzer {
 	private automaton: Automaton;
@@ -11,7 +12,12 @@ class LexicAnalyzer {
 	private indexEnd: number;
 	private transiciones: Transition[];
 	private state: State;
-	private top: number;
+	private input: string;
+	private lexicErrors;
+	private stack: [number, string][];
+	private pointer;
+	private errorFlag: boolean;
+	private index: number;
 
 	constructor(automata: Automaton[], tokens: Object, lexicName: string) {
 		const copies = automata.map(auto => auto.copy());
@@ -28,28 +34,20 @@ class LexicAnalyzer {
 		this.indexEnd = 0;
 		this.transiciones = [];
 		this.state = this.automaton.startState;
-		this.top = 0;
+		this.lexicErrors = new Array();
+		this.stack = new Array();
+		this.pointer = 0;
+		this.errorFlag = false;
+		this.index = 0;
 	}
 
 	getAutomaton = () => this.automaton;
 	getLexems = () => this.lexems;
 	getCurrentLexem = () => {
-		console.log("Se tiene el lexema: " + this.lexems[this.top - 1][0]);
-		return this.lexems[this.top - 1][0];
-	};
-
-	/**
-	 * Obtiene el siguiente lexema que idetifica el analizador.
-	 *
-	 * @returns {string}
-	 * @memberof LexicAnalyzer
-	 */
-	public getToken = () => {
-		if (this.top < this.lexems.length) {
-			return this.lexems[this.top++][1];
-		} else if (this.top === this.lexems.length) {
-			return undefined;
-		};
+		if(this.stack.length > 0){
+			let lexema: [number, string] = this.stack.pop();
+			return lexema[1];
+		}
 	};
 
 	/**
@@ -57,99 +55,104 @@ class LexicAnalyzer {
 	 *
 	 * @memberof LexicAnalyzer
 	 */
-	public returnToken = () => {
-		if (this.top > 0) this.top--;
-		else console.log("ERROR: Subdesbordamiento de pila");
+	public returnToken = (token: number) => {
+		this.stack.push([token, this.getCurrentLexem()]);
 	};
 
-	/**
-	 * Separa la entrada dada en un arreglo de lexemas con su token asociado.
-	 *
-	 * @param {string} input
-	 * @memberof Misc
-	 */
-	public lexicAnalysis(input: string) {
+
+	public lexicAnalysis = (input: string) => {
+		this.input = input;
+		let t: number;
+		t = this.getToken();
+		let lexem;
 		let errorString: string;
-		let i: number = 0;
-		let j: number = 0;
-		this.state = this.automaton.startState;
-		this.acceptStatesSeen.clear();
-		this.indexStart = 0;
-		this.indexEnd = 0;
-		this.transiciones = [];
-		let errorFlag: boolean = false;
-		let lexicErrors = new Array();
-		while (i < input.length) {
-			if (this.state.getTransitionsBySymbol(input[i]).length > 0) {
-				this.transiciones = this.state.getTransitionsBySymbol(input[i]);
-				this.state = [...this.transiciones][0].getTargetState(); //Se asume que solo se tuvo una transicion
-				i++;
-				if ([...this.automaton.acceptStates].includes(this.state)) {
-					this.acceptStatesSeen.add(this.state);
-					this.indexEnd = i;
-				}
-			} else {
-				if (this.acceptStatesSeen.size === 0) {
-					console.log("ERROR léxico en " + i);
-					lexicErrors.push(i);
-					errorFlag = true;
-					this.indexEnd--;
-					this.indexStart++;
-					i++;
-				} else {
-					this.setLexems(
-						j,
-						this.indexStart,
-						this.indexEnd,
-						input,
-						this.state
-					);
-					j++;
-					this.indexStart = this.indexEnd;
-					this.state = this.automaton.startState;
-					this.acceptStatesSeen.clear();
-				}
-			}
+		while(t != 0){
+			console.log("Se recibio el token [ " + t + " ]");
+			console.log("Se recibio el lexema [ " + this.getCurrentLexem() + " ]");
+			t = this.getToken();
 		}
-		if (i == input.length)
-			this.setLexems(
-				j,
-				this.indexStart,
-				this.indexEnd,
-				input,
-				this.state
-			);
-		if (!errorFlag){
-			alert("CADENA ACEPTADA \n Lexemas: " + this.lexems);
+		console.log("Se recibio el token [ " + t + " ]");
+		if (this.pointer == this.input.length){
+			lexem = this.input.substring(this.indexStart, this.indexEnd);
+			this.setLexems(lexem, this.state);
+		}
+		if (!this.errorFlag){
+			alert("CADENA ACEPTADA");
 
 		}
 		else {
-			for (let n = 0; n < lexicErrors.length; n++) {
-				if (n == 0) errorString = lexicErrors[n] + ", ";
+			for (let n = 0; n < this.lexicErrors.length; n++) {
+				if (n == 0) errorString = this.lexicErrors[n] + ", ";
 				else {
-					if (n < lexicErrors.length - 1)
-						errorString = errorString + lexicErrors[n] + ", ";
-					else errorString = errorString + lexicErrors[n];
+					if (n < this.lexicErrors.length - 1)
+						errorString = errorString + this.lexicErrors[n] + ", ";
+					else errorString = errorString + this.lexicErrors[n];
 				}
 			}
 			alert("Errores lexicos en los caracteres: " + errorString);
 		}
 	}
 
-	public setLexems(
-		j: number,
-		indexStart: number,
-		indexEnd: number,
-		input: string,
-		state
-	) {
-		if (state.getToken() != undefined) {
-			this.lexems[j] = [
-				input.substring(indexStart, indexEnd),
-				state.getToken()
-			]; //Se guarda el caracter y el token
-			console.log("Se recibio un token [" + this.state.getToken() + "]");
+	public getToken = () => {
+		this.state = this.automaton.startState;
+		this.acceptStatesSeen.clear();
+		//this.indexStart = 0;
+		//this.indexEnd = 0;
+		this.transiciones = [];
+		let lexem: string;
+		let resultado, tok: [number, string][];
+		if(this.pointer > this.input.length){
+			console.log("final de cadena");
+			return 0;
 		}
+		while(this.pointer < this.input.length){
+			if (this.state.getTransitionsBySymbol(this.input[this.pointer]).length > 0) {
+				this.transiciones = this.state.getTransitionsBySymbol(this.input[this.pointer]);
+				this.state = [...this.transiciones][0].getTargetState(); //Se asume que solo se tuvo una transicion
+				this.pointer++;
+				if ([...this.automaton.acceptStates].includes(this.state)) {
+					this.acceptStatesSeen.add(this.state);
+					this.indexEnd = this.pointer;
+				}
+			} 
+			else {
+				if (this.acceptStatesSeen.size === 0) {
+					console.log("ERROR léxico en " + this.pointer);
+					this.lexicErrors.push(this.pointer);
+					this.errorFlag = true;
+					this.indexEnd--;
+					this.indexStart++;
+					this.pointer++;
+					return -1;
+				} else {
+					lexem = "";
+					lexem = this.input.substring(this.indexStart, this.indexEnd);
+					console.log("Se conformo el lexema: " + lexem);
+					this.setLexems(lexem, this.state);
+					resultado = this.state.getToken();
+					//this.stack.push([resultado, lexem]);
+					this.indexStart = this.indexEnd;
+					this.state = this.automaton.startState;
+					this.acceptStatesSeen.clear();
+					return resultado;	
+				}
+			}			
+		}
+		if (this.pointer == this.input.length){
+			console.log("Ultimo lexema");
+			lexem = this.input.substring(this.indexStart, this.indexEnd);
+			this.setLexems(lexem, this.state);
+			resultado = this.state.getToken();
+			this.pointer++;
+			return resultado;
+		}
+	}
+
+	public setLexems = (lexem: string, state: State) =>{
+		let token = state.getToken();
+		this.stack.push([token, lexem]);
+		this.lexems[this.index] = [lexem, token];
+		this.index++;
 	}
 }
 
