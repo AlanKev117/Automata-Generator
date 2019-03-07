@@ -64,22 +64,12 @@ class LexicAnalyzer {
 		this.input = input;
 		let t: number;
 		t = this.getToken();
-		let lexem;
 		let errorString: string;
 		while(t != 0){
 			console.log("Se recibio el token [ " + t + " ]");
-			console.log("Se recibio el lexema [ " + this.getCurrentLexem() + " ]");
 			t = this.getToken();
 		}
-		console.log("Se recibio el token [ " + t + " ]");
-		if (this.pointer == this.input.length){
-			lexem = this.input.substring(this.indexStart, this.indexEnd);
-			this.setLexems(lexem, this.state);
-		}
-		if (!this.errorFlag){
-			alert("CADENA ACEPTADA");
-
-		}
+		if (!this.errorFlag) alert("CADENA ACEPTADA");
 		else {
 			for (let n = 0; n < this.lexicErrors.length; n++) {
 				if (n == 0) errorString = this.lexicErrors[n] + ", ";
@@ -96,13 +86,11 @@ class LexicAnalyzer {
 	public getToken = () => {
 		this.state = this.automaton.startState;
 		this.acceptStatesSeen.clear();
-		//this.indexStart = 0;
-		//this.indexEnd = 0;
 		this.transiciones = [];
 		let lexem: string;
 		let resultado, tok: [number, string][];
 		if(this.pointer > this.input.length){
-			console.log("final de cadena");
+			//console.log("Final de cadena");
 			return 0;
 		}
 		while(this.pointer < this.input.length){
@@ -127,10 +115,9 @@ class LexicAnalyzer {
 				} else {
 					lexem = "";
 					lexem = this.input.substring(this.indexStart, this.indexEnd);
-					console.log("Se conformo el lexema: " + lexem);
+					//console.log("Se conformo el lexema: " + lexem);
 					this.setLexems(lexem, this.state);
 					resultado = this.state.getToken();
-					//this.stack.push([resultado, lexem]);
 					this.indexStart = this.indexEnd;
 					this.state = this.automaton.startState;
 					this.acceptStatesSeen.clear();
@@ -139,7 +126,7 @@ class LexicAnalyzer {
 			}			
 		}
 		if (this.pointer == this.input.length){
-			console.log("Ultimo lexema");
+			//console.log("Ultimo lexema");
 			lexem = this.input.substring(this.indexStart, this.indexEnd);
 			this.setLexems(lexem, this.state);
 			resultado = this.state.getToken();
