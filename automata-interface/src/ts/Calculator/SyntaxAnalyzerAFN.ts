@@ -38,7 +38,6 @@ class SyntaxAnalyzerAFN {
 		const autoPAR_D = new Automaton("PAR_D"); // 7
 		autoPAR_D.createBasic(")");
 
-
 		// Autómatas AUXILIARES para aceptar un solo dígito o letra.
 		const autoDIGIT = new Automaton("DIGIT"); // 8.1
 		autoDIGIT.createBasic("0", "9");
@@ -46,7 +45,6 @@ class SyntaxAnalyzerAFN {
 		autoLOWER.createBasic("a", "z");
 		const autoUPPER = new Automaton("UPPER"); // 8.3
 		autoUPPER.createBasic("A", "Z");
-
 
 		// Autómatas AUXILIARES para los autómatas de los rangos.
 		const autoDASH = new Automaton("DASH");
@@ -65,7 +63,6 @@ class SyntaxAnalyzerAFN {
 		autoNUM_ZERO.createBasic("0");
 		const autoNUM_NINE = new Automaton("NUM_NINE");
 		autoNUM_NINE.createBasic("9");
-
 
 		// Autómatas AUXILIARES de los rangos para SIM.
 		const autoDIGIT_RANGE = new Automaton("DIGIT_RANGE"); // 8.4
@@ -86,7 +83,6 @@ class SyntaxAnalyzerAFN {
 		autoUPPER_RANGE.concatenarAFN(autoDASH.copy());
 		autoUPPER_RANGE.concatenarAFN(autoUPPER_Z.copy());
 		autoUPPER_RANGE.concatenarAFN(autoCLOSE_BR.copy());
-
 
 		// Autómata AUXILIAR para símbolos de operaciones de autómata.
 		const autoSHARED = new Automaton("SHARED");
@@ -139,7 +135,7 @@ class SyntaxAnalyzerAFN {
 			autoCERR_OPC,
 			autoPAR_I,
 			autoPAR_D,
-			autoSIM,
+			autoSIM
 		];
 	};
 
@@ -266,7 +262,11 @@ class SyntaxAnalyzerAFN {
 
 			case Token.SIM:
 				const symbol = this.lexico.getCurrentLexem().split("\\")[0];
-				f.createBasic(symbol);
+				if (symbol.includes("-") && symbol.length === 5) {
+					f.createBasic(symbol[1], symbol[3]);
+				} else {
+					f.createBasic(symbol);
+				}
 				return true;
 		}
 		return false;
