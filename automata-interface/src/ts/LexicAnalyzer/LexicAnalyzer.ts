@@ -19,6 +19,7 @@ class LexicAnalyzer {
 	private errorFlag: boolean;
 	private index: number;
 	private enableFlag: boolean;
+	private top: number;
 
 	constructor(automata: Automaton[], tokens: Object, lexicName: string) {
 		const copies = automata.map(auto => auto.copy());
@@ -41,15 +42,20 @@ class LexicAnalyzer {
 		this.errorFlag = false;
 		this.index = 0;
 		this.enableFlag = false;
+		this.top = 0;
 	}
 
 	getAutomaton = () => this.automaton;
 	getLexems = () => this.lexems;
 	getCurrentLexem = () => {
+		/*
 		if(this.stack.length > 0){
 			let lexema: [number, string] = this.stack.pop();
 			return lexema[1];
 		}
+		*/
+		console.log("Se tiene el lexema: " + this.lexems[this.top - 1][0]);
+		return this.lexems[this.top - 1][0];
 	};
 
 	/**
@@ -59,10 +65,14 @@ class LexicAnalyzer {
 	 */
 	public returnToken = (token: number) => {
 		//this.pointer--;
+		/*
 		this.enableFlag = true;
 		let lexema = this.getCurrentLexem();
 		this.stack.push([token, lexema]);
 		console.log("Se regreso el token [" + token  + "] y el lexema [" + lexema + "]");
+		*/
+		if (this.top > 0) this.top--;
+	else console.log("ERROR: Subdesbordamiento de pila");
 	};
 
 
@@ -87,6 +97,15 @@ class LexicAnalyzer {
 			}
 			alert("Errores lexicos en los caracteres: " + errorString);
 		}
+	}
+
+	public GetToken = () => {
+		if (this.top < this.lexems.length) {
+			return this.lexems[this.top++][1];
+		} 
+		else if (this.top === this.lexems.length) {
+			return undefined;
+};
 	}
 
 	public getToken = () => {
