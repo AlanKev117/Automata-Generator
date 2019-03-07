@@ -54,11 +54,11 @@ class SyntaxAnalyzerRegex {
 		const autoUPPER_A = new Automaton("UPPER_A");
 		autoUPPER_A.createBasic("A");
 		const autoUPPER_Z = new Automaton("UPPER_Z");
-		autoUPPER_A.createBasic("Z");
+		autoUPPER_Z.createBasic("Z");
 		const autoLOWER_A = new Automaton("LOWER_A");
 		autoLOWER_A.createBasic("a");
 		const autoLOWER_Z = new Automaton("LOWER_Z");
-		autoLOWER_A.createBasic("z");
+		autoLOWER_Z.createBasic("z");
 		const autoNUM_ZERO = new Automaton("NUM_ZERO");
 		autoNUM_ZERO.createBasic("0");
 		const autoNUM_NINE = new Automaton("NUM_NINE");
@@ -100,13 +100,20 @@ class SyntaxAnalyzerRegex {
 
 		// Autómata AUXILIAR para símbolos no compartidos.
 		const autoNOT_SHARED_1 = new Automaton("NS_1");
-		autoNOT_SHARED_1.createBasic("!", "/");
+		autoNOT_SHARED_1.createBasic("!", "%");
 		const autoNOT_SHARED_2 = new Automaton("NS_2");
-		autoNOT_SHARED_2.createBasic(":", "@");
+		autoNOT_SHARED_2.createBasic(",", "/");
 		const autoNOT_SHARED_3 = new Automaton("NS_3");
-		autoNOT_SHARED_3.createBasic("[", "`");
+		autoNOT_SHARED_3.createBasic(":", ">");
 		const autoNOT_SHARED_4 = new Automaton("NS_4");
-		autoNOT_SHARED_4.createBasic("{", "¿");
+		autoNOT_SHARED_4.createBasic("@");
+		const autoNOT_SHARED_5 = new Automaton("NS_5");
+		autoNOT_SHARED_5.createBasic("^", "`");
+		const autoNOT_SHARED_6 = new Automaton("NS_6");
+		autoNOT_SHARED_6.createBasic("~", "¿");
+		const autoNOT_SHARED_7 = new Automaton("NS_7");
+		autoNOT_SHARED_7.createBasic("'");
+
 
 		const autoOTHERS_NOT_SHARED = new Automaton("OTHERS_NOT_SHARED"); // 8.8
 		autoOTHERS_NOT_SHARED.createBasic("ñ");
@@ -114,6 +121,9 @@ class SyntaxAnalyzerRegex {
 		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_2.copy());
 		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_3.copy());
 		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_4.copy());
+		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_5.copy());
+		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_6.copy());
+		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_7.copy());
 
 		// Autómata de SÍMBOLOS
 		const autoSIM = new Automaton("SIM");
@@ -186,7 +196,7 @@ class SyntaxAnalyzerRegex {
 
 	T = (f: Automaton) => {
 		if (this.C(f)) {
-			if (this.Cp(f)) return true;
+			if (this.Tp(f)) return true;
 		}
 		return false;
 	};
@@ -260,7 +270,8 @@ class SyntaxAnalyzerRegex {
 				return false;
 
 			case Token.SIM:
-				const symbol = this.lexico.getCurrentLexem().split("\\")[0];
+				const _symbol = this.lexico.getCurrentLexem().split("\\");
+				const symbol = _symbol.length === 2 ? _symbol[1] : _symbol[0];
 				if (symbol.includes("-") && symbol.length === 5) {
 					f.createBasic(symbol[1], symbol[3]);
 				} else {
