@@ -2,7 +2,7 @@ import { LexicAnalyzer } from "../LexicAnalyzer/LexicAnalyzer";
 import { Automaton } from "../Automaton/Automaton";
 
 enum Token {
-	MAS,
+	MAS = 1,
 	MENOS,
 	PROD,
 	DIV,
@@ -21,10 +21,10 @@ enum Token {
 class SyntaxAnalyzerCalc {
 	public lexico: LexicAnalyzer;
 
-	constructor() {
+	constructor(input: string) {
 		const tokens = { ...Token };
 		const automata = this.createAutomataForLexic();
-		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora Chida");
+		this.lexico = new LexicAnalyzer(automata, tokens, "Calculadora Chida", input);
 	}
 
 	private createAutomataForLexic = () => {
@@ -127,8 +127,7 @@ class SyntaxAnalyzerCalc {
 		];
 	};
 
-	public solve = (input: string) => {
-		this.lexico.lexicAnalysis(input);
+	public solve = () => {
 		const val: number[] = [];
 		const str: string[] = [];
 		if (this.G(val, str)) {
@@ -136,7 +135,7 @@ class SyntaxAnalyzerCalc {
 			const _str = str[0];
 			return {_val, _str};
 		} else {
-			alert("Error sintáxtico");
+			alert("Error sintáctico");
 			return null;
 		}
 	};
@@ -164,7 +163,7 @@ class SyntaxAnalyzerCalc {
 		let v1: number[] = [];
 		let s1: string[] = [];
 		tok = this.lexico.getToken();
-		if (tok !== undefined && (tok === Token.MAS || tok === Token.MENOS)) {
+		if (tok === Token.MAS || tok === Token.MENOS) {
 			if (this.T(v1, s1)) {
 				v[0] += tok === Token.MAS ? v1[0] : -v1[0];
 				s[0] = `${tok === Token.MAS ? "+" : "-"} ${s[0]} ${s1[0]}`;
@@ -174,7 +173,7 @@ class SyntaxAnalyzerCalc {
 			}
 			return false;
 		}
-		if (tok !== undefined) this.lexico.returnToken();
+		this.lexico.returnToken();
 		return true;
 	};
 
@@ -190,7 +189,7 @@ class SyntaxAnalyzerCalc {
 		let v1: number[] = [];
 		let s1: string[] = [];
 		tok = this.lexico.getToken();
-		if (tok !== undefined && (tok === Token.PROD || tok === Token.DIV)) {
+		if (tok === Token.PROD || tok === Token.DIV) {
 			if (this.P(v1, s1)) {
 				v[0] *= tok === Token.PROD ? v1[0] : 1.0 / v1[0];
 				s[0] = `${tok === Token.PROD ? "*" : "/"} ${s[0]} ${s1[0]}`;
@@ -198,7 +197,7 @@ class SyntaxAnalyzerCalc {
 			}
 			return false;
 		}
-		if (tok !== undefined) this.lexico.returnToken();
+		this.lexico.returnToken();
 		return true;
 	};
 
@@ -215,7 +214,7 @@ class SyntaxAnalyzerCalc {
 		let s1: string[] = [];
 		tok = this.lexico.getToken();
 
-		if (tok !== undefined && tok === Token.POT) {
+		if (tok === Token.POT) {
 			if (this.F(v1, s1)) {
 				v[0] = Math.pow(v[0], v1[0]);
 				s[0] = `^ ${s[0]} ${s1[0]}`;
@@ -225,7 +224,7 @@ class SyntaxAnalyzerCalc {
 			}
 			return false;
 		}
-		if (tok !== undefined) this.lexico.returnToken();
+		this.lexico.returnToken();
 		return true;
 	};
 

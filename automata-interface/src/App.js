@@ -6,6 +6,7 @@ import { Switch, Route } from "react-router-dom";
 import Builder from "./containers/Pages/Builder/Builder";
 import Lexic from "./containers/Pages/Lexic/Lexic";
 import Calculator from "./containers/Pages/Calculator/Calculator";
+import Regex from "./containers/Pages/Regex/Regex";
 
 class App extends Component {
 	automata = [];
@@ -15,7 +16,8 @@ class App extends Component {
 			<Auxiliary>
 				<Header />
 				<Switch>
-					<Route path="/calculator" component={Calculator}/>
+					<Route path="/regex" component={Regex}/>
+					<Route path="/calculator" component={Calculator} />
 					<Route
 						path="/lexic"
 						render={() => (

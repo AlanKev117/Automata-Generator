@@ -4,6 +4,7 @@ import { Transition } from "../Transition/Transition";
 
 class Misc {
 	public static readonly EPSILON: string = "\u03B5";
+	public static readonly EOI: string = String.fromCharCode(0);
 
 	/**
 	 * Función Ir_a(). Aplica la función Mover() con los parámetros
