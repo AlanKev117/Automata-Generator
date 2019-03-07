@@ -18,6 +18,7 @@ class LexicAnalyzer {
 	private pointer;
 	private errorFlag: boolean;
 	private index: number;
+	private enableFlag: boolean;
 
 	constructor(automata: Automaton[], tokens: Object, lexicName: string) {
 		const copies = automata.map(auto => auto.copy());
@@ -39,6 +40,7 @@ class LexicAnalyzer {
 		this.pointer = 0;
 		this.errorFlag = false;
 		this.index = 0;
+		this.enableFlag = false;
 	}
 
 	getAutomaton = () => this.automaton;
@@ -56,7 +58,11 @@ class LexicAnalyzer {
 	 * @memberof LexicAnalyzer
 	 */
 	public returnToken = (token: number) => {
-		this.stack.push([token, this.getCurrentLexem()]);
+		//this.pointer--;
+		this.enableFlag = true;
+		let lexema = this.getCurrentLexem();
+		this.stack.push([token, lexema]);
+		console.log("Se regreso el token [" + token  + "] y el lexema [" + lexema + "]");
 	};
 
 
@@ -88,7 +94,12 @@ class LexicAnalyzer {
 		this.acceptStatesSeen.clear();
 		this.transiciones = [];
 		let lexem: string;
-		let resultado, tok: [number, string][];
+		let resultado, tok: [number, string];
+		if(this.enableFlag){
+			tok = this.stack.pop();
+			this.enableFlag = false;
+			return tok[0];
+		}
 		if(this.pointer > this.input.length){
 			//console.log("Final de cadena");
 			return 0;
