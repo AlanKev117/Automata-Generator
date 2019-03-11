@@ -4,6 +4,7 @@ import Chooser from "./Chooser/Chooser";
 import Auxiliary from "../../../hoc/Auxiliary/Auxiliary";
 import Table from "./Table/Table";
 import domtoimage from "dom-to-image";
+import axios from "../../../axios";
 
 import classes from "./Builder.module.css";
 import { Automaton } from "../../../ts/Automaton/Automaton";
@@ -16,7 +17,8 @@ class Builder extends Component {
 		automaton1: "",
 		automaton2: "",
 		operation: "",
-		showA2: false
+		showA2: false,
+		unsavedAuto: false
 	};
 
 	tableRef = React.createRef();
@@ -114,11 +116,14 @@ class Builder extends Component {
 				alert("Rango de transición no válido.");
 				return;
 		}
+		console.log(newAutom);
+		this.setState();
 		this.props.automata.push(newAutom);
 		this.setState({
 			name: "",
 			symbol: "",
-			automaton1: name
+			automaton1: name,
+			unsavedAuto: true
 		});
 	};
 
@@ -132,8 +137,11 @@ class Builder extends Component {
 			const newAuto = Misc.afnToAfd(automaton.copy());
 			delete this.props.automata[index];
 			this.props.automata[index] = newAuto;
+			this.saveAutomaton(newAuto);
 		} else {
+			axios.delete("/automata.json", { params: { automaton } });
 			automaton[this.state.operation]();
+			this.saveAutomaton(automaton);
 		}
 
 		this.setState(prevState => {
@@ -156,17 +164,35 @@ class Builder extends Component {
 
 		a1[this.state.operation](a2.copy());
 
+		this.saveAutomaton(a1);
+
 		this.setState({ automaton1: a1.getName() });
 	};
 
-	componentDidMount = () => {
+	saveAutomaton = automaton => {
+		axios
+			.post("/automata.json", automaton)
+			.then(console.log)
+			.catch(console.log);
+	};
+
+	componentDidMount() {
 		if (this.props.automata.length > 0) {
 			this.setState({
 				automaton1: this.props.automata[0].getName()
 			});
 		}
 		this.setState({ operation: "makeOptional" });
-	};
+	}
+
+	componentDidUpdate() {
+		if (this.state.unsavedAuto) {
+			this.saveAutomaton(this.props.automata[this.props.automata.length - 1]);
+			this.setState({
+				unsavedAuto: false
+			});
+		}
+	}
 
 	render() {
 		return (
