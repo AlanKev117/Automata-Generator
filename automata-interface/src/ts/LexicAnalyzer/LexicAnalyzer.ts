@@ -27,6 +27,10 @@ class LexicAnalyzer {
 
 	getAutomaton = () => this.automaton;
 
+	setInput = (input: string) => {
+		this.input = input;
+	};
+
 	public readonly getToken = () => {
 		let i: number;
 		let lastLexemIndex: number;

@@ -13,7 +13,7 @@ class Lexic extends Component {
 		// Items externos.
 		automata: this.props.automata,
 		analyzers: this.props.analyzers,
-	
+
 		// Items de Checker
 		checkedAutomata: new Set(),
 		tokens: {},
@@ -118,7 +118,8 @@ class Lexic extends Component {
 		const analyzer = new LexicAnalyzer(
 			selectedAutos,
 			this.state.tokens,
-			this.state.lexicName
+			this.state.lexicName,
+			""
 		);
 		this.setState(prevState => {
 			prevState.analyzers.push(analyzer);
@@ -143,13 +144,31 @@ class Lexic extends Component {
 			an => an.getAutomaton().getName() === this.state.selectedAnalyzer
 		);
 
-		analyzer.lexicAnalysis(this.state.inputString);
-		console.log("Lexemas: " + analyzer.getLexems().map(lex => lex[0]).join(", "));
+		analyzer.setInput(this.state.inputString + "\0");
+
+		const lexems = [];
+		const tokens = [];
+		let token;
+
+		while ((token = analyzer.getToken()) > 0) {
+			tokens.push(token);
+			lexems.push(analyzer.getCurrentLexem());
+		}
+		if (token === -1) {
+			return alert("Error léxico.");
+		} else {
+			alert(
+				"Tokens y lexemas: \n" +
+					lexems
+						.map((lex, i) => `Lexema: ${lex}, Token: ${tokens[i]}`)
+						.join("\n")
+			);
+		}
 	};
 
 	inputStringChangedHandler = event => {
-		this.setState({inputString: event.target.value});
-	}
+		this.setState({ inputString: event.target.value });
+	};
 
 	// Eventos del ciclo de vida del componente.
 	componentDidMount() {

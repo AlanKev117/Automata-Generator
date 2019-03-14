@@ -268,7 +268,49 @@ class Misc {
 		}
 		return symbols;
 	};
-	
+
+	public static readonly assertAFN = (automaton: Automaton) => {
+		let res = true;
+		automaton.getStates().forEach(state => {
+			const symbols = new Set<string>();
+			state.getTransitions().forEach(trans => {
+				if (trans.hasLimitSymbol()) {
+					Misc.getSymbolsFromRange(
+						trans.getSymbol(),
+						trans.getLimitSymbol()
+					).forEach(symbol => {
+						if (symbols.has(symbol)) {
+							return (res = false);
+						} else {
+							symbols.add(symbol);
+						}
+					});
+				} else {
+					if (symbols.has(trans.getSymbol())) {
+						return (res = false);
+					} else {
+						symbols.add(trans.getSymbol());
+					}
+				}
+				symbols.clear();
+			});
+		});
+		return res;
+	};
+
+	public static readonly assertEpsTransitions = (automaton: Automaton) => {
+		let res = false;
+		automaton.getStates().forEach(state => {
+			state.getTransitions().forEach(trans => {
+				if (!trans.hasLimitSymbol()) {
+					if (trans.getSymbol() === Misc.EPSILON) {
+						return res = true;
+					}
+				}
+			});
+		});
+		return res;
+	};
 }
 
 export default Misc;

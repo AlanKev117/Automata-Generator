@@ -149,8 +149,8 @@ class SyntaxAnalyzerRegex {
 		];
 	};
 
-	public solve = () => {
-		const val: Automaton = new Automaton("REG-EX");
+	public solve = (nameOfNewAuto: string) => {
+		const val: Automaton = new Automaton(nameOfNewAuto);
 		if (this.G(val)) {
 			return val;
 		} else {

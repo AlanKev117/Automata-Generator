@@ -16,7 +16,7 @@ class App extends Component {
 			<Auxiliary>
 				<Header />
 				<Switch>
-					<Route path="/regex" component={Regex}/>
+					<Route path="/regex" render={() => <Regex automata={this.automata}/>} />
 					<Route path="/calculator" component={Calculator} />
 					<Route
 						path="/lexic"
