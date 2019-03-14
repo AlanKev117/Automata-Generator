@@ -144,7 +144,7 @@ class Lexic extends Component {
 			an => an.getAutomaton().getName() === this.state.selectedAnalyzer
 		);
 
-		analyzer.setInput(this.state.inputString + "\0");
+		analyzer.reset(this.state.inputString + "\0");
 
 		const lexems = [];
 		const tokens = [];
