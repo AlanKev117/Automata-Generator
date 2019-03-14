@@ -93,6 +93,7 @@ class SyntaxAnalyzerRegex {
 		autoSHARED.unirAFN(autoCERR_OPC.copy());
 		autoSHARED.unirAFN(autoPAR_I.copy());
 		autoSHARED.unirAFN(autoPAR_D.copy());
+		autoSHARED.unirAFN(autoDASH.copy());
 
 		const autoOTHERS_SHARED = new Automaton("OTHERS_SHARED"); // 8.7
 		autoOTHERS_SHARED.createBasic("\\");
@@ -100,9 +101,9 @@ class SyntaxAnalyzerRegex {
 
 		// Autómata AUXILIAR para símbolos no compartidos.
 		const autoNOT_SHARED_1 = new Automaton("NS_1");
-		autoNOT_SHARED_1.createBasic("!", "%");
+		autoNOT_SHARED_1.createBasic(" ", "%");
 		const autoNOT_SHARED_2 = new Automaton("NS_2");
-		autoNOT_SHARED_2.createBasic(",", "/");
+		autoNOT_SHARED_2.createBasic(".", "/");
 		const autoNOT_SHARED_3 = new Automaton("NS_3");
 		autoNOT_SHARED_3.createBasic(":", ">");
 		const autoNOT_SHARED_4 = new Automaton("NS_4");
@@ -113,6 +114,8 @@ class SyntaxAnalyzerRegex {
 		autoNOT_SHARED_6.createBasic("~", "¿");
 		const autoNOT_SHARED_7 = new Automaton("NS_7");
 		autoNOT_SHARED_7.createBasic("'");
+		const autoNOT_SHARED_8 = new Automaton("NS_8");
+		autoNOT_SHARED_8.createBasic(",");
 
 
 		const autoOTHERS_NOT_SHARED = new Automaton("OTHERS_NOT_SHARED"); // 8.8
@@ -124,6 +127,7 @@ class SyntaxAnalyzerRegex {
 		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_5.copy());
 		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_6.copy());
 		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_7.copy());
+		autoOTHERS_NOT_SHARED.unirAFN(autoNOT_SHARED_8.copy());
 
 		// Autómata de SÍMBOLOS
 		const autoSIM = new Automaton("SIM");
