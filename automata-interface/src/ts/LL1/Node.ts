@@ -1,7 +1,7 @@
 class Node {
-    private symbol: string;
-    private right: Node;
-    private down: Node;
+    public symbol: string;
+    public right: Node;
+    public down: Node;
 }
 
 

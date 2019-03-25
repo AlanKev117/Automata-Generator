@@ -8,24 +8,34 @@ class Gramatica {
     }
 
     public readonly getRightSidesWith = (symbol: string) => {
-        const rightSides: Set<Node> = new Set<Node>();
+        const rightSides: Set<string> = new Set<string>();
         for (
-            let currentHead = this.head;
-            currentHead != null;
-            currentHead = currentHead.down
+            let leftSide = this.head;
+            leftSide != null;
+            leftSide = leftSide.down
         ) {
             for (
-                let currentNode = currentHead.right;
-                currentNode != null;
-                currentNode = currentNode.right
+                let rightSide = leftSide.right;
+                rightSide != null;
+                rightSide = rightSide.down
             ) {
-                if (currentNode.symbol === symbol) {
-					rightSides.add(currentHead);
+                const rightSideStr = this.rightSideToString(rightSide);
+                if (leftSide.symbol === symbol) {
+                    rightSides.add(rightSideStr);
+                } else {
 					break;
-                }
+				}
             }
-		}
-		return rightSides;
+        }
+        return rightSides;
+    };
+
+    private readonly rightSideToString = (rightSide: Node) => {
+        let str = "";
+        for (let node = rightSide; node != null; node = node.right) {
+            str += node.symbol;
+        }
+        return str;
     };
 }
 
