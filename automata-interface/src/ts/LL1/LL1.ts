@@ -39,23 +39,27 @@ class LL1 {
 
 
     }
-    public readonly follow = (s:Set<string>) => {
+    public readonly follow = (s:Array<string>) => {
+
 
     };
 
     public readonly esTerminal = (gama:string) => {
+    
         return true;
     }
 
     public readonly esEps = (gama:string) => {
-        return true;
+        if (gama == "\u03B5")
+            return true;
+        return false;
     }
 
     public readonly tEpsilon = (arreglo:Array<string>) => {
         let conjunto = new Set(arreglo) 
         if (conjunto.has("\u03B5"))
             return true;
-        else return false;
+        return false;
     }
 
 
