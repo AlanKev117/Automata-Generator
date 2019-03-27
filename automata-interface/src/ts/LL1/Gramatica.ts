@@ -7,7 +7,10 @@ class Gramatica {
         this.head = null;
     }
 
+    
+
     public readonly getRightSidesWith = (symbol: string) => {
+        
         const rightSides: Set<string> = new Set<string>();
         for (
             let leftSide = this.head;
