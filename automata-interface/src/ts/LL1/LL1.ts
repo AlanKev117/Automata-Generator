@@ -1,69 +1,62 @@
 import { Gramatica } from "./Gramatica";
+import Misc from "../Misc/Misc";
 
 class LL1 {
     private G: Gramatica; //lista de reglas
-   
 
-
-    constructor (gramatica:Gramatica){
-
-
-
-        
+    constructor(G: Gramatica) {
+        this.G = G;
     }
 
-    public readonly first = (s:Array<string>) => {//recibimos los lexemas a analizar 
+    public readonly first = (symbols: Array<string>) => {
         //Declaramos conjunto vacio
-        let c:Array<string> = null;
-        //Se recibe una cadena de la forma "E' E T"
-        //Se separan los elementos
-        const gamas: Array<string> = s;
+        let set = new Set<string>();
 
-        if ( this.esTerminal(gamas[0]) || this.esEps(gamas[0]) ){
-            c.push(gamas[0])
-            return c;
-        } 
-
-        gamas.forEach(gama => {
-            let beta = Array.from(this.G.getRightSidesWith(gama)); // convertimos el cojunto en arreglo para aplicar propiedades
-            c = c.concat( this.first(beta) );
-        });
-
-        if (this.tEpsilon(c) && ( gamas.length ) != 1 ){
-            let set:Set<string> = new Set(c);  
-            set.delete("\u03B5");
-            gamas.shift();
-            c.concat( this.first(gamas) )
+        // Verificamos si el símbolo recibido es un terminal o épsilon.
+        if (this.G.terminals.has(symbols[0]) || symbols[0] === Misc.EPSILON) {
+            set.add(symbols[0]);
+            return set;
         }
 
+        // Si el símbolo es un no terminal, procedemos de la siguiente forma.
+        const rightSides = this.G.getRightSidesWith(symbols[0]);
+        for (let rightSide of rightSides) {
+            set = new Set<string>([...set].concat(...this.first(rightSide.split(""))));
+        }
 
+        if (set.has(Misc.EPSILON) && symbols.length != 1) {
+            set.delete("\u03B5");
+            symbols.shift();
+            set = new Set<string>([...set].concat(...this.first(symbols)));
+        }
 
-    }
-    public readonly follow = (s:Array<string>) => {
-
-
+        return set;
     };
 
-    public readonly esTerminal = (gama:string) => {
     
-        return true;
-    }
+    public readonly follow = (symbol: string) => {
+        let set = new Set<string>();
+        if (symbol === this.G.startSymbol) {
+            set.add("$");
+        }
+        const gammas = this.G.getLeftSidesAndGammasWith(symbol);
+        for (let leftSide in gammas) {
+            if (gammas[leftSide].length !== 0) {
+                set = new Set<string>([...set].concat(...this.first(gammas[leftSide])));
+                if (set.has(Misc.EPSILON)) {
+                    set.delete(Misc.EPSILON);
+                    set = new Set<string>([...set].concat(...this.follow(leftSide)));
+                }
+            } else {
+                if (leftSide === symbol) {
+                    return new Set<string>();
+                }
+                set = new Set<string>([...set].concat(...this.follow(leftSide)));
+            }
+        }
 
-    public readonly esEps = (gama:string) => {
-        if (gama == "\u03B5")
-            return true;
-        return false;
-    }
-
-    public readonly tEpsilon = (arreglo:Array<string>) => {
-        let conjunto = new Set(arreglo) 
-        if (conjunto.has("\u03B5"))
-            return true;
-        return false;
-    }
-
-
-
+        return set;
+    };
 }
 
 export { LL1 };
