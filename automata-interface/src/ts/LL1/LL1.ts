@@ -15,7 +15,6 @@ class LL1 {
     public readonly first = (s:Array<string>) => {//recibimos los lexemas a analizar 
         //Declaramos conjunto vacio
         let c:Array<string> = null;
-        //Se recibe una cadena de la forma "E' E T"
         //Se separan los elementos
         const gamas: Array<string> = s;
 
