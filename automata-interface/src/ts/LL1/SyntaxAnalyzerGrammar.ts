@@ -112,6 +112,9 @@ class SyntaxAnalyzerGrammar {
             return true;
         }
     };
+
+
+    
 }
 
 export { SyntaxAnalyzerGrammar };

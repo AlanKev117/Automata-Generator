@@ -7,12 +7,14 @@ class LexicAnalyzer {
     private automaton: Automaton;
     private indexStack: number[];
     private input: string;
+    private obj: Object;
 
     constructor(
         automata: Automaton[],
         tokens: Object,
         lexicName: string,
-        input: string
+        input: string,
+        obj: Object = new Object,
     ) {
         const copies = automata.map(auto => auto.copy());
         copies.forEach(auto => {
@@ -92,6 +94,21 @@ class LexicAnalyzer {
             return null;
         }
     };
+
+    public readonly getLexicState = () =>{
+
+        let estado:Object = this.obj = {
+                iniLexema: null,
+                finLexema: null,
+                edoAccept: null,
+                token: null,
+                currentIndex: this.indexStack
+            }
+            return estado
+    }
+
+    public readonly setLexicState = (obj: Object) =>{
+    }
 }
 
 export { LexicAnalyzer };
