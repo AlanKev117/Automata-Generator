@@ -1,20 +1,22 @@
 import { Automaton } from "../Automaton/Automaton";
 import Misc from "../Misc/Misc";
 import { State } from "../State/State";
-import { Transition } from "../Transition/Transition";
 
 class LexicAnalyzer {
+    // Atributos fijos del analizador.
     private automaton: Automaton;
-    private indexStack: number[];
     private input: string;
-    private obj: Object;
+
+    // Atributos de estado.
+    private i: number;
+    private lastLexemIndex: number;
+    private indexStack: number[];
 
     constructor(
         automata: Automaton[],
         tokens: Object,
         lexicName: string,
-        input: string,
-        obj: Object = new Object,
+        input: string
     ) {
         const copies = automata.map(auto => auto.copy());
         copies.forEach(auto => {
@@ -39,8 +41,6 @@ class LexicAnalyzer {
     };
 
     public readonly getToken = () => {
-        let i: number;
-        let lastLexemIndex: number;
         let currentState: State = this.automaton.startState;
         let lastAcceptState: State = null;
 
@@ -48,34 +48,37 @@ class LexicAnalyzer {
             this.indexStack.push(0);
         }
 
-        i = this.indexStack[this.indexStack.length - 1];
+        this.i = this.indexStack[this.indexStack.length - 1];
 
-        if (this.input[i] === Misc.EOI) {
-            this.indexStack.push(i);
+        if (this.input[this.i] === Misc.EOI) {
+            this.indexStack.push(this.i);
             return 0;
         }
 
-        while (this.input[i] !== Misc.EOI) {
-            if (currentState.getTransitionsBySymbol(this.input[i]).length > 0) {
+        while (this.input[this.i] !== Misc.EOI) {
+            if (
+                currentState.getTransitionsBySymbol(this.input[this.i]).length >
+                0
+            ) {
                 currentState = currentState
-                    .getTransitionsBySymbol(this.input[i])[0]
+                    .getTransitionsBySymbol(this.input[this.i])[0]
                     .getTargetState();
-                i++;
+                this.i++;
                 if (this.automaton.acceptStates.has(currentState)) {
-                    lastLexemIndex = i;
+                    this.lastLexemIndex = this.i;
                     lastAcceptState = currentState;
                 }
             } else {
                 if (lastAcceptState === null) {
                     return -1;
                 } else {
-                    this.indexStack.push(lastLexemIndex);
+                    this.indexStack.push(this.lastLexemIndex);
                     return lastAcceptState.getToken();
                 }
             }
         }
 
-        this.indexStack.push(lastLexemIndex);
+        this.indexStack.push(this.lastLexemIndex);
         return lastAcceptState.getToken();
     };
 
@@ -95,20 +98,19 @@ class LexicAnalyzer {
         }
     };
 
-    public readonly getLexicState = () =>{
+    public readonly getLexicState = () => {
+        return {
+            i: this.i,
+            lastLexemIndex: this.lastLexemIndex,
+            indexStack: this.indexStack
+        };
+    };
 
-        let estado:Object = this.obj = {
-                iniLexema: null,
-                finLexema: null,
-                edoAccept: null,
-                token: null,
-                currentIndex: this.indexStack
-            }
-            return estado
-    }
-
-    public readonly setLexicState = (obj: Object) =>{
-    }
+    public readonly setLexicState = (lexicState: Object) => {
+        for (let key in lexicState) {
+            this[key] = lexicState[key];
+        }
+    };
 }
 
 export { LexicAnalyzer };

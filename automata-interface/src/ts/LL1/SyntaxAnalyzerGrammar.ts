@@ -100,7 +100,7 @@ class SyntaxAnalyzerGrammar {
         let token: number = this.lexicAnalyzer.getToken();
         if (token === Token.SYMBOL) {
             node = new Node(this.lexicAnalyzer.getCurrentLexem());
-            if (this._LS_(node)){
+            if (this._LS_(node)) {
                 let s: object = this.lexicAnalyzer.getLexicState();
                 let node1: Node = null;
                 if (this._LS_(node1)) {
@@ -112,9 +112,6 @@ class SyntaxAnalyzerGrammar {
             return true;
         }
     };
-
-
-    
 }
 
 export { SyntaxAnalyzerGrammar };

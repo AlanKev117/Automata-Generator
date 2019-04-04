@@ -5,6 +5,8 @@ class Node {
 
     constructor (symbol: string) {
         this.symbol = symbol;
+        this.right = null;
+        this.down = null;
     }
 }
 
