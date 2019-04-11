@@ -1,10 +1,44 @@
 import React, { Component } from "react";
+import classes from "./LL1.module.css";
+import { SyntaxAnalyzerGrammar } from "../../../ts/LL1/SyntaxAnalyzerGrammar";
+import GrammarInput from "./GrammarInput/GrammarInput";
 
 class LL1 extends Component {
-    state = {};
+    state = {
+        grammars: [],
+        grammarText: ""
+    };
+
+    createGrammar = () => {
+        const analyzer = new SyntaxAnalyzerGrammar(this.state.grammarText);
+        let grammar = null;
+        if ((grammar = analyzer.solve("Gramática Chida")) != null) {
+            this.grammars[0] = grammar;
+        } else {
+            alert("Error sintáctico al obtener gramática.");
+        }
+    };
+
+    grammarTextChanged = event => {
+        this.setState({ grammarText: event.target.value });
+    };
 
     render() {
-        return <div/>
+        return (
+            <main className={classes.LL1}>
+                <h1>Creador de autómatas por expresión regular</h1>
+                <GrammarInput
+                    grammarText={this.state.grammarText}
+                    grammarTextChanged={this.grammarTextChanged}
+                    createGrammar={this.createGrammar}
+                />
+                {this.state.grammars.length > 0 ? (
+                    <div style={{ textAlign: "center" }}>
+                        {this.state.grammars[0].toString()}
+                    </div>
+                ) : null}
+            </main>
+        );
     }
 }
 

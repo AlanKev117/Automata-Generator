@@ -102,7 +102,7 @@ class LexicAnalyzer {
         return {
             i: this.i,
             lastLexemIndex: this.lastLexemIndex,
-            indexStack: this.indexStack
+            indexStack: [...this.indexStack]
         };
     };
 

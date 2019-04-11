@@ -48,6 +48,16 @@ const header = props => (
                         RegEx
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink
+                        to="/LL1"
+                        activeStyle={{
+                            color: "white"
+                        }}
+                    >
+                        LL1
+                    </NavLink>
+                </li>
             </ul>
         </nav>
     </header>

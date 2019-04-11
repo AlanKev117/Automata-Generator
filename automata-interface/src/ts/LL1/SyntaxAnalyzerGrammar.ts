@@ -1,7 +1,8 @@
 import { LexicAnalyzer } from "../LexicAnalyzer/LexicAnalyzer";
 import { SyntaxAnalyzerRegex } from "../Regex/SyntaxAnalyzerRegex";
 import { Node } from "./Node";
-import Lexic from "../../containers/Pages/Lexic/Lexic";
+import { Gramatica } from "./Gramatica";
+import { Automaton } from "../Automaton/Automaton";
 
 enum Token {
     ARROW = 1,
@@ -12,21 +13,47 @@ enum Token {
 
 class SyntaxAnalyzerGrammar {
     private lexicAnalyzer: LexicAnalyzer;
-    private input: string;
 
     constructor(input: string) {
         const tokens = { ...Token };
         const automata = this.createAutomataForLexic();
-        // Inicializar...
+        this.lexicAnalyzer = new LexicAnalyzer(
+            automata,
+            tokens,
+            "Analizador de Gramáticas",
+            input
+        );
     }
 
     private readonly createAutomataForLexic = () => {
-        const autoARROW = new SyntaxAnalyzerRegex("-&>").solve("ARROW");
-        const autoPIPE = new SyntaxAnalyzerRegex("|").solve("PIPE");
-        const autoSEMICOLON = new SyntaxAnalyzerRegex(";").solve("SEMICOLON");
-        const autoSYMBOL = new SyntaxAnalyzerRegex(
+        const autoARROW: Automaton = new SyntaxAnalyzerRegex("\\-&>").solve(
+            "ARROW"
+        );
+        const autoPIPE: Automaton = new SyntaxAnalyzerRegex("\\|").solve(
+            "PIPE"
+        );
+        const autoSEMICOLON: Automaton = new SyntaxAnalyzerRegex(";").solve(
+            "SEMICOLON"
+        );
+        const autoSYMBOL: Automaton = new SyntaxAnalyzerRegex(
             "[a-z]|[A-Z]|[0-9]|\\&"
         ).solve("SYMBOL");
+        return [autoARROW, autoPIPE, autoSEMICOLON, autoSYMBOL];
+    };
+
+    public solve = (nameOfNewGrammar: string) => {
+        const val: Node = null;
+        if (this.G(val)) {
+            const grammar = new Gramatica(nameOfNewGrammar);
+            grammar.rules = val;
+            grammar.setNonTerminals(val);
+            grammar.setTerminals(val);
+            grammar.startSymbol = val.symbol;
+            return grammar;
+        } else {
+            alert("Error sintáctico");
+            return null;
+        }
     };
 
     /**
