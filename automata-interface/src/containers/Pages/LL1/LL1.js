@@ -13,7 +13,8 @@ class LL1 extends Component {
         const analyzer = new SyntaxAnalyzerGrammar(this.state.grammarText);
         let grammar = null;
         if ((grammar = analyzer.solve("Gramática Chida")) != null) {
-            this.grammars[0] = grammar;
+            this.setState({grammars: [grammar]});
+            console.log(grammar);
         } else {
             alert("Error sintáctico al obtener gramática.");
         }

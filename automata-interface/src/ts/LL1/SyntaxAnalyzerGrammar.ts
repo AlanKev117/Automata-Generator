@@ -42,13 +42,13 @@ class SyntaxAnalyzerGrammar {
     };
 
     public solve = (nameOfNewGrammar: string) => {
-        const val: Node = null;
+        const val: Node[] = [];
         if (this.G(val)) {
             const grammar = new Gramatica(nameOfNewGrammar);
-            grammar.rules = val;
-            grammar.setNonTerminals(val);
-            grammar.setTerminals(val);
-            grammar.startSymbol = val.symbol;
+            grammar.rules = val[0];
+            grammar.setNonTerminals(val[0]);
+            grammar.setTerminals(val[0]);
+            grammar.startSymbol = val[0].symbol;
             return grammar;
         } else {
             alert("Error sintáctico");
@@ -61,19 +61,19 @@ class SyntaxAnalyzerGrammar {
      *
      * @memberof SyntaxAnalyzerGrammar
      */
-    public readonly G = (node: Node) => {
+    public readonly G = (node: Node[]) => {
         return this._LR_(node);
     };
 
-    public readonly _LR_ = (node: Node) => {
+    public readonly _LR_ = (node: Node[]) => {
         if (this._R_(node)) {
             if (this.lexicAnalyzer.getToken() === Token.SEMICOLON) {
                 // Nuevo nodo para guardar una regla.
-                let node1: Node = null;
+                let node1: Node[] = [];
                 // Estado del analizador léxico antes de entrar a _LR_ de nuevo.
                 let s: object = this.lexicAnalyzer.getLexicState();
                 if (this._LR_(node1)) {
-                    node.down = node1;
+                    node[0].down = node1[0];
                     return true;
                 }
                 this.lexicAnalyzer.setLexicState(s);
@@ -83,29 +83,29 @@ class SyntaxAnalyzerGrammar {
         }
     };
 
-    public readonly _R_ = (node: Node) => {
+    public readonly _R_ = (node: Node[]) => {
         let token: number;
         if (this._LI_(node)) {
             token = this.lexicAnalyzer.getToken();
             if (token === Token.ARROW) {
-                let node1: Node = null;
+                let node1: Node[] = [];
                 if (this._LLD_(node1)) {
-                    node.right = node1;
+                    node[0].right = node1[0];
                     return true;
                 }
             }
         }
         return false;
     };
-    public readonly _LI_ = (node: Node) => {
+    public readonly _LI_ = (node: Node[]) => {
         let token: number = this.lexicAnalyzer.getToken();
         if (token === Token.SYMBOL) {
-            node = new Node(this.lexicAnalyzer.getCurrentLexem());
+            node[0] = new Node(this.lexicAnalyzer.getCurrentLexem());
             return true;
         }
         return false;
     };
-    public readonly _LLD_ = (node: Node) => {
+    public readonly _LLD_ = (node: Node[]) => {
         let token: number;
         if (this._LD_(node)) {
             token = this.lexicAnalyzer.getToken();
@@ -120,24 +120,26 @@ class SyntaxAnalyzerGrammar {
         }
         return false;
     };
-    public readonly _LD_ = (node: Node) => {
+    public readonly _LD_ = (node: Node[]) => {
         return this._LS_(node);
     };
-    public readonly _LS_ = (node: Node) => {
+    public readonly _LS_ = (node: Node[]) => {
         let token: number = this.lexicAnalyzer.getToken();
         if (token === Token.SYMBOL) {
-            node = new Node(this.lexicAnalyzer.getCurrentLexem());
+            node[0] = new Node(this.lexicAnalyzer.getCurrentLexem());
             if (this._LS_(node)) {
                 let s: object = this.lexicAnalyzer.getLexicState();
-                let node1: Node = null;
+                let node1: Node[] = null;
                 if (this._LS_(node1)) {
-                    node.right = node1;
+                    node[0].right = node1[0];
                     return true;
                 }
                 this.lexicAnalyzer.setLexicState(s);
             }
             return true;
         }
+        this.lexicAnalyzer.returnToken();
+        return false;
     };
 }
 
