@@ -72,7 +72,7 @@ class LL1 {
         for (
             let leftSide: Node = this.G.rules, ruleIndex: number = 0;
             leftSide != null;
-            leftSide = leftSide.down, ruleIndex++
+            leftSide = leftSide.down
         ) {
             const transSymbols = this.first([
                 ...this.G.rightSideToString(head)
@@ -83,7 +83,7 @@ class LL1 {
                 }
                 table[leftSide.symbol][symbol] = [
                     this.G.rightSideToString(leftSide.right),
-                    ruleIndex
+                    ruleIndex++
                 ];
             });
         }
