@@ -4,12 +4,14 @@ import { Node } from "./Node";
 
 class LL1 {
 	private G: Gramatica; //lista de reglas
+	private LL1Table: object;
 
 	constructor(G: Gramatica) {
 		this.G = G;
+		this.LL1Table = this.createLL1Table();
 	}
 
-	public readonly first = (symbols: Array<string>) => {
+	private readonly first = (symbols: Array<string>) => {
 		//Declaramos conjunto vacio
 		let set = new Set<string>();
 
@@ -28,7 +30,7 @@ class LL1 {
 		}
 
 		if (set.has(Misc.EPSILON) && symbols.length != 1) {
-			set.delete("\u03B5");
+			set.delete(Misc.EPSILON);
 			symbols.shift();
 			set = new Set<string>([...set].concat(...this.first(symbols)));
 		}
@@ -36,7 +38,7 @@ class LL1 {
 		return set;
 	};
 
-	public readonly follow = (symbol: string) => {
+	private readonly follow = (symbol: string) => {
 		let set = new Set<string>();
 		if (symbol === this.G.startSymbol) {
 			set.add("$");
@@ -66,53 +68,71 @@ class LL1 {
 		return set;
 	};
 
-	public createLL1Table() {
-		// const head = this.G.rules;
-		// const table = {};
-		// for (
-		//     let leftSide: Node = this.G.rules, ruleIndex: number = 0;
-		//     leftSide != null;
-		//     leftSide = leftSide.down
-		// ) {
-		//     const transSymbols = this.first([
-		//         ...this.G.rightSideToString(head)
-		//     ]);
-		//     transSymbols.forEach(symbol => {
-		//         if (!table[leftSide.symbol]) {
-		//             table[leftSide.symbol] = {};
-		//         }
-		//         table[leftSide.symbol][symbol] = [
-		//             this.G.rightSideToString(leftSide.right),
-		//             ruleIndex++
-		//         ];
-		//     });
-		// }
-		const head: Node = this.G.rules;
-	}
+	private readonly createLL1Table = () => {
+		/* 
+			Objeto de objetos (tabla LL1).
+			Forma: table[NT o T o $][T o $] = [regla, indice de regla].
+		*/
+		const table = {};
 
-	/**
-	 * Regresa un arreglo de nodos (reglas) donde los índices
-	 * identifican a cada regla pra la tabla LL1.
-	 *
-	 * @private
-	 * @memberof LL1
-	 * @param {Node} rules El nodo de las reglas de una gramática
-	 * @returns {Node[]}
-	 */
-	private enumerateRules = (rules: Node) => {
-		const enumRules: Node[] = [];
-		for (let aux = rules; aux != null; aux = aux.down) {
-			const current = new Node(aux.symbol);
-			//for (let )
+		// Arreglo para indexar reglas.
+		const rules: Node[] = [];
+
+		// Iteramos a través de todos los lados izquierdos.
+		for (
+			let leftSide = this.G.rules;
+			leftSide != null;
+			leftSide = leftSide.down
+		) {
+			// Iteramos a través de todas las reglas de esos lados izquierdos.
+			for (let rule = leftSide.right; rule != null; rule = rule.down) {
+				// Se agrega regla a arreglo para indexar.
+				rules.push(rule);
+
+				// Arreglo de todos los símbolos de la regla actual.
+				const ruleSymbols = [...this.G.rightSideToString(rule)];
+
+				// Se define nuevo objeto (fila) en caso de no existir.
+				if (!table[leftSide.symbol]) {
+					table[leftSide.symbol] = {};
+				}
+
+				// Obtenemos first de la regla actual.
+				const terminals = this.first(ruleSymbols);
+
+				// Si en el resultado se tiene épsilon,
+				if (terminals.has(Misc.EPSILON)) {
+					// se elimina del conjunto.
+					terminals.delete(Misc.EPSILON);
+
+					// Después se calcula el follow.
+					const followTerminals = this.follow(leftSide.symbol);
+
+					// El resultado se une con first.
+					followTerminals.forEach(terminal => {
+						terminals.add(terminal);
+					});
+				}
+
+				// Ya teniendo los terminales (columnas), se asignan valores a la tabla.
+				terminals.forEach(column => {
+					table[leftSide.symbol][column] = [
+						rule,
+						rules.indexOf(rule)
+					];
+				});
+			}
 		}
-		return enumRules;
+
+		// Se omiten las operaciones pop en esta implementación, recordando que
+		// table[s][s] = stack.pop() ; con s un terminal.
+
+		return table;
 	};
 
-	private getRulesFromBranch = (branch: Node) => {
-		const rules = [];
-		for (let aux = branch; aux != null; aux = aux.right) {
-			
-		}
+	public readonly evaluate = (input: string) => {
+		const stack = ["$"];
+		
 	};
 }
 
