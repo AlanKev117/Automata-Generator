@@ -113,7 +113,7 @@ class SyntaxAnalyzerGrammar {
 			if (token === Token.PIPE) {
 				const node1: Node[] = [];
 				if (this._LLD_(node1)) {
-					node[0].down = node[1];
+					node[0].down = node1[0];
 					return true;
 				}
 				return false;

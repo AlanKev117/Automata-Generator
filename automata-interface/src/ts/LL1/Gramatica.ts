@@ -105,13 +105,13 @@ class Gramatica {
 	};
 
 	private getTerminalsFromBranch = (branch: Node) => {
-		const terminals = [];
+		let terminals = [];
 		for (let aux = branch; aux != null; aux = aux.right) {
 			if (!this.nonTerminals.has(aux.symbol)) {
 				terminals.push(aux.symbol);
 			}
 			if (aux.down != null) {
-				terminals.concat(this.getTerminalsFromBranch(aux.down));
+				terminals = terminals.concat(this.getTerminalsFromBranch(aux.down));
 			}
 		}
 		return terminals;
