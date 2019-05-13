@@ -5,7 +5,7 @@ const grammarInput = props => {
     return (
         <div className={classes.GrammarInput}>
             <h2>Ingrese reglas de una gramática</h2>
-            <h3>Formato: N->aBc|dEf|...;M->xYz|jKl|...</h3>
+            <h3>Formato: N->aBc|dEf|...;M->xYz|jKl|...;</h3>
             <div className={classes.FlexContainer}>
                 <textarea
                     name="grammar"
