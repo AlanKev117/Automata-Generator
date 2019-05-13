@@ -1,8 +1,9 @@
 import Misc from "../Misc/Misc";
 import { Gramatica } from "./Gramatica";
 import { Node } from "./Node";
+import { log } from "util";
 
-class LL1 {
+class LL1ts {
     private G: Gramatica; //lista de reglas
 
     constructor(G: Gramatica) {
@@ -69,7 +70,11 @@ class LL1 {
     public createLL1Table() {
         const head = this.G.rules;
         const table = {};
-        for (
+        console.log(head);
+
+
+
+/*         for (
             let leftSide: Node = this.G.rules, ruleIndex: number = 0;
             leftSide != null;
             leftSide = leftSide.down
@@ -86,8 +91,8 @@ class LL1 {
                     ruleIndex++
                 ];
             });
-        }
+        } */
     }
 }
 
-export { LL1 };
+export { LL1ts };

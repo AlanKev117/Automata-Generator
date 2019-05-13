@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import classes from "./LL1.module.css";
 import { SyntaxAnalyzerGrammar } from "../../../ts/LL1/SyntaxAnalyzerGrammar";
 import GrammarInput from "./GrammarInput/GrammarInput";
+import { LL1ts } from "../../../ts/LL1/LL1";
 
 class LL1 extends Component {
     state = {
@@ -15,6 +16,9 @@ class LL1 extends Component {
         if ((grammar = analyzer.solve("Gramática Chida")) != null) {
             this.setState({grammars: [grammar]});
             console.log(grammar);
+            const ll1 = new LL1ts(grammar);
+            console.log(ll1.createLL1Table());
+            ll1.createLL1Table();
         } else {
             alert("Error sintáctico al obtener gramática.");
         }
