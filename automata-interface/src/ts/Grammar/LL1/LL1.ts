@@ -1,7 +1,6 @@
-import Misc from "../Misc/Misc";
-import { Gramatica } from "./Gramatica";
-import { Node } from "./Node";
-import { log } from "util";
+import Misc from "../../Misc/Misc";
+import { Gramatica } from "../Gramatica";
+import { Node } from "../Node";
 
 class LL1 {
 	private G: Gramatica; //lista de reglas
@@ -137,4 +136,4 @@ class LL1 {
 	};
 }
 
-export { LL1ts };
+export { LL1 };

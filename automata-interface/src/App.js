@@ -7,7 +7,7 @@ import Builder from "./containers/Pages/Builder/Builder";
 import Lexic from "./containers/Pages/Lexic/Lexic";
 import Calculator from "./containers/Pages/Calculator/Calculator";
 import Regex from "./containers/Pages/Regex/Regex";
-import LL1 from "./containers/Pages/LL1/LL1";
+import LL1Interface from "./containers/Pages/LL1/LL1Interface";
 
 class App extends Component {
     automata = [];
@@ -17,7 +17,7 @@ class App extends Component {
             <Auxiliary>
                 <Header />
                 <Switch>
-                    <Route path="/LL1" component={LL1}/>
+                    <Route path="/LL1" component={LL1Interface}/>
                     <Route
                         path="/regex"
                         render={() => <Regex automata={this.automata} />}
