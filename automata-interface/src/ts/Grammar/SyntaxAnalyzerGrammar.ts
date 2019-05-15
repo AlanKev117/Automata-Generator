@@ -3,6 +3,7 @@ import { SyntaxAnalyzerRegex } from "../Regex/SyntaxAnalyzerRegex";
 import { Node } from "./Node";
 import { Gramatica } from "./Gramatica";
 import { Automaton } from "../Automaton/Automaton";
+import Misc from "../Misc/Misc";
 
 enum Token {
 	ARROW = 1,
@@ -36,7 +37,8 @@ class SyntaxAnalyzerGrammar {
 			"SEMICOLON"
 		);
 		const autoSYMBOL: Automaton = new SyntaxAnalyzerRegex(
-			"[a-z]|[A-Z]|[0-9]|\\&"
+			//`[a-z]|[A-Z]|[0-9]|\\&|\\+|\\-|\\*|\\/|\\(|\\)|${Misc.EPSILON}`
+			`[a-z]|[A-Z]|[0-9]|\\&|\\+|\\-|\\${Misc.EPSILON}`
 		).solve("SYMBOL");
 		return [autoARROW, autoPIPE, autoSEMICOLON, autoSYMBOL];
 	};

@@ -6,6 +6,7 @@ class Misc {
 	public static readonly EPSILON: string = "\u03B5";
 	public static readonly EOI: string = String.fromCharCode(0);
 	public static readonly PESOS: string = "$";
+	public static readonly DOT: string = "•";
 
 	/**
 	 * Función Ir_a(). Aplica la función Mover() con los parámetros
