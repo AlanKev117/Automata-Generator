@@ -53,7 +53,6 @@ class SyntaxAnalyzerGrammar {
 			grammar.startSymbol = val[0].symbol;
 			return grammar;
 		} else {
-			alert("Error sintáctico");
 			return null;
 		}
 	};

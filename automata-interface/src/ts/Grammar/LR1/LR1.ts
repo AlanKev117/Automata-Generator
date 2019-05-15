@@ -10,7 +10,7 @@ class LR1 {
 
     constructor(G: Gramatica) {
         this.G = G;
-        this.augmentGammar();
+        this.augmentGrammar();
         this.rulesToObject();
         this.LR1Table = this.createLR1Table();
     }
@@ -28,7 +28,7 @@ class LR1 {
      * @private
      * @memberof LR1
      */
-    private readonly augmentGammar = () => {
+    private readonly augmentGrammar = () => {
         if (this.G === null) {
             return;
         }
@@ -37,6 +37,7 @@ class LR1 {
         augmentedNode.right = new Node(this.G.startSymbol);
         augmentedNode.down = { ...this.G.rules };
         this.G.rules = augmentedNode;
+        this.G.startSymbol = augmentedSymbol;
     };
 
     /**
@@ -93,7 +94,6 @@ class LR1 {
      * @memberof LR1
      */
     private readonly epsilonClosure = (rules: Item[]) => {
-
         // Se agregan al conjunto resultado las reglas que se pasan como argumento.
         // Tratamos al conjunto temporalmente como un arreglo para mayor rapidez
         // en las operaciones de lectura y escritura.
@@ -119,7 +119,9 @@ class LR1 {
                     // Se calcula FIRST del conjunto formado por los símbolos después de B
                     // y los terminales del item.
                     const first = this.firstLR1(
-                        [...rightSide.slice(afterDotIndex + 1)].concat(item.terminals)
+                        [...rightSide.slice(afterDotIndex + 1)].concat(
+                            item.terminals
+                        )
                     );
 
                     // Para cada símbolo del FIRST,
@@ -199,22 +201,19 @@ class LR1 {
     };
 
     /**
-     * Desplaza una vez el punto de un conjunto de items a la derecha.
+     * Desplaza el punto de un item a la derecha una posición.
      *
      * @private
      * @memberof LR1
      */
-    private readonly shiftDot = (rules: object) => {
-        for (let leftSide in rules) {
-            rules[leftSide].forEach((rule: string) => {
-                const parts = rule.split(Misc.DOT);
-                if (parts[1].length > 0) {
-                    parts[0] += parts[1][0];
-                    parts[1] = parts[1].slice(1);
-                }
-                rule = parts.join(Misc.DOT);
-            });
+    private readonly shiftDot = (item: Item) => {
+        const leftSide = Object.keys(item.rule)[0];
+        const parts = item.rule[leftSide].split(Misc.DOT);
+        if (parts[1].length > 0) {
+            parts[0] += parts[1][0];
+            parts[1] = parts[1].slice(1);
         }
+        item.rule[leftSide] = parts.join(Misc.DOT);
     };
 }
 

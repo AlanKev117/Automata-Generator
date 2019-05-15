@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import classes from "./LL1Interface.module.css";
 import { SyntaxAnalyzerGrammar } from "../../../ts/Grammar/SyntaxAnalyzerGrammar";
 import GrammarInput from "./GrammarInput/GrammarInput";
-import { LL1 } from "../../../ts/Grammar/LL1/LL1";
+//import { LL1 } from "../../../ts/Grammar/LL1/LL1";
 
 class LL1Interface extends Component {
     state = {
@@ -12,13 +12,10 @@ class LL1Interface extends Component {
 
     createGrammar = () => {
         const analyzer = new SyntaxAnalyzerGrammar(this.state.grammarText);
-        let grammar = null;
-        if ((grammar = analyzer.solve("Gramática Chida")) != null) {
-            this.setState({grammars: [grammar]});
+        let grammar = analyzer.solve("Gramática Chida");
+        if (grammar !== null) {
+            this.setState({ grammars: [grammar] });
             console.log(grammar);
-            const ll1 = new LL1(grammar);
-            console.log(ll1.createLL1Table());
-            ll1.createLL1Table();
         } else {
             alert("Error sintáctico al obtener gramática.");
         }
@@ -38,10 +35,14 @@ class LL1Interface extends Component {
                     createGrammar={this.createGrammar}
                 />
                 {this.state.grammars.length > 0 ? (
-                    <div style={{ textAlign: "center" }}>
-                        {this.state.grammars[0].toString()}
+                    <div style={{ textAlign: "center", margin: "6px" }}>
+                        Gramática generada en consola.
                     </div>
-                ) : null}
+                ) : (
+                    <div style={{ textAlign: "center", margin: "6px" }}>
+                        Gramática no generada.
+                    </div>
+                )}
             </main>
         );
     }
