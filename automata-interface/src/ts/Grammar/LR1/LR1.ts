@@ -49,7 +49,7 @@ class LR1 {
             return null;
         } else if ("A" <= latinChar && latinChar <= "Z") {
             return String.fromCharCode(
-                0x03b1 + latinChar.charCodeAt(0) - "A".charCodeAt(0)
+                0x0391 + latinChar.charCodeAt(0) - "A".charCodeAt(0)
             );
         } else if ("a" <= latinChar && latinChar <= "z") {
             return String.fromCharCode(

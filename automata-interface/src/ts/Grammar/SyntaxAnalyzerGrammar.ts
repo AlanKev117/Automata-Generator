@@ -38,7 +38,7 @@ class SyntaxAnalyzerGrammar {
 		);
 		const autoSYMBOL: Automaton = new SyntaxAnalyzerRegex(
 			//`[a-z]|[A-Z]|[0-9]|\\&|\\+|\\-|\\*|\\/|\\(|\\)|${Misc.EPSILON}`
-			`[a-z]|[A-Z]|[0-9]|\\&|\\+|\\-|\\${Misc.EPSILON}`
+			`[a-z]|[A-Z]|[0-9]|${Misc.SAFE_EPSILON}|\\&|\\+|\\-|\\*|/|\\(|\\)`
 		).solve("SYMBOL");
 		return [autoARROW, autoPIPE, autoSEMICOLON, autoSYMBOL];
 	};
