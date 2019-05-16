@@ -225,7 +225,7 @@ class LR1 {
 
       	/**
 	 * Función Ir_a(). Aplica la función Mover() con los parámetros
-	 * "states" que es un conjunto de estados y "symbol" que es un
+	 * "item" que es un conjunto de estados y "symbol" que es un
 	 * símbolo. Al resultado se le
 	 *
 	 *
@@ -243,7 +243,7 @@ class LR1 {
 
     	/**
 	 * Función Mover(). Obtiene el conjunto de estados al que se
-	 * puede acceder desde otro conjunto de estados "states"
+	 * puede acceder desde otro conjunto de estados "Items"
 	 * estrictamente mediante transiciones con un símbolo "symbol"
 	 * dado.
 	 *
