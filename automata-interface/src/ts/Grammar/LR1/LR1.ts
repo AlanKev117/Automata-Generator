@@ -253,14 +253,34 @@ class LR1 {
 	 */
 	public readonly move = (state: Array<Item>, symbol: string) => {
 		// Tomamos el conjunto de items del estado que tengan nuestro symbol
-		const items: Item[] = [...state[symbol]]; // Aquí va la modificación, Ralph.
-		//ahora por cada item de nuestro conjunto de items
-		for (let item of items) {
-			//cambiamos de posición nuestro punto
-			this.shiftDot(item);
-		}
-		return items;
-	};
+        
+        //arreglo de items que cumplen la consiciones
+        let items: Item[] = [];
+
+        for (let regla of state){
+            
+
+            // Obtenemos el lado derecho de la regla del item.
+			let rightSide = Object.values(regla.rule)[0];
+
+			// Obtenemos el índice del símbolo después del punto.
+			let afterDotIndex = rightSide.indexOf(Misc.DOT) + 1;
+
+			// Con él, obtenemos el símbolo después del punto.
+			let afterDotSymbol = rightSide[afterDotIndex];
+            // Si el símbolo despues del simbolo es igual al simbolo que mandamos            
+            if (afterDotSymbol == symbol){
+                //metemos el item dentro del arreglo
+                items.push(regla);
+            }
+        };
+        //ahora por cada item de nuestro conjunto de items
+        for (let item of items) {
+            //cambiamos de posición nuestro punto
+            this.shiftDot(item);
+        }
+        return items;
+    }
 }
 
 export { LR1 };
