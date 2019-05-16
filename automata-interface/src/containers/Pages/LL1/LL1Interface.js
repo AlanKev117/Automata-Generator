@@ -5,11 +5,16 @@ import GrammarInput from "./GrammarInput/GrammarInput";
 //import { LL1 } from "../../../ts/Grammar/LL1/LL1";
 
 class LL1Interface extends Component {
+    constructor(){
+        super();
+        this.textArea = React.createRef()
+        this.epsilon = String.fromCharCode(949);
+    }
     state = {
         grammars: [],
         grammarText: ""
     };
-
+    
     createGrammar = () => {
         const analyzer = new SyntaxAnalyzerGrammar(this.state.grammarText);
         let grammar = analyzer.solve("Gramática Chida");
@@ -20,11 +25,14 @@ class LL1Interface extends Component {
             alert("Error sintáctico al obtener gramática.");
         }
     };
-
-    grammarTextChanged = event => {
+    grammarTextChanged = (event) => {
         this.setState({ grammarText: event.target.value });
+
     };
 
+    addEpsilon = () => {
+        this.textArea.current.value = this.textArea.current.value + this.epsilon;       
+    }
     render() {
         return (
             <main className={classes.LL1}>
@@ -33,6 +41,8 @@ class LL1Interface extends Component {
                     grammarText={this.state.grammarText}
                     grammarTextChanged={this.grammarTextChanged}
                     createGrammar={this.createGrammar}
+                    addEpsilon={this.addEpsilon}
+                    textArea={this.textArea}
                 />
                 {this.state.grammars.length > 0 ? (
                     <div style={{ textAlign: "center", margin: "6px" }}>
