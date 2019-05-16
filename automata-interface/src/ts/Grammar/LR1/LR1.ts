@@ -229,17 +229,14 @@ class LR1 {
 	 * símbolo. Al resultado se le
 	 *
 	 *
-	 * @param {Set<State>} states
+	 * @param {Array<Item>} states
 	 * @param {string} symbol
-	 * @returns {Set<State>}
+	 * @returns {Array<Item>}
 	 * @memberof LR1
 	 */
 	public readonly goTo = (states: Array<Item>, symbol: string) => {
-        
         this.epsilonClosure(  this.move(states, symbol)  );
     };
-
-
 
     	/**
 	 * Función Mover(). Obtiene el conjunto de estados al que se
@@ -247,22 +244,20 @@ class LR1 {
 	 * estrictamente mediante transiciones con un símbolo "symbol"
 	 * dado.
 	 *
-	 * @param {Set<State>} setOfStates
+	 * @param {Array<Item>} state
 	 * @param {string} symbol
-	 * @returns {Set<State>}
-	 * @memberof Misc
+	 * @returns {Array<Item>}
+	 * @memberof LR1
 	 */
-    public readonly move = (states: Array<Item>, symbol: string) => {
-        
-        return states;
-        
-     /*    const result = [...states].map(state => this.);
-		return result.reduce((union, set) => {
-			set.forEach(state => {
-				union.add(state);
-			});
-			return union;
-		}, new Set<Item>()); */
+    public readonly move = (state: Array<Item>, symbol: string) => {
+        // Tomamos el conjunto de items del estado que tengan nuestro symbol
+        const items = [...state[symbol]];
+        //ahora por cada item de nuestro conjunto de items
+        for (let item of items){
+            //cambiamos de posición nuestro punto
+                this.shiftDot(item);
+        }
+        return items;
     };
     
   
