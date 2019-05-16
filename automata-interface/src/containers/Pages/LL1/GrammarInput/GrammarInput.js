@@ -17,13 +17,12 @@ const grammarInput = props => {
                 />
                 {props.grammarText.length > 0 ? (
                     <div>
-                    <center>
-                    <button onClick={props.createGrammar}>
-                        Crear gramática
-                    </button>
+
+                    <button onClick={props.addEpsilon}>Insertar{epsilon}</button>
                     <br/><br/>
-                    <button onClick={props.addEpsilon}>{epsilon}</button>
-                    </center>
+                    <button onClick={props.createGrammar}>
+                        <strong>Crear gramática</strong>
+                    </button>
                     </div>
                 ) : null}
             </div>

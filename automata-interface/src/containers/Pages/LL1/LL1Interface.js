@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import classes from "./LL1Interface.module.css";
 import { SyntaxAnalyzerGrammar } from "../../../ts/Grammar/SyntaxAnalyzerGrammar";
+import Misc from "../../../ts/Misc/Misc";
 import GrammarInput from "./GrammarInput/GrammarInput";
 //import { LL1 } from "../../../ts/Grammar/LL1/LL1";
 
@@ -8,7 +9,8 @@ class LL1Interface extends Component {
     constructor(){
         super();
         this.textArea = React.createRef()
-        this.epsilon = String.fromCharCode(949);
+        //this.epsilon = String.fromCharCode(949);
+        this.epsilon = Misc.SAFE_EPSILON;
     }
     state = {
         grammars: [],
