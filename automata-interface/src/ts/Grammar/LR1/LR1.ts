@@ -15,6 +15,13 @@ class LR1 {
         this.LR1Table = this.createLR1Table();
     }
 
+
+
+
+
+
+
+
     public readonly evaluate = (input: string) => {};
 
     private readonly createLR1Table = () => {
@@ -215,6 +222,51 @@ class LR1 {
         }
         item.rule[leftSide] = parts.join(Misc.DOT);
     };
+
+      	/**
+	 * Función Ir_a(). Aplica la función Mover() con los parámetros
+	 * "states" que es un conjunto de estados y "symbol" que es un
+	 * símbolo. Al resultado se le
+	 *
+	 *
+	 * @param {Set<State>} states
+	 * @param {string} symbol
+	 * @returns {Set<State>}
+	 * @memberof LR1
+	 */
+	public readonly goTo = (states: Array<Item>, symbol: string) => {
+        
+        this.epsilonClosure(  this.move(states, symbol)  );
+    };
+
+
+
+    	/**
+	 * Función Mover(). Obtiene el conjunto de estados al que se
+	 * puede acceder desde otro conjunto de estados "states"
+	 * estrictamente mediante transiciones con un símbolo "symbol"
+	 * dado.
+	 *
+	 * @param {Set<State>} setOfStates
+	 * @param {string} symbol
+	 * @returns {Set<State>}
+	 * @memberof Misc
+	 */
+    public readonly move = (states: Array<Item>, symbol: string) => {
+        
+        return states;
+        
+     /*    const result = [...states].map(state => this.);
+		return result.reduce((union, set) => {
+			set.forEach(state => {
+				union.add(state);
+			});
+			return union;
+		}, new Set<Item>()); */
+    };
+    
+  
+
 }
 
 export { LR1 };
