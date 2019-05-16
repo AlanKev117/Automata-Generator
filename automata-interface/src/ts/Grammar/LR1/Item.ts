@@ -3,7 +3,7 @@ class Item {
     public terminals: string[];
 
     constructor(rule: object, terminals: string[]) {
-        const val = [...Object.values(rule)[0]];
+        const val = Object.values(rule)[0];
         const key = Object.keys(rule)[0];
         this.rule[key] = val;
         this.terminals = [...terminals];

@@ -18,7 +18,12 @@ class LR1 {
 	public readonly evaluate = (input: string) => {};
 
 	private readonly createLR1Table = () => {
+		// Declaración de la tabla (objeto de objetos).
 		const table = {};
+
+		// Creación del primer Item
+		const rule = {};
+		rule[this.G.startSymbol] = this.rules[this.G.startSymbol];
 		return table;
 	};
 
@@ -33,11 +38,15 @@ class LR1 {
 			return;
 		}
 		const augmentedSymbol = this.getGreekFromLatin(this.G.rules.symbol);
+		if (augmentedSymbol === null) {
+			return;
+		}
 		const augmentedNode = new Node(augmentedSymbol);
 		augmentedNode.right = new Node(this.G.startSymbol);
 		augmentedNode.down = { ...this.G.rules };
 		this.G.rules = augmentedNode;
 		this.G.startSymbol = augmentedSymbol;
+		this.G.nonTerminals.add(augmentedSymbol);
 	};
 
 	/**
