@@ -12,19 +12,30 @@ class LR1 {
 		this.G = G;
 		this.augmentGrammar();
 		this.rulesToObject();
-		this.LR1Table = this.createLR1Table();
+		this.createLR1Table();
 	}
 
 	public readonly evaluate = (input: string) => {};
 
 	private readonly createLR1Table = () => {
 		// Declaración de la tabla (objeto de objetos).
-		const table = {};
+		this.LR1Table = {};
 
 		// Creación del primer Item
 		const rule = {};
-		rule[this.G.startSymbol] = this.rules[this.G.startSymbol];
-		return table;
+		rule[this.G.startSymbol] = Misc.DOT + this.rules[this.G.startSymbol][0];
+		const firstItem = new Item(rule, [Misc.PESOS]);
+
+		// Creamos una cola para identificar los conjuntos por analizar.
+		const S: Array<Item[]> = [];
+
+		//Creación del primer conjunto (S0).
+		S.push(this.epsilonClosure([firstItem]));
+
+		// Analizamos los elementos de la cola.
+		for (const set of S) {
+			
+		}
 	};
 
 	/**
@@ -260,6 +271,37 @@ class LR1 {
 			this.shiftDot(item);
 		}
 		return items;
+	};
+
+	/**
+	 * Obtiene un conjunto con todos los símbolos que se encuentran después del
+	 * punto de la regla de cada item, de existir.
+	 *
+	 * @private
+	 * @memberof LR1
+	 */
+	private readonly getSymbolsAfterDot = (items: Item[]) => {
+		// Declaramos arreglo de los símbolos que van después del punto en cada item.
+		const symbolsAfterDot = [];
+		// Iteramos a través de los items.
+		items.forEach(item => {
+			// Obtenemos el lado derecho de la regla del item.
+			const rightSide: string = Object.values(item.rule)[0];
+			// Obtenemos el índice del punto del item.
+			const dotIndex = rightSide.indexOf(Misc.DOT);
+			// Verificamos que el punto no sea el último caracter del lado derecho.
+			if (dotIndex !== rightSide.length - 1) {
+				// Para así obtener el símbolo que le sigue.
+				const symbolAfterDot = rightSide[dotIndex + 1];
+				// Finalmente, verificamos que ese símbolo no exista en el conjunto.
+				if (!symbolsAfterDot.includes(symbolAfterDot)) {
+					// De ser así, lo agregamos.
+					symbolsAfterDot.push(symbolAfterDot);
+				}
+			}
+		});
+
+		return symbolsAfterDot;
 	};
 }
 
