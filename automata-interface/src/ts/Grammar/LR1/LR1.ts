@@ -4,36 +4,116 @@ import { Node } from "../Node";
 import { Item } from "./Item";
 
 class LR1 {
+	// Gramática
 	private G: Gramatica;
-	private LR1Table: object;
+
+	// Tabla LR1
+	private LR1Table: object[];
+
+	// Objeto con Object.keys:str[] y Object.values:str[][]
 	private rules: object;
+
+	// Arreglo con objetos con una sola regla de la forma {rightSide: leftSide}
+	private arrayRules: object[];
 
 	constructor(G: Gramatica) {
 		this.G = G;
 		this.augmentGrammar();
-		this.rulesToObject();
+		this.mapRules();
 		this.createLR1Table();
 	}
 
 	public readonly evaluate = (input: string) => {};
 
 	private readonly createLR1Table = () => {
-		// Declaración de la tabla (objeto de objetos).
-		this.LR1Table = {};
+		// Declaración de la tabla (arreglo de objetos).
+		this.LR1Table = [];
 
 		// Creación del primer Item
 		const rule = {};
 		rule[this.G.startSymbol] = Misc.DOT + this.rules[this.G.startSymbol][0];
 		const firstItem = new Item(rule, [Misc.PESOS]);
 
-		// Creamos una cola para identificar los conjuntos por analizar.
-		const S: Array<Item[]> = [];
+		// Creamos un arreglo para identificar los conjuntos por analizar, empezando por S0.
+		const S: Item[][] = [this.epsilonClosure([firstItem])];
 
-		//Creación del primer conjunto (S0).
-		S.push(this.epsilonClosure([firstItem]));
-
-		// Analizamos los elementos de la cola.
+		// Analizamos los elementos del arreglo.
 		for (const set of S) {
+			// Renglón de la tabla LR1.
+			const row = {};
+
+			// Obtenemos aquellos símbolos que se encuentran después del punto
+			// de todos los items del conjunto (set) actual.
+			const symbolsAfterDot = this.getSymbolsAfterDot(set);
+
+			// Iteramos a través de ellos para rellenar el renglón row.
+			for (const symbol of symbolsAfterDot) {
+				// Obtenemos el conjunto al que se transita con el símbolo actual.
+				const newSet: Item[] = this.goTo(set, symbol);
+
+				// Obtenemos el conjunto que coincida con el nuevo, en caso de existir.
+				const found = S.find(
+					// (Se usa stringify() para obtener una cadena del objeto y comparar
+					// por valor y no por referencia)
+					_set => JSON.stringify(_set) === JSON.stringify(newSet)
+				);
+
+				// Obtenemos el índice del conjunto nuevo.
+				let indexOfNewSet: number = found
+					? S.indexOf(found) // Si existe, su índice correspondiente.
+					: S.push(newSet) - 1; // Si no, se agrega y se asigna el índice del último elemento.
+
+				if (this.G.nonTerminals.has(symbol)) {
+					// Si el símbolo actual es un no terminal, se registra el índice del conjunto a la.
+					// casilla correspondiente del renglón.
+					row[symbol] = indexOfNewSet;
+				} else if (this.G.terminals.has(symbol)) {
+					// Si es un terminal, se registra una operación shift "s".
+					row[symbol] = "s" + indexOfNewSet;
+				}
+			}
+
+			// Filtramos los items que tienen reglas de la forma A -> B•.
+			const endItems: Item[] = set.filter(
+				item =>
+					Object.values(item.rule)[0].split(Misc.DOT)[1].length === 0
+			);
+
+			// Quitamos temporalmente el punto de ellas.
+			endItems.forEach(endItem => {
+				const leftSide: string = Object.keys(endItem.rule)[0];
+				const rightSide: string = Object.values(endItem.rule)[0];
+				endItem.rule[leftSide] = rightSide.split(Misc.DOT)[0];
+			});
+
+			// Iteramos a través de esos items para obtener las operaciones reduce "r"
+			for (const endItem of endItems) {
+				// Se obtiene el índice de la regla del item actual.
+				const ruleIndex = this.arrayRules.indexOf(
+					this.arrayRules.find(
+						rule =>
+							JSON.stringify(rule) ===
+							JSON.stringify(endItem.rule)
+					)
+				);
+
+				for (const terminal of endItem.terminals) {
+					// Si ya ha sido definida una operación shift en la casilla, se detiene el procedimiento.
+					if (row[terminal]) {
+						console.log("Colición shift/reduce");
+						this.LR1Table = null;
+						return;
+					}
+
+					// Se registra la operación reduce con el índice de la regla por
+					// la que se lleva a cabo.
+					row[terminal] = "r" + ruleIndex;
+				}
+			}
+
+
+			// Ya registradas las operaciones en el renglón, lo anexamos a la tabla LR1.
+			this.LR1Table.push(row);
 		}
 	};
 
@@ -82,14 +162,15 @@ class LR1 {
 	};
 
 	/**
-	 * Convierte las reglas de la gramática dada a un objeto
-	 * cuyas claves guardan items.
+	 * Establece los valores de this.rules y this.arrayRules, según sus definiciones.
 	 *
 	 * @private
 	 * @memberof LR1
 	 */
-	private readonly rulesToObject = () => {
+	private readonly mapRules = () => {
 		this.rules = {};
+		this.arrayRules = [];
+
 		for (
 			let leftSide = this.G.rules;
 			leftSide !== null;
@@ -97,11 +178,19 @@ class LR1 {
 		) {
 			this.rules[leftSide.symbol] = [];
 			for (let rule = leftSide.right; rule !== null; rule = rule.down) {
+				// Convertimos el lado derecho en una cadena.
 				let ruleString = "";
 				for (let aux = rule; aux !== null; aux = aux.right) {
 					ruleString += aux.symbol;
 				}
+
+				// La agregamos a las cadenas cuya clave es el lado izquierdo actual.
 				this.rules[leftSide.symbol].push(ruleString);
+
+				// Agregamos una regla al conjunto indexado.
+				const newRule = {};
+				newRule[leftSide.symbol] = ruleString;
+				this.arrayRules.push(newRule);
 			}
 		}
 	};
@@ -220,22 +309,6 @@ class LR1 {
 	};
 
 	/**
-	 * Desplaza el punto de un item a la derecha una posición.
-	 *
-	 * @private
-	 * @memberof LR1
-	 */
-	private readonly shiftDot = (item: Item) => {
-		const leftSide = Object.keys(item.rule)[0];
-		const parts = item.rule[leftSide].split(Misc.DOT);
-		if (parts[1].length > 0) {
-			parts[0] += parts[1][0];
-			parts[1] = parts[1].slice(1);
-		}
-		item.rule[leftSide] = parts.join(Misc.DOT);
-	};
-
-	/**
 	 * Función Ir_a(). Aplica la función Mover() con los parámetros
 	 * "item" que es un conjunto de estados y "symbol" que es un
 	 * símbolo. Al resultado se le
@@ -296,7 +369,7 @@ class LR1 {
 	 */
 	private readonly getSymbolsAfterDot = (items: Item[]) => {
 		// Declaramos arreglo de los símbolos que van después del punto en cada item.
-		const symbolsAfterDot = [];
+		const symbolsAfterDot: string[] = [];
 		// Iteramos a través de los items.
 		items.forEach(item => {
 			// Obtenemos el lado derecho de la regla del item.
@@ -316,6 +389,22 @@ class LR1 {
 		});
 
 		return symbolsAfterDot;
+	};
+
+	/**
+	 * Desplaza el punto de un item a la derecha una posición.
+	 *
+	 * @private
+	 * @memberof LR1
+	 */
+	private readonly shiftDot = (item: Item) => {
+		const leftSide = Object.keys(item.rule)[0];
+		const parts = item.rule[leftSide].split(Misc.DOT);
+		if (parts[1].length > 0) {
+			parts[0] += parts[1][0];
+			parts[1] = parts[1].slice(1);
+		}
+		item.rule[leftSide] = parts.join(Misc.DOT);
 	};
 }
 
