@@ -42,3 +42,12 @@
 	background:#555;
 	border-color: #555;
 }
+
+.GrammarInput input {
+	width: 80%;
+	border: 1px solid grey;
+	border-radius: 3px;
+	padding: 3px;
+	font-size: 18px;
+	font-family: consolas;
+}

@@ -3,6 +3,7 @@ import { SyntaxAnalyzerRegex } from "../Regex/SyntaxAnalyzerRegex";
 import { Node } from "./Node";
 import { Gramatica } from "./Gramatica";
 import { Automaton } from "../Automaton/Automaton";
+import { LL1 } from "../Grammar/LL1/LL1";
 import Misc from "../Misc/Misc";
 
 enum Token {
