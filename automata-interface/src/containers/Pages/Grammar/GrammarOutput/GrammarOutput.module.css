@@ -1,0 +1,36 @@
+.GrammarOutput {
+	background: #3673c4fb;
+	box-shadow: 3px 3px 3px gray;
+	width: 80%;
+	margin: 0 auto;
+	padding: 10px;
+	border-radius: 3px;
+}
+
+.Rule {
+	font-size: 4vh;
+	width: 90%;
+	margin: 0 auto;
+	border-bottom: 1px solid #3d3d3d;
+	text-align: left;
+	padding: 0 5px;
+}
+
+.Rule:last-of-type {
+	border-bottom: none;
+}
+
+.GrammarOutput button {
+	background: #bd88c7;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 3px;
+	margin: 10px;
+	font-size: 2vh;
+	cursor: pointer;
+}
+
+.GrammarOutput button:hover {
+	background: #ad68bb;
+	cursor: pointer;
+}

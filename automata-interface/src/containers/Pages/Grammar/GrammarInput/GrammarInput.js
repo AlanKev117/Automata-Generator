@@ -13,7 +13,7 @@ const grammarInput = props => {
                     id="textAreaLL1"
                     ref={props.textArea}
                     value={props.grammarText}
-                    onChange={props.grammarTextChanged}
+					onChange={props.grammarTextChanged}
                 />
                 {props.grammarText.length > 0 ? (
                     <div>
