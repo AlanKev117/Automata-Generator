@@ -1,0 +1,11 @@
+.ParserTable {
+	font-size: 2vh;
+	border-collapse: collapse;
+	background: #e0e0e0;
+	display: inline-block;
+}
+
+th,
+td {
+	border: 1px solid black;
+}
