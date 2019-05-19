@@ -9,3 +9,16 @@ th,
 td {
 	border: 1px solid black;
 }
+
+td.shift {
+	color: blue;
+}
+
+td.reduce {
+	color: #c00000;
+}
+
+td.accept {
+	content: "acc";
+	color: green;
+}

@@ -5,7 +5,7 @@ const parserTable = props => {
 	const grammar = props.parser.G;
 	if (props.parserType === "LR1") {
 		return (
-			<table className = {classes.ParserTable}>
+			<table className={classes.ParserTable}>
 				<thead>
 					<tr>
 						<th
@@ -32,16 +32,53 @@ const parserTable = props => {
 
 				<tbody>
 					{props.parser.LR1Table.map((row, i) => {
+						let pesosOpClass = "";
+						let pesosOp = " ";
+						if (row["$"]) {
+							pesosOp = row["$"];
+							if (row["$"] === "r0") {
+								pesosOpClass = classes.accept;
+								pesosOp = "acc";
+							} else if (row["$"][0] === "s") {
+								pesosOpClass = classes.shift;
+							} else if (row["$"][0] === "r") {
+								pesosOpClass = classes.reduce;
+							}
+						}
 						return (
 							<tr key={i}>
 								<td>{i}</td>
-								{[...grammar.terminals].map(t =>
-									<td key={i + " " + t}>{row[t] ? row[t] : " "}</td>
-								)}
-								<td>{row["$"] ? row["$"] : " "}</td>
-								{[...grammar.nonTerminals].map(nt =>
-									<td key={i + " " + nt}>{row[nt] ? row[nt] : " "}</td>
-								)}
+								{[...grammar.terminals].map(t => {
+									let opClass = "";
+									let op = " ";
+									if (row[t]) {
+										op = row[t];
+										if (row[t] === "r0") {
+											op = "acc";
+											opClass = classes.accept;
+										} else if (row[t][0] === "s") {
+											opClass = classes.shift;
+										} else if (row[t][0] === "r") {
+											opClass = classes.reduce;
+										}
+									}
+									return (
+										<td
+											className={opClass}
+											key={i + " " + t}
+										>
+											{op}
+										</td>
+									);
+								})}
+								<td className={pesosOpClass}>
+									{pesosOp}
+								</td>
+								{[...grammar.nonTerminals].map(nt => (
+									<td key={i + " " + nt}>
+										{row[nt] ? row[nt] : " "}
+									</td>
+								))}
 							</tr>
 						);
 					})}
@@ -51,7 +88,7 @@ const parserTable = props => {
 	}
 	if (props.parserType === "LL1") {
 		return (
-			<table className = {classes.ParserTable}>
+			<table className={classes.ParserTable}>
 				<thead>
 					<tr>
 						<th

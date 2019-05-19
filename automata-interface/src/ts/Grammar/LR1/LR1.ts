@@ -64,7 +64,11 @@ class LR1 {
 				const found = S.find(
 					// (Se usa stringify() para obtener una cadena del objeto y comparar
 					// por valor y no por referencia)
-					_set => JSON.stringify(_set) === JSON.stringify(newSet)
+					_set => {
+						const str1 = JSON.stringify(_set);
+						const str2 = JSON.stringify(newSet);
+						return str1 === str2;
+					}
 				);
 
 				// Obtenemos el índice del conjunto nuevo.
@@ -82,17 +86,17 @@ class LR1 {
 				}
 			}
 
-			// Filtramos los items que tienen reglas de la forma A -> B•.
+			// Filtramos los items que tienen reglas de la forma A -> B• y creamos una copia de ellos
+			// sin el punto.
 			const endItems: Item[] = set.filter(
 				item =>
 					Object.values(item.rule)[0].split(Misc.DOT)[1].length === 0
-			);
-
-			// Quitamos temporalmente el punto de ellas.
-			endItems.forEach(endItem => {
+			).map(item => {
+				const endItem = item.copy();
 				const leftSide: string = Object.keys(endItem.rule)[0];
 				const rightSide: string = Object.values(endItem.rule)[0];
 				endItem.rule[leftSide] = rightSide.split(Misc.DOT)[0];
+				return endItem;
 			});
 
 			// Iteramos a través de esos items para obtener las operaciones reduce "r"
