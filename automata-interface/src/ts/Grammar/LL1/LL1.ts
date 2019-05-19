@@ -15,7 +15,7 @@ enum Token {
 }
 class LL1 {
 	private G: Gramatica; //lista de reglas
-	private LL1Table: object;
+	private LL1Table: Object[];
 	public lexico: LexicAnalyzer;
 
 	constructor(G: Gramatica) {
@@ -85,7 +85,7 @@ class LL1 {
 			Objeto de objetos (tabla LL1).
 			Forma: table[NT o T o $][T o $] = [regla, indice de regla].
 		*/
-		const table = {};
+		const table = new Array();
 
 		// Arreglo para indexar reglas.
 		const rules: Node[] = [];
@@ -137,9 +137,9 @@ class LL1 {
 		}
 		// Se omiten las operaciones pop en esta implementación, recordando que
 		// table[s][s] = stack.pop() ; con s un terminal.
-
+		console.log("TABLA LL1: " + table)
 		return table;
-	};
+};
 
 	public readonly analyzeString = (input: string) => {
 		const stack = ["$"];

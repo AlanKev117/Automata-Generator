@@ -123,6 +123,7 @@ class LR1 {
 			// Ya registradas las operaciones en el renglón, lo anexamos a la tabla LR1.
 			this.LR1Table.push(row);
 		}
+		console.log("TABLA LR1: " + this.LR1Table);
 	};
 
 	/**

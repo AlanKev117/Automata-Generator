@@ -7,10 +7,15 @@ import Misc from "../../../ts/Misc/Misc";
 
 class Grammar extends Component {
 
+	
 	state = {
 		grammar: null,
 		grammarText: ""
 	};
+	constructor(){
+		super();
+		this.textArea = React.createRef();
+	}
 
 	createGrammar = () => {
 		const analyzer = new SyntaxAnalyzerGrammar(this.state.grammarText);
@@ -24,11 +29,35 @@ class Grammar extends Component {
 
 	grammarTextChanged = event => {
 		this.setState({ grammarText: event.target.value });
+		
 	};
 
 	addEpsilon = () => {
 		this.setState(prevState => {
 			prevState.grammarText += Misc.SAFE_EPSILON;
+			this.textArea.current.focus();
+			return prevState;
+		});
+
+	};
+	addPipeline = () => {
+		this.setState(prevState => {
+			prevState.grammarText += "|";
+			this.textArea.current.focus();
+			return prevState;
+		});
+	};
+	addArrow = () => {
+		this.setState(prevState => {
+			prevState.grammarText += "->";
+			this.textArea.current.focus();
+			return prevState;
+		});
+	};
+	addFinal = () => {
+		this.setState(prevState => {
+			prevState.grammarText += ";";
+			this.textArea.current.focus();
 			return prevState;
 		});
 	};
@@ -42,8 +71,13 @@ class Grammar extends Component {
 					grammarTextChanged={this.grammarTextChanged}
 					createGrammar={this.createGrammar}
 					addEpsilon={this.addEpsilon}
+					addPipeline={this.addPipeline}
+					addArrow={this.addArrow}
+					addFinal={this.addFinal}
 					textArea={this.textArea}
 				/>
+				<br/><br/>
+				{this.state.grammarText.length > 0?(<center><button onClick={this.createGrammar}>Crear Gramatica</button></center>):null}
 				<div style={{ textAlign: "center", margin: "30px" }}>
 					{this.state.grammar ? (
 						<GrammarOutput grammar={this.state.grammar} />

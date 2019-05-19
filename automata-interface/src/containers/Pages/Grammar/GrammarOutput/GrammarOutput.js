@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import classes from "./GrammarOutput.module.css";
 import { LR1 } from "../../../../ts/Grammar/LR1/LR1";
+import { LL1 } from "../../../../ts/Grammar/LL1/LL1";
 import ParserTable from "./ParserTable/ParserTable";
 
 const grammarOutput = props => {
@@ -48,6 +49,15 @@ const grammarOutput = props => {
 		});
 	};
 
+	const createLL1Parser = () => {
+		const newParser = new LL1(props.grammar);
+		console.log(newParser);
+		setParserState({
+			parser: newParser,
+			type: "LL1"
+		});
+	};
+
 	// Se recibe una gramática en props.grammar
 	const rules = props.grammar.rules;
 
@@ -68,7 +78,7 @@ const grammarOutput = props => {
 					}`}</div>
 				);
 			})}
-			<button>Crear Tabla LL(1)</button>
+			<button onClick={createLL1Parser}>Crear Tabla LL(1)</button>
 			<button>Crear Tabla LR(0)</button>
 			<button onClick={createLR1Parser}>Crear Tabla LR(1)</button>
 			{parserState.type ? (
@@ -79,6 +89,7 @@ const grammarOutput = props => {
 					/>
 				</div>
 			) : null}
+			
 		</div>
 	);
 };
