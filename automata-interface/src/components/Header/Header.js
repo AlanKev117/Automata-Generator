@@ -50,12 +50,12 @@ const header = props => (
                 </li>
                 <li>
                     <NavLink
-                        to="/LL1"
+                        to="/grammar"
                         activeStyle={{
                             color: "white"
                         }}
                     >
-                        LL1
+                        Grammar
                     </NavLink>
                 </li>
             </ul>

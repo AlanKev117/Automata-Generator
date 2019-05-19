@@ -5,10 +5,10 @@ import { Item } from "./Item";
 
 class LR1 {
 	// Gramática
-	private G: Gramatica;
+	public G: Gramatica;
 
 	// Tabla LR1
-	private LR1Table: object[];
+	public LR1Table: object[];
 
 	// Objeto con Object.keys:str[] y Object.values:str[][]
 	private rules: object;
@@ -18,10 +18,19 @@ class LR1 {
 
 	constructor(G: Gramatica) {
 		this.G = G;
-		this.augmentGrammar();
+		this.rules = null;
+		this.arrayRules = null;
+		this.LR1Table = null;
+		// this.augmentGrammar(); // Creo que no es necesario aumentar gramática.
 		this.mapRules();
 		this.createLR1Table();
 	}
+
+	// public initParser = () => {
+	// 	this.augmentGrammar();
+	// 	this.mapRules();
+	// 	this.createLR1Table();
+	// };
 
 	public readonly evaluate = (input: string) => {};
 
@@ -110,7 +119,6 @@ class LR1 {
 					row[terminal] = "r" + ruleIndex;
 				}
 			}
-
 
 			// Ya registradas las operaciones en el renglón, lo anexamos a la tabla LR1.
 			this.LR1Table.push(row);
@@ -205,7 +213,7 @@ class LR1 {
 		// Se agregan al conjunto resultado las reglas que se pasan como argumento.
 		// Tratamos al conjunto temporalmente como un arreglo para mayor rapidez
 		// en las operaciones de lectura y escritura.
-		const closure = [...rules];
+		const closure = rules.map(rule => rule.copy());
 
 		//Agregamos el resto de reglas según el contenido de closure.
 		for (let item of closure) {
@@ -349,7 +357,7 @@ class LR1 {
 			// Si el símbolo despues del simbolo es igual al simbolo que mandamos
 			if (afterDotSymbol == symbol) {
 				//metemos el item dentro del arreglo
-				items.push(regla);
+				items.push(regla.copy());
 			}
 		}
 		//ahora por cada item de nuestro conjunto de items
