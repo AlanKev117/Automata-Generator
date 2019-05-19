@@ -42,7 +42,6 @@ const grammarOutput = props => {
 	 */
 	const createLR1Parser = () => {
 		const newParser = new LR1(props.grammar);
-		console.log(newParser);
 		setParserState({
 			parser: newParser,
 			type: "LR1"
