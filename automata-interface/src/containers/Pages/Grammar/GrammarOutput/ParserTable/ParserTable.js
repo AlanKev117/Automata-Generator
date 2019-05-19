@@ -21,11 +21,11 @@ const parserTable = props => {
 					<tr>
 						<th>Estado</th>
 						{[...grammar.terminals].map(t => (
-							<th>{t}</th>
+							<th key={t}>{t}</th>
 						))}
 						<th>$</th>
 						{[...grammar.nonTerminals].map(nt => (
-							<th>{nt}</th>
+							<th key={nt}>{nt}</th>
 						))}
 					</tr>
 				</thead>
@@ -33,14 +33,14 @@ const parserTable = props => {
 				<tbody>
 					{props.parser.LR1Table.map((row, i) => {
 						return (
-							<tr>
+							<tr key={i}>
 								<td>{i}</td>
 								{[...grammar.terminals].map(t =>
-									row[t] ? <td>{row[t]}</td> : <td> </td>
+									<td key={i + " " + t}>{row[t] ? row[t] : " "}</td>
 								)}
 								<td>{row["$"] ? row["$"] : " "}</td>
 								{[...grammar.nonTerminals].map(nt =>
-									row[nt] ? <td>{row[nt]}</td> : <td> </td>
+									<td key={i + " " + nt}>{row[nt] ? row[nt] : " "}</td>
 								)}
 							</tr>
 						);
