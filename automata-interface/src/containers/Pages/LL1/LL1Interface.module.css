@@ -10,3 +10,41 @@
 .LL1 h1 {
     text-align: center;
 }
+
+
+.LL1 button {
+	background: #96d49b;
+	border: 1px solid #96d49b;
+	padding: 5px 15px;
+	border-radius: 4px;
+	font-size: 18px;
+}
+
+.LL1 button:hover {
+	color: white;
+	cursor: pointer;
+}
+
+.LL1 button:active {
+	background:#555;
+	border-color: #555;
+}
+
+.LL1 input {
+	width: 80%;
+	border: 1px solid grey;
+	border-radius: 3px;
+	padding: 3px;
+	font-size: 18px;
+	font-family: consolas;
+}
+
+.box {
+	background: #48beaf;
+	border-radius: 5px;
+	box-shadow: 3px 3px 3px gray;
+	padding: 20px;
+	width: 70%;
+	margin: initial auto;
+	justify-content: space-between;
+}
