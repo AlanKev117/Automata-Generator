@@ -21,14 +21,14 @@ class Grammar extends Component {
 		const analyzer = new SyntaxAnalyzerGrammar(this.state.grammarText);
 		let newGrammar = analyzer.solve("Gramática");
 		if (newGrammar !== null) {
-			this.setState({ grammar: newGrammar });
+			this.setState({ grammar: newGrammar});
 		} else {
 			alert("Error sintáctico al obtener gramática.");
 		}
 	};
 
 	grammarTextChanged = event => {
-		this.setState({ grammarText: event.target.value });	
+		this.setState({ grammarText: event.target.value, grammar: null});	
 	};
 
 	addEpsilon = () => {
@@ -79,7 +79,7 @@ class Grammar extends Component {
 				{this.state.grammarText.length > 0?(<center><button onClick={this.createGrammar}>Crear Gramatica</button></center>):null}
 				<div style={{ textAlign: "center", margin: "30px" }}>
 					{this.state.grammar ? (
-						<GrammarOutput grammar={this.state.grammar} />
+						<GrammarOutput grammar={this.state.grammar}/>
 					) : null}
 				</div>
 			</main>

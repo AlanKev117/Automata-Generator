@@ -15,15 +15,17 @@ const grammarOutput = props => {
 	const [parserState, setParserState] = useState(null);
 
 	// Se usa una variable para el arreglo de tokens
-	const tokens = terminals.map((t, i) => i);
+	const tokens = terminals.map((t, i) => i + 1);
 
 	// Se usa un state para el arreglo de expresiones regulares.
 	const [regExpsState, setRegExpsState] = useState([...terminals]);
 	// Se declaran funciones para actualizar las expresiones regulares.
 	const regExpsHandlers = terminals.map((t, i) => {
 		return event => {
-			regExpsState[i] = event.target.value;
-			setRegExpsState(regExpsState);
+			const copy = [...regExpsState];
+			copy[i] = event.target.value;
+			console.log("actualizado regex " + i);
+			setRegExpsState(copy);
 		};
 	});
 
@@ -75,11 +77,7 @@ const grammarOutput = props => {
 	};
 
 	const analyzeString = () => {
-		const valid = parserState.evaluate(
-			textInput,
-			tokens,
-			regExpsState
-		);
+		const valid = parserState.evaluate(textInput, tokens, regExpsState);
 		if (valid) {
 			alert("Cadena válida.");
 		} else {
@@ -107,20 +105,27 @@ const grammarOutput = props => {
 			<button onClick={createLL1Parser}>Crear Tabla LL(1)</button>
 			<button>Crear Tabla LR(0)</button>
 			<button onClick={createLR1Parser}>Crear Tabla LR(1)</button>
-			{parserState ? (
+			{parserState && !props.resetParser ? (
 				<div className={classes.TableContainer}>
 					<ParserTable parser={parserState} />
 					<div className={classes.RegExpInputsContainer}>
 						<h2>Expresiones regulares para cada terminal</h2>
-						<h3>Ingrese una reg-ex para determinar cómo será reconocido cada símbolo</h3>
+						<h3>
+							Ingrese una reg-ex para determinar cómo será
+							reconocido cada símbolo
+						</h3>
 						{terminals.map((t, i) => (
-							<label>t</label>,
-							<input
+							<div
 								key={"input-" + t}
-								type="text"
-								value={regExpsState[i]}
-								onChange={regExpsHandlers[i]}
-							/>
+								className={classes.RegExInput}
+							>
+								<label>{t} </label>
+								<input
+									type="text"
+									value={regExpsState[i]}
+									onChange={regExpsHandlers[i]}
+								/>
+							</div>
 						))}
 					</div>
 					<div>
