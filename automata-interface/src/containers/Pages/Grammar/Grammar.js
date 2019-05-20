@@ -28,8 +28,7 @@ class Grammar extends Component {
 	};
 
 	grammarTextChanged = event => {
-		this.setState({ grammarText: event.target.value });
-		
+		this.setState({ grammarText: event.target.value });	
 	};
 
 	addEpsilon = () => {
