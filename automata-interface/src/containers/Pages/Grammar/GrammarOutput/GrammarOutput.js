@@ -5,17 +5,33 @@ import { LL1 } from "../../../../ts/Grammar/LL1/LL1";
 import ParserTable from "./ParserTable/ParserTable";
 
 const grammarOutput = props => {
+	// Se recibe una gramática en props.grammar
+	const grammar = props.grammar;
+
+	// Arreglo muy usado: [...grammar.terminals]
+	const terminals = [...grammar.terminals];
+
 	// Se usa un state para el parser (del tipo que sea.)
 	const [parserState, setParserState] = useState(null);
 
-	// Se usa un state para el arreglo de tokens.
-	const [tokensState, setTokensState] = useState([]);
+	// Se usa una variable para el arreglo de tokens
+	const tokens = terminals.map((t, i) => i);
 
 	// Se usa un state para el arreglo de expresiones regulares.
-	const [regExpsState, setRegExpsState] = useState([]);
+	const [regExpsState, setRegExpsState] = useState([...terminals]);
+	// Se declaran funciones para actualizar las expresiones regulares.
+	const regExpsHandlers = terminals.map((t, i) => {
+		return event => {
+			regExpsState[i] = event.target.value;
+			setRegExpsState(regExpsState);
+		};
+	});
 
-	// Se recibe una gramática en props.grammar
-	const grammar = props.grammar;
+	// Se usa un estado para la entrada de la cadena a evaluar.
+	const [textInput, setTextInput] = useState("");
+	let grammarTextChangedHandler = event => {
+		setTextInput(event.target.value);
+	};
 
 	/**
 	 * // Obtiene un arreglo con las reglas de la gramática de las props.
@@ -23,14 +39,6 @@ const grammarOutput = props => {
 	 * @param {Node} rules
 	 * @returns {{leftSide: any; rightSide: string;}[]}
 	 */
-
-	const [textInput, setTextInput] = useState({
-		text: ""
-	});
-	let grammarTextChanged = event => {
-		setTextInput({ text: event.target.value });	
-	};
-	
 	const mapRulesToArray = rules => {
 		const arr = [];
 		for (let leftSide = rules; leftSide != null; leftSide = leftSide.down) {
@@ -67,11 +75,17 @@ const grammarOutput = props => {
 	};
 
 	const analyzeString = () => {
-		//alert(textInput.text);
-	}
-
-	// Se recibe una gramática en props.grammar
-	const rules = props.grammar.rules;
+		const valid = parserState.evaluate(
+			textInput,
+			tokens,
+			regExpsState
+		);
+		if (valid) {
+			alert("Cadena válida.");
+		} else {
+			alert("Cadena no válida.");
+		}
+	};
 
 	// Arreglo de reglas para mostrar en render (return).
 	const grammarRules = mapRulesToArray(grammar.rules);
@@ -94,18 +108,33 @@ const grammarOutput = props => {
 			<button>Crear Tabla LR(0)</button>
 			<button onClick={createLR1Parser}>Crear Tabla LR(1)</button>
 			{parserState ? (
-				<div style={{ textAlign: "center" }}>
-					<ParserTable
-						parser={parserState}
-					/>
+				<div className={classes.TableContainer}>
+					<ParserTable parser={parserState} />
+					<div className={classes.RegExpInputsContainer}>
+						<h2>Expresiones regulares para cada terminal</h2>
+						<h3>Ingrese una reg-ex para determinar cómo será reconocido cada símbolo</h3>
+						{terminals.map((t, i) => (
+							<label>t</label>,
+							<input
+								key={"input-" + t}
+								type="text"
+								value={regExpsState[i]}
+								onChange={regExpsHandlers[i]}
+							/>
+						))}
+					</div>
 					<div>
 						<h2>Analizador de cadenas</h2>
-                        <h3>Introduzca cadena:</h3><input type="text" name="stringLL1" onChange={grammarTextChanged}/>
-                        &nbsp;&nbsp;&nbsp;
-                        <button onClick={analyzeString}>
-                            Analizar
-                        </button>
-                    </div>
+						<h3>Introduzca cadena:</h3>
+						<input
+							type="text"
+							name="stringLL1"
+							onChange={grammarTextChangedHandler}
+							value={textInput}
+						/>
+						&nbsp;&nbsp;&nbsp;
+						<button onClick={analyzeString}>Analizar</button>
+					</div>
 				</div>
 			) : null}
 		</div>

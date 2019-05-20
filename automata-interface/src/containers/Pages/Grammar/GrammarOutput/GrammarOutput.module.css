@@ -34,3 +34,12 @@
 	background: #ad68bb;
 	cursor: pointer;
 }
+
+.TableContainer {
+	display: flex;
+	justify-content: space-around;
+}
+
+.RegExpInputsContainer {
+	
+}
