@@ -18,7 +18,7 @@ class SyntaxAnalyzerRegex {
 
     constructor(input: string) {
         const tokens = { ...Token };
-        const automata = this.createAutomataForLexic();
+		const automata = this.createAutomataForLexic();
         this.lexico = new LexicAnalyzer(
             automata,
             tokens,
@@ -166,7 +166,7 @@ class SyntaxAnalyzerRegex {
         if (this.G(val)) {
             return val;
         } else {
-            alert("Error sintáctico");
+            alert("Error sintáctico en expresión regular.");
             return null;
         }
     };

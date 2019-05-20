@@ -2,6 +2,8 @@ import Misc from "../../Misc/Misc";
 import { Gramatica } from "../Gramatica";
 import { Node } from "../Node";
 import { Item } from "./Item";
+import { LexicAnalyzer } from "../../LexicAnalyzer/LexicAnalyzer";
+import { SyntaxAnalyzerRegex } from "../../Regex/SyntaxAnalyzerRegex";
 
 class LR1 {
 	// Gramática
@@ -26,13 +28,109 @@ class LR1 {
 		this.createLR1Table();
 	}
 
-	// public initParser = () => {
-	// 	this.augmentGrammar();
-	// 	this.mapRules();
-	// 	this.createLR1Table();
-	// };
+	/**
+	 * Evalua si una cadena puede ser analizada por el analizador LR(1).
+	 * Requiere de un conjunto de tokens y expresiones regulares para hacer un analizador léxico.
+	 * 
+	 * @param {string} input es la entrada a analizar.
+	 * @param {number[]} tokens es el arreglo de tokens indexado igual que [...this.G.terminals]
+	 * @param {string[]} regExps es el arreglo de expresiones regulares indexado igual que [tokens].
+	 * 
+	 *
+	 * @memberof LR1
+	 */
+	public readonly evaluate = (
+		input: string,
+		tokens: number[],
+		regExps: string[]
+	) => {
+		// Creamos autómatas para el analizador léxico
+		const automata = regExps.map(regExp =>
+			new SyntaxAnalyzerRegex(regExp).solve(regExp)
+		);
+		automata.push(new SyntaxAnalyzerRegex("$").solve("$"));
+		// Nos cercioramos de que todas las expresiones fueron correctas
+		const errorIndex = automata.indexOf(null);
+		if (errorIndex !== -1) {
+			alert("Error en expresión regular " + regExps[errorIndex]);
+			return false;
+		}
 
-	public readonly evaluate = (input: string) => {};
+		// Creamos el objeto de tokens para el analizador léxico.
+		const _tokens = {};
+		tokens.forEach((token, i) => (_tokens[regExps[i]] = token));
+		_tokens["$"] = -2; // Valor -2 simboliza el token PESOS.
+
+		// Creamos el analizador léxico para analizar input (concatenando $).
+		const lexicAnalyzer = new LexicAnalyzer(
+			automata,
+			_tokens,
+			"Lexic LR1",
+			input + "$"
+		);
+
+		/**
+		 * Inicia el algoritmo de análizis de la cadena.
+		 */
+
+		// Creamos un mapa que nos dará los símbolos terminales de los tokens
+		// confiando que los tokens están igual indexados que los terminales.
+		const terminalOf = {};
+		[...this.G.terminals].forEach((t, i) => {
+			terminalOf[tokens[i]] = t;
+		});
+		terminalOf[-2] = "$";
+
+		// La pila es un arreglo para mayor eficiencia.
+		const stack: (number | string)[] = [0];
+		// La fila de la tabla por empezar es la 0.
+		let row = stack[stack.length - 1];
+		// Obtenemos el símbolo del primer token.
+		let symbol: string = terminalOf[lexicAnalyzer.getToken()];
+		// Obtenemos la primer operación de la tabla.
+		let op: string = this.LR1Table[row][symbol];
+
+		// Mientras haya alguna operación qué hacer en la tabla.
+		while (op) {
+			if (op.startsWith("s")) {
+				stack.push(symbol);
+				stack.push(+op[1]);
+				symbol = terminalOf[lexicAnalyzer.getToken()];
+			} else if (op.startsWith("r")) {
+				// Verificamos que sea la operación aceptar.
+				if (op === "r0") {
+					return true;
+				}
+				// Obtenemos el índice de la regla por la que se hace la reducción.
+				const ruleIndex = +op[1];
+				// Obtenemos la regla.
+				const rule = this.arrayRules[ruleIndex];
+				// Obtenemos el lado derecho de la regla.
+				const rightSide: string = Object.values(rule)[0];
+				// Hacemos 2 pop() en la pila por cada símbolo del lado derecho.
+				[...rightSide].forEach(() => {
+					stack.pop();
+					stack.pop();
+				});
+				// Obtenemos el último símbolo de la pila después de hacer esas operaciones.
+				const peekSymbol = stack[stack.length - 1];
+				// Obtenemos el lado izquierdo de la gramática.
+				const leftSide: string = Object.keys(rule)[0];
+				// Metemos el lado izquierdo en la pila
+				stack.push(leftSide);
+				// Metemos el símbolo de la tabla que corresponde al par de los dos últimos símbolos
+				// de la pila.
+				stack.push(this.LR1Table[peekSymbol][leftSide]);
+			}
+			// Siempre actualizamos la fila de la tabla en cada iteración.
+			row = stack[stack.length - 1];
+			// Así como la siguiente operación por hacer.
+			op = this.LR1Table[row][symbol];
+		}
+
+		// No hubo operación qué hacer para cierto par.
+		return false;
+	};
 
 	private readonly createLR1Table = () => {
 		// Declaración de la tabla (arreglo de objetos).
@@ -88,16 +186,19 @@ class LR1 {
 
 			// Filtramos los items que tienen reglas de la forma A -> B• y creamos una copia de ellos
 			// sin el punto.
-			const endItems: Item[] = set.filter(
-				item =>
-					Object.values(item.rule)[0].split(Misc.DOT)[1].length === 0
-			).map(item => {
-				const endItem = item.copy();
-				const leftSide: string = Object.keys(endItem.rule)[0];
-				const rightSide: string = Object.values(endItem.rule)[0];
-				endItem.rule[leftSide] = rightSide.split(Misc.DOT)[0];
-				return endItem;
-			});
+			const endItems: Item[] = set
+				.filter(
+					item =>
+						Object.values(item.rule)[0].split(Misc.DOT)[1]
+							.length === 0
+				)
+				.map(item => {
+					const endItem = item.copy();
+					const leftSide: string = Object.keys(endItem.rule)[0];
+					const rightSide: string = Object.values(endItem.rule)[0];
+					endItem.rule[leftSide] = rightSide.split(Misc.DOT)[0];
+					return endItem;
+				});
 
 			// Iteramos a través de esos items para obtener las operaciones reduce "r"
 			for (const endItem of endItems) {
