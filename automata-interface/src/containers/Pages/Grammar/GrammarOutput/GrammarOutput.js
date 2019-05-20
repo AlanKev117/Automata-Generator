@@ -23,6 +23,14 @@ const grammarOutput = props => {
 	 * @param {Node} rules
 	 * @returns {{leftSide: any; rightSide: string;}[]}
 	 */
+
+	const [textInput, setTextInput] = useState({
+		text: ""
+	});
+	let grammarTextChanged = event => {
+		setTextInput({ text: event.target.value });	
+	};
+	
 	const mapRulesToArray = rules => {
 		const arr = [];
 		for (let leftSide = rules; leftSide != null; leftSide = leftSide.down) {
@@ -58,6 +66,13 @@ const grammarOutput = props => {
 		setParserState(newParser);
 	};
 
+	const analyzeString = () => {
+		//alert(textInput.text);
+	}
+
+	// Se recibe una gramática en props.grammar
+	const rules = props.grammar.rules;
+
 	// Arreglo de reglas para mostrar en render (return).
 	const grammarRules = mapRulesToArray(grammar.rules);
 
@@ -80,8 +95,17 @@ const grammarOutput = props => {
 			<button onClick={createLR1Parser}>Crear Tabla LR(1)</button>
 			{parserState ? (
 				<div style={{ textAlign: "center" }}>
-					<ParserTable parser={parserState} />
-					{}
+					<ParserTable
+						parser={parserState}
+					/>
+					<div>
+						<h2>Analizador de cadenas</h2>
+                        <h3>Introduzca cadena:</h3><input type="text" name="stringLL1" onChange={grammarTextChanged}/>
+                        &nbsp;&nbsp;&nbsp;
+                        <button onClick={analyzeString}>
+                            Analizar
+                        </button>
+                    </div>
 				</div>
 			) : null}
 		</div>
