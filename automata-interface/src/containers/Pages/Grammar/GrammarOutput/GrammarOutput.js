@@ -117,9 +117,9 @@ const grammarOutput = props => {
 						{terminals.map((t, i) => (
 							<div
 								key={"input-" + t}
-								className={classes.RegExInput}
+								className={classes.RegExpInput}
 							>
-								<label>{t} </label>
+								<label>{t}: </label>
 								<input
 									type="text"
 									value={regExpsState[i]}

@@ -37,6 +37,7 @@
 
 .TableContainer {
 	display: flex;
+	align-items: flex-start;
 	justify-content: space-around;
 }
 
@@ -45,4 +46,22 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+}
+
+.RegExpInput input {
+	background: none;
+	border:none;
+	border-bottom: 1px solid black;
+	font-size: 2vh;
+	margin: 2px;
+	color: #4d2e16;
+}
+
+.RegExpInput label {
+	font-size: 2vh;
+}
+
+.RegExpInput input:focus {
+	outline: 0;
+	border-bottom: 1px solid white;
 }
