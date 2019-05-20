@@ -46,22 +46,33 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+
+	padding: 0 30px 30px 30px;
 }
 
 .RegExpInput input {
 	background: none;
 	border:none;
 	border-bottom: 1px solid black;
-	font-size: 2vh;
+	font-size: 2.5vh;
 	margin: 2px;
 	color: #4d2e16;
 }
 
 .RegExpInput label {
-	font-size: 2vh;
+	font-size: 2.5vh;
 }
 
-.RegExpInput input:focus {
+.StringInput input {
+	background: none;
+	border: none;
+	border-bottom: 1px solid black;
+	font-size: 2.5vh;
+	margin: 2px;
+}
+
+.RegExpInput input:focus,
+.StringInput input:focus {
 	outline: 0;
 	border-bottom: 1px solid white;
 }

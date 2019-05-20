@@ -105,7 +105,7 @@ const grammarOutput = props => {
 			<button onClick={createLL1Parser}>Crear Tabla LL(1)</button>
 			<button>Crear Tabla LR(0)</button>
 			<button onClick={createLR1Parser}>Crear Tabla LR(1)</button>
-			{parserState && !props.resetParser ? (
+			{parserState ? (
 				<div className={classes.TableContainer}>
 					<ParserTable parser={parserState} />
 					<div className={classes.RegExpInputsContainer}>
@@ -128,7 +128,7 @@ const grammarOutput = props => {
 							</div>
 						))}
 					</div>
-					<div>
+					<div className={classes.StringInput}>
 						<h2>Analizador de cadenas</h2>
 						<h3>Introduzca cadena:</h3>
 						<input
