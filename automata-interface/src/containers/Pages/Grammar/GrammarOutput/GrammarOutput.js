@@ -5,6 +5,18 @@ import { LL1 } from "../../../../ts/Grammar/LL1/LL1";
 import ParserTable from "./ParserTable/ParserTable";
 
 const grammarOutput = props => {
+	// Se usa un state para el parser (del tipo que sea.)
+	const [parserState, setParserState] = useState(null);
+
+	// Se usa un state para el arreglo de tokens.
+	const [tokensState, setTokensState] = useState([]);
+
+	// Se usa un state para el arreglo de expresiones regulares.
+	const [regExpsState, setRegExpsState] = useState([]);
+
+	// Se recibe una gramática en props.grammar
+	const grammar = props.grammar;
+
 	/**
 	 * // Obtiene un arreglo con las reglas de la gramática de las props.
 	 *
@@ -30,38 +42,24 @@ const grammarOutput = props => {
 		return arr;
 	};
 
-	// Se usa un state para el parser (del tipo que sea.)
-	const [parserState, setParserState] = useState({
-		parser: null,
-		type: null
-	});
-
 	/**
 	 * Establece en parserState un parser LR1
 	 *
 	 */
 	const createLR1Parser = () => {
 		const newParser = new LR1(props.grammar);
-		setParserState({
-			parser: newParser,
-			type: "LR1"
-		});
+		console.log(newParser);
+		setParserState(newParser);
 	};
 
 	const createLL1Parser = () => {
 		const newParser = new LL1(props.grammar);
 		console.log(newParser);
-		setParserState({
-			parser: newParser,
-			type: "LL1"
-		});
+		setParserState(newParser);
 	};
 
-	// Se recibe una gramática en props.grammar
-	const rules = props.grammar.rules;
-
 	// Arreglo de reglas para mostrar en render (return).
-	const grammarRules = mapRulesToArray(rules);
+	const grammarRules = mapRulesToArray(grammar.rules);
 
 	return (
 		<div className={classes.GrammarOutput}>
@@ -80,15 +78,12 @@ const grammarOutput = props => {
 			<button onClick={createLL1Parser}>Crear Tabla LL(1)</button>
 			<button>Crear Tabla LR(0)</button>
 			<button onClick={createLR1Parser}>Crear Tabla LR(1)</button>
-			{parserState.type ? (
+			{parserState ? (
 				<div style={{ textAlign: "center" }}>
-					<ParserTable
-						parserType={parserState.type}
-						parser={parserState.parser}
-					/>
+					<ParserTable parser={parserState} />
+					{}
 				</div>
 			) : null}
-			
 		</div>
 	);
 };

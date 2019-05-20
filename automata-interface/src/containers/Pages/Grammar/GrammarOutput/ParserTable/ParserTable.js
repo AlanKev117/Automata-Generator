@@ -1,9 +1,11 @@
 import React from "react";
 import classes from "./ParserTable.module.css";
+import { LR1 } from "../../../../../ts/Grammar/LR1/LR1";
+import { LL1 } from "../../../../../ts/Grammar/LL1/LL1";
 
 const parserTable = props => {
 	const grammar = props.parser.G;
-	if (props.parserType === "LR1") {
+	if (props.parser instanceof LR1) {
 		return (
 			<table className={classes.ParserTable}>
 				<thead>
@@ -86,7 +88,7 @@ const parserTable = props => {
 			</table>
 		);
 	}
-	if (props.parserType === "LL1") {
+	else if (props.parser instanceof LL1) {
 		return (
 			<table className={classes.ParserTable}>
 				<thead>
@@ -132,6 +134,7 @@ const parserTable = props => {
 			</table>
 		);
 	}
+	// else if (props.parser instanceof LR0) {}
 };
 
 export default parserTable;
