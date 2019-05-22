@@ -112,11 +112,15 @@ class LR0{
 
 				for (const terminal of this.G.terminals ) {
 					// Si ya ha sido definida una operación shift en la casilla, se detiene el procedimiento.
-					if (row[terminal]) {
-						console.log("La gramatica no es LR0");
-						this.LR0Table = null;
+                    
+                    if (row[terminal]) {
+                        alert("La gramática no es LR0 \n" 
+                        + "Introduzca una gramática no ambigua \n" 
+                        + "y no recursiva por la izquierda");
+						this.LR0Table = [];
 						return;
-					}
+                    }
+                    
 
 					// Se registra la operación reduce con el índice de la regla por
 					// la que se lleva a cabo.
@@ -131,7 +135,7 @@ class LR0{
         for(let i = 0; i < S.length; i++){
             console.log("Estado [" + i + "] = " + JSON.stringify(S[i]));
         }
-		console.log("TABLA LR1: " + this.LR0Table);
+        console.log("TABLA LR1: " + this.LR0Table);
     };
 
     public readonly evaluate = (

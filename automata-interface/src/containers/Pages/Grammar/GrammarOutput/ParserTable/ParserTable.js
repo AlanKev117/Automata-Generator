@@ -163,7 +163,7 @@ const parserTable = props => {
 				</thead>
 
 				<tbody>
-					{props.parser.LR0Table.map((row, i) => {
+					{ props.parser.LR0Table.map((row, i) => {
 						let pesosOpClass = "";
 						let pesosOp = " ";
 						if (row["$"]) {
