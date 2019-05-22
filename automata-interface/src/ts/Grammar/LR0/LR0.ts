@@ -154,6 +154,7 @@ class LR0{
 			alert("Error en expresión regular " + regExps[errorIndex]);
 			return false;
         }
+        input += Misc.PESOS;
         alert(input);
 
 		// Creamos el objeto de tokens para el analizador léxico.
