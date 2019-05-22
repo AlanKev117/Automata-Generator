@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import classes from "./GrammarOutput.module.css";
 import { LR1 } from "../../../../ts/Grammar/LR1/LR1";
+import { LR0 } from "../../../../ts/Grammar/LR0/LR0";
 import { LL1 } from "../../../../ts/Grammar/LL1/LL1";
 import ParserTable from "./ParserTable/ParserTable";
 
@@ -70,6 +71,12 @@ const grammarOutput = props => {
 		setParserState(newParser);
 	};
 
+	const createLR0Parser = () => {
+		const newParser = new LR0(props.grammar);
+		console.log(newParser);
+		setParserState(newParser);
+	}
+
 	const createLL1Parser = () => {
 		const newParser = new LL1(props.grammar);
 		console.log(newParser);
@@ -103,7 +110,7 @@ const grammarOutput = props => {
 				);
 			})}
 			<button onClick={createLL1Parser}>Crear Tabla LL(1)</button>
-			<button>Crear Tabla LR(0)</button>
+			<button onClick={createLR0Parser}>Crear Tabla LR(0)</button>
 			<button onClick={createLR1Parser}>Crear Tabla LR(1)</button>
 			{parserState ? (
 				<div className={classes.TableContainer}>
