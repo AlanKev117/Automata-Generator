@@ -33,7 +33,11 @@ class Regex extends Component {
 			if (names.indexOf(regex) > -1) {
 				return alert("Este autómata ya ha sido creado.");
 			}
-			const automaton = Misc.afnToAfd(an.solve(regex));
+			const primitiveAuto = an.solve(regex);
+			if (primitiveAuto === null) {
+				return;
+			}
+			const automaton = Misc.afnToAfd(primitiveAuto);
 			if (automaton !== null) {
 				this.state.automata.push(automaton);
 				this.setState({

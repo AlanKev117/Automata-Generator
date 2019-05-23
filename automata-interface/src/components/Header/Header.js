@@ -1,66 +1,28 @@
-import React from "react";
-import classes from "./Header.module.css";
-import { NavLink } from "react-router-dom";
+import React, {useState} from "react";
 
-const header = props => (
+import classes from "./Header.module.css";
+import NavItems from "../Header/NavItems/NavItems";
+
+import SideMenuButton from "../Header/SideMenu/SideMenuButton/SideMenuButton";
+import SideMenu from "../Header/SideMenu/SideMenu";
+
+const header = props => {
+    const [displaySideMenu, setDisplaySideMenu] = useState(false);
+
+    const displaySideMenuHandler = () => {
+        const display = displaySideMenu;
+        setDisplaySideMenu(!display);
+    };
+    
+    return (
     <header className={classes.Header}>
         <div className={classes.Brand}>Automatón</div>
-        <nav className={classes.Menu}>
-            <ul>
-                <li>
-                    <NavLink
-                        to="/"
-                        exact
-                        activeStyle={{
-                            color: "white"
-                        }}
-                    >
-                        Constructor
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink
-                        to="/lexic"
-                        activeStyle={{
-                            color: "white"
-                        }}
-                    >
-                        Analizador Léxico
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink
-                        to="/calculator"
-                        activeStyle={{
-                            color: "white"
-                        }}
-                    >
-                        Calculadora
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink
-                        to="/regex"
-                        activeStyle={{
-                            color: "white"
-                        }}
-                    >
-                        RegEx
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink
-                        to="/grammar"
-                        activeStyle={{
-                            color: "white"
-                        }}
-                    >
-                        Grammar
-                    </NavLink>
-                </li>
-            </ul>
-        </nav>
-    </header>
-);
+        <div className={classes.DefaultNavItems}>
+            <NavItems />
+        </div>
+        <SideMenuButton showMenu={displaySideMenuHandler}/>
+        <SideMenu display={displaySideMenu}/>
+    </header>)
+};
 
 export default header;

@@ -13,24 +13,16 @@ const grammarInput = props => {
                     id="textAreaLL1"
                     ref={props.textArea}
                     value={props.grammarText}
-					onChange={props.grammarTextChanged}
+                    onChange={props.grammarTextChanged}
                 />
                 {props.grammarText.length > 0 ? (
-                    <div>
-                        <div>
-                            <button onClick={props.addEpsilon}>{epsilon}</button>
-                            &nbsp;
-                            <button onClick={props.addPipeline}>|</button>
-                            <br/><br/>
-                        </div>
-                        <div>
-                            <button onClick={props.addArrow}>→</button>
-                            &nbsp;
-                            <button onClick={props.addFinal}>;</button>
-                        </div>
+                    <div className={classes.ButtonArea}>
+                        <button onClick={props.addEpsilon}>{epsilon}</button>
+                        <button onClick={props.addPipeline}>|</button>
+                        <button onClick={props.addArrow}>→</button>
+                        <button onClick={props.addFinal}>;</button>
                     </div>
                 ) : null}
-                
             </div>
         </div>
     );

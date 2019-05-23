@@ -208,7 +208,7 @@ const parserTable = props => {
 								</td>
 								{[...grammar.nonTerminals].map(nt => (
 									<td key={i + " " + nt}>
-										{(row[nt] && nt != grammar.startSymbol) ? row[nt] : " "}
+										{(row[nt] && nt !== grammar.startSymbol) ? row[nt] : " "}
 									</td>
 								))}
 							</tr>
