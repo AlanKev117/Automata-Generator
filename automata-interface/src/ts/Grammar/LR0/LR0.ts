@@ -9,7 +9,7 @@ class LR0{
     	// Gramática
 	public G: Gramatica;
 
-	// Tabla LR1
+	// Tabla LR0
 	public LR0Table: object[];
 
 	// Objeto con Object.keys:str[] y Object.values:str[][]
@@ -166,18 +166,16 @@ class LR0{
 		const lexicAnalyzer = new LexicAnalyzer(
 			automata,
 			_tokens,
-			"Lexic LR1",
+			"Lexic LR0",
 			input + "$"
         );
-        // Creamos un mapa que nos dará los símbolos terminales de los tokens
-		// confiando que los tokens están igual indexados que los terminales.
-        /*
+
         const terminalOf = {};
 		[...this.G.terminals].forEach((t, i) => {
 			terminalOf[tokens[i]] = t;
 		});
 		terminalOf[-2] = "$";
-        */
+
 		// La pila es un arreglo para mayor eficiencia.
 		const stack: (number | string)[] = [0];
 		// La fila de la tabla por empezar es la 0.
@@ -185,15 +183,17 @@ class LR0{
 		// Obtenemos el símbolo del primer token.
         //let symbol: string = terminalOf[lexicAnalyzer.getToken()];
         let index: number = 0;
-        let symbol: string = input[index];
-        console.log("Entrada = "+ symbol)
+		let symbol: string = input[index];
+		console.log(input);
+        console.log("Entrada = " + symbol)
 		// Obtenemos la primer operación de la tabla.
-        let op: string = this.LR0Table[row][symbol];
+		let op: string = this.LR0Table[row][symbol];
+		
         console.log("Pila: " + stack);
         while (op) {
 			if (op.startsWith("s")) {
 				stack.push(symbol);
-                stack.push(+op[1]);
+                stack.push(+(parseInt(op.split("s")[1])));
                 console.log("Pila: " + stack);
                 //symbol = terminalOf[lexicAnalyzer.getToken()];
                 index++;
@@ -205,7 +205,7 @@ class LR0{
 					return true;
 				}
 				// Obtenemos el índice de la regla por la que se hace la reducción.
-				const ruleIndex = +op[1];
+				const ruleIndex = +(parseInt(op.split("r")[1]));
 				// Obtenemos la regla.
 				const rule = this.arrayRules[ruleIndex];
 				// Obtenemos el lado derecho de la regla.
@@ -215,7 +215,6 @@ class LR0{
 					stack.pop();
 					stack.pop();
                 });
-                console.log("Pila: " + stack);
 				// Obtenemos el último símbolo de la pila después de hacer esas operaciones.
 				const peekSymbol = stack[stack.length - 1];
 				// Obtenemos el lado izquierdo de la gramática.
@@ -224,6 +223,9 @@ class LR0{
 				stack.push(leftSide);
 				// Metemos el símbolo de la tabla que corresponde al par de los dos últimos símbolos
 				// de la pila.
+                console.log(this.LR0Table);
+                console.log(peekSymbol);
+                console.log(this.LR0Table[peekSymbol]);
                 stack.push(this.LR0Table[peekSymbol][leftSide]);
                 console.log("Pila: " + stack);
 			}
