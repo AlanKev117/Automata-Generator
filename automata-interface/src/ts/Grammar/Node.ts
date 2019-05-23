@@ -8,6 +8,14 @@ class Node {
         this.right = null;
         this.down = null;
     }
+
+    public toString = () => {
+        let s = "";
+        for (let node = <Node>this; node !== null; node = node.right ) {
+            s += node.symbol;
+        }
+        return s;
+    };
 }
 
 

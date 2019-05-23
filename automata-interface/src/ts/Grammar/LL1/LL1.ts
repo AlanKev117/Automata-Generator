@@ -6,7 +6,7 @@ import { Automaton } from "../../Automaton/Automaton";
 import { SyntaxAnalyzerRegex } from "../../Regex/SyntaxAnalyzerRegex";
 class LL1 {
     private G: Gramatica; //lista de reglas
-    private LL1Table: Object[];
+    public LL1Table: Object;
     public lexico: LexicAnalyzer;
 
     constructor(G: Gramatica) {
@@ -27,7 +27,6 @@ class LL1 {
         tokens: number[],
         regExps: string[]
     ) => {
-
         // Creamos autómatas para el analizador léxico
         const automata = regExps.map(regExp =>
             new SyntaxAnalyzerRegex(regExp).solve(regExp)
@@ -76,6 +75,8 @@ class LL1 {
         let op: string = this.LL1Table[row][column];
 
         while (op) {
+            // Obtenemos la cadena de la regla.
+            op = op[0].toString();
             // Verificamos si se trata de operación pop().
             if (row === column) {
                 // Verificamos si es la operación aceptar.
@@ -90,7 +91,7 @@ class LL1 {
                 // Hacemos pop en la pila
                 stack.pop();
                 // Agregamos
-                const rule = op[0];
+                const rule = op;
                 [...rule].reverse().forEach(symbol => {
                     if (symbol !== Misc.SAFE_EPSILON) {
                         stack.push(symbol);
@@ -170,7 +171,7 @@ class LL1 {
 			Objeto de objetos (tabla LL1).
 			Forma: table[NT o T o $][T o $] = [regla, indice de regla].
 		*/
-        const table = new Array();
+        const table = {};
 
         // Arreglo para indexar reglas.
         const rules: Node[] = [];
@@ -220,8 +221,14 @@ class LL1 {
                 });
             }
         }
-        // Se omiten las operaciones pop en esta implementación, recordando que
-        // table[s][s] = stack.pop() ; con s un terminal.
+
+        // Se registran las operaciones pop en esta implementación, recordando que
+        // table[t][t] = stack.pop() ; con t un terminal.
+        [...this.G.terminals].concat("$").forEach(t => {
+            table[t] = {};
+            table[t][t] = ["pop", " "];
+        });
+        
         console.log("TABLA LL1: " + table);
         return table;
     };
