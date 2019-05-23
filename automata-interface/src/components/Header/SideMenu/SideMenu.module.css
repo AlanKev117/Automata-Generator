@@ -1,0 +1,10 @@
+.SideMenu {
+    background: #57849e;
+    display: inline-block;
+}
+
+@media only screen and (min-width: 1000px) {
+    .SideMenu {
+        display: none;
+    }
+}

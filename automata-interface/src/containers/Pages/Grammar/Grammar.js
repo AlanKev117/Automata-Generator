@@ -20,6 +20,10 @@ class Grammar extends Component {
 	createGrammar = () => {
 		const analyzer = new SyntaxAnalyzerGrammar(this.state.grammarText);
 		let newGrammar = analyzer.solve("Gramática");
+		if (newGrammar === null) {
+			alert("Error sintáctico en la gramática.");
+			return;
+		}
 		newGrammar.terminals = new Set([...newGrammar.terminals].filter(t => t !== Misc.SAFE_EPSILON));
 		if (newGrammar !== null) {
 			this.setState({ grammar: newGrammar});

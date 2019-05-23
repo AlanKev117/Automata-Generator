@@ -1,0 +1,42 @@
+.NavItems {
+    display: inline-block;
+    padding: 0;
+    margin: 0 15px;
+    font-size: 18px;
+    text-align: right;
+    width: calc(100% - 180px);
+}
+
+.NavItems ul {
+    list-style: none;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.NavItems li {
+    display: inline-block;
+    padding: 10px;
+}
+
+.NavItems li:hover {
+    background-color: #3cb8ff;
+}
+
+.NavItems a {
+    text-decoration: none;
+    color: black;
+}
+
+.NavItems a:hover,
+.NavItems a:active,
+.NavItems a.active {
+    text-decoration: underline;
+    color: white;
+}
+
+@media only screen and (max-width: 1000px) {
+    .NavItems li {
+        display: block;
+    }
+}

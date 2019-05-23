@@ -10,6 +10,7 @@
 .GrammarInput .FlexContainer {
 	display: flex;
 	justify-content: space-between;
+	flex-wrap: wrap;
 }
 
 .GrammarInput h2 {
@@ -17,12 +18,13 @@
 }
 
 .GrammarInput textarea {
-	width: 80%;
+	width: 100%;
 	border: 1px solid grey;
 	border-radius: 3px;
 	padding: 3px;
 	font-size: 18px;
 	font-family: consolas;
+	margin: 10px 0;
 }
 
 .GrammarInput button {
@@ -50,4 +52,15 @@
 	padding: 3px;
 	font-size: 18px;
 	font-family: consolas;
+}
+
+.ButtonArea {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.ButtonArea > button {
+	width: 20%;
 }

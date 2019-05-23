@@ -155,7 +155,7 @@ class LR0{
 			return false;
         }
         input += Misc.PESOS;
-        alert(input);
+        // alert(input);
 
 		// Creamos el objeto de tokens para el analizador léxico.
 		const _tokens = {};

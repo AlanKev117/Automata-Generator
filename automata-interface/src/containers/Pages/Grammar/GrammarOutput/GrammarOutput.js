@@ -118,8 +118,7 @@ const grammarOutput = props => {
 					<div className={classes.RegExpInputsContainer}>
 						<h2>Expresiones regulares para cada terminal</h2>
 						<h3>
-							Ingrese una reg-ex para determinar cómo será
-							reconocido cada símbolo
+							Asigne expresiones regulares a los símbolos terminales
 						</h3>
 						{terminals.map((t, i) => (
 							<div
