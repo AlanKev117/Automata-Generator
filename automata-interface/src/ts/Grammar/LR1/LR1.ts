@@ -80,7 +80,8 @@ class LR1 {
 			terminalOf[tokens[i]] = t;
 		});
 		terminalOf[-2] = "$";
-
+		console.log(terminalOf);
+		
 		// La pila es un arreglo para mayor eficiencia.
 		const stack: (number | string)[] = [0];
 		// La fila de la tabla por empezar es la 0.
@@ -94,7 +95,7 @@ class LR1 {
 		while (op) {
 			if (op.startsWith("s")) {
 				stack.push(symbol);
-				stack.push(+op[1]);
+				stack.push(+(parseInt(op.split("s")[1])));
 				symbol = terminalOf[lexicAnalyzer.getToken()];
 			} else if (op.startsWith("r")) {
 				// Verificamos que sea la operación aceptar.
@@ -102,7 +103,7 @@ class LR1 {
 					return true;
 				}
 				// Obtenemos el índice de la regla por la que se hace la reducción.
-				const ruleIndex = +op[1];
+				const ruleIndex = +(parseInt(op.split("r")[1]));
 				// Obtenemos la regla.
 				const rule = this.arrayRules[ruleIndex];
 				// Obtenemos el lado derecho de la regla.
