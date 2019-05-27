@@ -1,6 +1,8 @@
 .SideMenu {
-    background: #57849e;
-    display: inline-block;
+    background: rgba(120, 139, 150, 0.63);
+    display: block;
+    z-index: 200;
+    width: 100%;
 }
 
 @media only screen and (min-width: 1000px) {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-	baseURL: "https://automata-generator.firebaseio.com/"
+	baseURL: "192.168.10.5:4000"
 });
 
 export default instance;

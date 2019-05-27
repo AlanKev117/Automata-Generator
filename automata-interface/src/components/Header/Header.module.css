@@ -6,23 +6,30 @@
     background-color: #57849e;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .Brand {
-    display: inline-block;
-    padding: 0;
-    margin: 0 15px;
+    padding: 10px;
     font-size: 20px;
     font-weight: bold;
+    display: inline-block;
 }
 
 .DefaultNavItems {
-    display: none;
+    display: inline-block;
+}
+
+.NavigationMenu {
+    display: inline-block;
 }
 
 /*===================================*/
-@media only screen and (min-width: 1000px) {
+@media only screen and (max-width: 1000px) {
     .DefaultNavItems {
-        display: inline;
+        display: none;
     }
 }

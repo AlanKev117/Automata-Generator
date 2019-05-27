@@ -8,10 +8,16 @@ import Lexic from "./containers/Pages/Lexic/Lexic";
 import Calculator from "./containers/Pages/Calculator/Calculator";
 import Regex from "./containers/Pages/Regex/Regex";
 import Grammar from "./containers/Pages/Grammar/Grammar";
+// import Axios from "axios";
 
 class App extends Component {
     automata = [];
     analyzers = [];
+
+    // componentDidMount () {
+    //     Axios.get("192.168.10.5:4000/automatas").then(res => console.log(res.data));
+    // }
+
     render() {
         return (
             <Auxiliary>

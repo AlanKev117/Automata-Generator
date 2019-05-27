@@ -9,7 +9,7 @@ class LexicAnalyzer {
 
     // Atributos de estado.
     private i: number;
-    private lastLexemIndex: number;
+    public lastLexemIndex: number;
     private indexStack: number[];
 
     constructor(

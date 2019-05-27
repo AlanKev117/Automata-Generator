@@ -6,7 +6,7 @@ import classes from "./NavItems.module.css";
 const navItems = props => {
     return (
         <nav className={classes.NavItems}>
-            <ul>
+            <ul className={classes.LinkContainer}>
                 <li>
                     <NavLink
                         to="/"

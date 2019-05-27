@@ -65,7 +65,7 @@
 }
 
 .StringInput input {
-	background: none;
+	background: initial;
 	border: none;
 	border-bottom: 1px solid black;
 	font-size: 2.5vh;

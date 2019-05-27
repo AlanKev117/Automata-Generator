@@ -1,21 +1,14 @@
 .SideMenuButton {
-    display: inline-block;
-    padding: 0;
-    margin: 6px 15px;
-    font-size: 18px;
-    text-align: right;
-    width: calc(100% - 180px);
-    box-sizing: border-box;
-    max-height: 44px;
+    margin: 10px;
 }
 
 .SideMenuButton button {
+    padding: 0px 15px;
     background: #2b7aaf;
-    padding: auto 15px;
     border: none;
     box-shadow: 1px 1px 3px black;
     border-radius: 4px;
-    font-size: 24px;
+    font-size: 30px;
 
 }
 

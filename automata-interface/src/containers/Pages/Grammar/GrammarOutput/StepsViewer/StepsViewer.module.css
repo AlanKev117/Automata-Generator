@@ -1,9 +1,9 @@
-.ParserTable {
-	font-size: 2.4vh;
+.StepsViewer {
+    font-size: 2.5vh;
 	border-collapse: collapse;
 	background: #e0e0e0;
 	display: inline-block;
-	margin: 10px;
+    margin: 10px;
 }
 
 th,

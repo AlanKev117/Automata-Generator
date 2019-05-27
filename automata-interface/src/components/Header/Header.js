@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 import classes from "./Header.module.css";
 import NavItems from "../Header/NavItems/NavItems";
@@ -13,16 +13,19 @@ const header = props => {
         const display = displaySideMenu;
         setDisplaySideMenu(!display);
     };
-    
+
     return (
-    <header className={classes.Header}>
-        <div className={classes.Brand}>Automatón</div>
-        <div className={classes.DefaultNavItems}>
-            <NavItems />
-        </div>
-        <SideMenuButton showMenu={displaySideMenuHandler}/>
-        <SideMenu display={displaySideMenu}/>
-    </header>)
+        <header className={classes.Header}>
+            <div className={classes.Brand}>Automatón</div>
+            <div className={classes.NavigationMenu}>
+                <div className={classes.DefaultNavItems}>
+                    <NavItems />
+                </div>
+                <SideMenuButton showMenu={displaySideMenuHandler} />
+            </div>
+            <SideMenu display={displaySideMenu} />
+        </header>
+    );
 };
 
 export default header;

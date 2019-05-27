@@ -2,3 +2,5 @@ LR1
 e->E;E->E+T|T;T->T*F|F;F->(E)|n;
 LL1
 e->tE;E->+tE|-tE|ϵ;t->fT;T->*fT|/fT|ϵ;f->(e)|n;
+
+[0-9]+&(.&[0-9]+)?

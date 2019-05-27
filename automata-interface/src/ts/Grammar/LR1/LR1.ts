@@ -18,6 +18,9 @@ class LR1 {
 	// Arreglo con objetos con una sola regla de la forma {rightSide: leftSide}
 	private arrayRules: object[];
 
+	// Datos sobre el último análisis.
+	public analysis = {};
+
 	constructor(G: Gramatica) {
 		this.G = G;
 		this.rules = null;
@@ -44,6 +47,13 @@ class LR1 {
 		tokens: number[],
 		regExps: string[]
 	) => {
+		// Reseteamos el último análisis.
+		this.analysis = {
+			"stacks": [],
+			"sigmas": [],
+			"actions": []
+		};
+
 		// Creamos autómatas para el analizador léxico
 		const automata = regExps.map(regExp =>
 			new SyntaxAnalyzerRegex(regExp).solve(regExp)
@@ -80,7 +90,9 @@ class LR1 {
 			terminalOf[tokens[i]] = t;
 		});
 		terminalOf[-2] = "$";
-		console.log(terminalOf);
+
+		// Declaramos un apuntador a la posición del índice de la entrada.
+		let i = 0;
 		
 		// La pila es un arreglo para mayor eficiencia.
 		const stack: (number | string)[] = [0];
@@ -93,6 +105,9 @@ class LR1 {
 
 		// Mientras haya alguna operación qué hacer en la tabla.
 		while (op) {
+			this.analysis["stacks"].push([...stack]);
+			this.analysis["sigmas"].push(input.slice(lexicAnalyzer.lastLexemIndex - 1) + "$");
+			this.analysis["actions"].push(op);
 			if (op.startsWith("s")) {
 				stack.push(symbol);
 				stack.push(+(parseInt(op.split("s")[1])));
