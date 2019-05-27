@@ -110,28 +110,28 @@ class LR0{
 					)
 				);
 				//let terminalsFinal = new Array();
-				this.first("E");
-				for (const terminal of endItem.terminals ) {
+				//this.first("E");
+				for (const terminal of this.G.terminals ) {
 					// Si ya ha sido definida una operación shift en la casilla, se detiene el procedimiento.
 					
-					for(const item of terminal){
+					//for(const item of terminal){
 						//if(item != Misc.PESOS) console.log("FOLLOW(" + item + ") = " + this.follow(item));
 						//console.log("FOLLOW(T)= " + this.follow("T"));
 						//terminalsFinal.push(this.follow(item));
-					}
+					//}
 					//console.log("FOLLOW: " + terminalsFinal);	
-                    if (row[terminal]) {
-                        alert("La gramática no es LR0 \n" 
-                        + "Introduzca una gramática no ambigua \n" 
-                        + "y no recursiva por la izquierda");
-						this.LR0Table = [];
-						return;
-                    }
+                   // if (row[terminal]) {
+                        //alert("La gramática no es LR0 \n" 
+                        //+ "Introduzca una gramática no ambigua \n" 
+                        //+ "y no recursiva por la izquierda");
+						//this.LR0Table = [];
+						//return;
+                    //}
                     
 
 					// Se registra la operación reduce con el índice de la regla por
 					// la que se lleva a cabo.
-                    if(ruleIndex != 0) row[terminal] = "r" + ruleIndex;
+                    if(ruleIndex != 0 && !row[terminal]) row[terminal] = "r" + ruleIndex;
                     row[Misc.PESOS] = "r" + ruleIndex;
 				}
 			}
