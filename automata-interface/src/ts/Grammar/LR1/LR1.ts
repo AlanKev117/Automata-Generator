@@ -26,7 +26,7 @@ class LR1 {
 		this.rules = null;
 		this.arrayRules = null;
 		this.LR1Table = null;
-		// this.augmentGrammar(); // Creo que no es necesario aumentar gramática.
+		this.augmentGrammar(); // Creo que no es necesario aumentar gramática.
 		this.mapRules();
 		this.createLR1Table();
 	}

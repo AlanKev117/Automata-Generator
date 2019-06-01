@@ -38,6 +38,8 @@ const grammarOutput = props => {
     const [textInput, setTextInput] = useState("");
     let grammarTextChangedHandler = event => {
         setTextInput(event.target.value);
+        setShowSteps(false);
+        //setParserState(null);
     };
 
     /**
@@ -90,7 +92,8 @@ const grammarOutput = props => {
     const analyzeString = () => {
         const valid = parserState.evaluate(textInput, tokens, regExpsState);
         if (valid) {
-            setShowSteps(true);
+            if(!(parserState instanceof LR0)){ alert("Cadena valida \n mostrando pasos"); setShowSteps(true);}
+            else alert("Cadena valida");
         } else {
             alert("Cadena no válida.");
         }
