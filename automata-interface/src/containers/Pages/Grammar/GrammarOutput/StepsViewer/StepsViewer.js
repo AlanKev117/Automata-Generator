@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./StepsViewer.module.css";
 import { LR1 } from "../../../../../ts/Grammar/LR1/LR1";
-import { LR0 } from "../../../../../ts/Grammar/LR0/LR0";
+
 
 const stepsViewer = props => {
     const { stacks, sigmas, actions } = props.analysis;

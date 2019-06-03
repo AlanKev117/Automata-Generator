@@ -18,6 +18,8 @@ class LR0{
 	// Arreglo con objetos con una sola regla de la forma {rightSide: leftSide}
 	private arrayRules: object[];
 
+	public analysis;
+
 	constructor(G: Gramatica) {
 		this.G = G;
 		this.rules = null;
@@ -150,7 +152,13 @@ class LR0{
 		tokens: number[],
 		regExps: string[]
 	) => {
-        		// Creamos autómatas para el analizador léxico
+		//Reseteamos el array donde se almacenan los datos del analisis
+		this.analysis = {
+			"stacks": [],
+			"sigmas": [],
+			"actions": []
+		};
+        // Creamos autómatas para el analizador léxico
 		const automata = regExps.map(regExp =>
 			new SyntaxAnalyzerRegex(regExp).solve(regExp)
 		);
@@ -198,6 +206,9 @@ class LR0{
 		
         console.log("Pila: " + stack);
         while (op) {
+			this.analysis["stacks"].push([...stack]);
+			this.analysis["sigmas"].push(symbol);
+			this.analysis["actions"].push(op);
 			if (op.startsWith("s")) {
 				stack.push(symbol);
                 stack.push(+(parseInt(op.split("s")[1])));

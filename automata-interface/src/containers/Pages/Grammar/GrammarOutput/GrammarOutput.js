@@ -91,12 +91,16 @@ const grammarOutput = props => {
 
     const analyzeString = () => {
         const valid = parserState.evaluate(textInput, tokens, regExpsState);
-        if (valid) {
+        if(valid){
+            alert("CADENA VÁLIDA \n Clic en Aceptar para mostrar pasos:"); 
+            setShowSteps(true);
+        }
+        /*if (valid) {
             if(!(parserState instanceof LR0)){ alert("Cadena valida \n mostrando pasos"); setShowSteps(true);}
             else alert("Cadena valida");
         } else {
             alert("Cadena no válida.");
-        }
+        }*/
     };
 
     // Arreglo de reglas para mostrar en render (return).
